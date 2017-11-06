@@ -1,0 +1,140 @@
+﻿@{
+    Layout = null;
+    ViewBag.SearchCombination = "<select id='selYear' class='txt100 ' style='width:120px;' editable='false' panelHeight='auto'  buttonText='年'></select>" +
+        "<select id='selMonth' class='txt100' style='width:120px;' editable='false' panelHeight='auto'  buttonText='月'></select>" +
+        "<select class='txt200' style='width:190px;' editable='false' id='SearchModel' panelHeight='auto'  buttonText='模块'></select>";
+    ViewBag.SearchOption = "prompt:'按操作人模糊搜索',searcher:doSearch";
+}
+<script type="text/javascript">
+    $(function () {
+        InitSearchModel();
+        $('#grid').datagrid({
+            width: function () { return document.body.clientWidth * 0.9 },
+            nowrap: true,
+            autoRowHeight: true,
+            striped: true,
+            collapsible: false,
+            pagination: true,
+            pageSize: 10,
+            pageList: [10, 20, 30],
+            rownumbers: true,
+            sortOrder: 'desc',
+            remoteSort: false,
+            singleSelect: true,
+            idField: 'LogIndex',
+            queryParams: {},
+            animate: true,
+            columns: [[
+                  { title: 'LogIndex', field: 'LogIndex', hidden: true, width: 1, halign: 'center', align: 'center' },
+                  { title: '操作人', field: 'OpratorName', width: 100, halign: 'center', align: 'center' },
+                  {
+                      title: '操作时间', field: 'LogDate', width: 150, halign: 'center', align: 'center', formatter: function (value, row, index) {
+                          if (value != null) {
+                              return jsonDateHMSFormat(value);
+                          }
+                      }
+                  },
+                  { title: '操作类型', field: 'BelongFunc', width: 100, halign: 'center', align: 'center' },
+                  { title: '操作内容', field: 'LogDetails', width: 500, halign: 'center', align: 'left' },
+                  { title: '所属模块', field: 'BelongModel', width: 100, halign: 'center', align: 'center' },
+            ]]
+        });
+
+        $('#selYear').combobox({
+            valueField: 'YearValue',
+            textField: 'YearText',
+            value: "2017",
+            data: [
+                { YearValue:-1,YearText: "请选择" },
+                { YearValue: 1, YearText: 2012 }, { YearValue: 2, YearText: 2013 }, { YearValue: 3, YearText: 2014 }, { YearValue: 4, YearText: 2015 }, { YearValue: 5, YearText: 2016 },
+                { YearValue: 6, YearText: 2017 }, { YearValue: 7, YearText: 2018 }, { YearValue: 8, YearText: 2019 }, { YearValue: 9, YearText: 2020 }, { YearValue:10, YearText: 2021 }, { YearValue: 11, YearText: 2022 }
+            ],
+            onSelect: function (row) {
+                $("#serchText").searchbox('setValue', null);
+                $('#grid').datagrid({
+                    url: '@Url.Action("GetLog", "System")',
+                    queryParams: {
+                        Year: row.YearText == "请选择" ? null : row.YearText,
+                        Month: $('#selMonth').combobox('getValue') == -1 ? null : $('#selMonth').combobox('getValue'),
+                        BelongModel: $('#SearchModel').combobox('getText') == "请选择" ? null : $('#SearchModel').combobox('getText')
+                    }
+                });
+            }
+        });
+        $('#selMonth').combobox({
+            valueField: 'MonthValue',
+            textField: 'MonthText',
+            value: "请选择",
+            data: [
+                { MonthValue: -1, MonthText: '请选择' },
+                { MonthValue: 1, MonthText: '1月' }, { MonthValue: 2, MonthText: '2月' }, { MonthValue: 3, MonthText: '3月' },
+                { MonthValue: 4, MonthText: '4月' }, { MonthValue: 5, MonthText: '5月' }, { MonthValue: 6, MonthText: '6月' },
+                { MonthValue: 7, MonthText: '7月' }, { MonthValue: 8, MonthText: '8月' }, { MonthValue: 9, MonthText: '9月' },
+                { MonthValue: 10, MonthText: '10月' }, { MonthValue: 11, MonthText: '11月' }, { MonthValue: 12, MonthText: '12月' }
+            ],
+            onSelect: function (row) {
+                $("#serchText").searchbox('setValue', null);
+                $('#grid').datagrid({
+                    url: '@Url.Action("GetLog", "System")',
+                    queryParams: {
+                        Year: $('#selYear').combobox('getText') == -1 ? null : $('#selYear').combobox('getText'),
+                        Month: row.MonthValue == -1 ? null : row.MonthValue,
+                        BelongModel: $('#SearchModel').combobox('getText') == "请选择" ? null : $('#SearchModel').combobox('getText')
+                    }
+                });
+            }
+        });
+    })
+    function doSearch(value) {
+        $('#grid').datagrid('reload', {
+            SearchText: value,
+            Year: $('#selYear').combobox('getText') == -1 ? null : $('#selYear').combobox('getText'),
+            Month: $('#selMonth').combobox('getValue') == -1 ? null : $('#selMonth').combobox('getValue'),
+            BelongModel: $('#SearchModel').combobox('getText') == "请选择" ? null : $('#SearchModel').combobox('getText')
+        });
+    }
+    function InitSearchModel() {
+        $('#SearchModel').combobox({
+            url: '@Url.Action("GetSearchModule", "BaseInfo")',
+            queryParams: {},
+            valueField: 'StructureName',
+            textField: 'StructureName',
+            editable: false,
+            value: "请选择",
+            onSelect: function (row) {
+                $("#serchText").searchbox('setValue', null);
+                $('#grid').datagrid({
+                    url: '@Url.Action("GetLog", "System")',
+                    queryParams: {
+                        Year: $('#selYear').combobox('getText') == -1 ? null : $('#selYear').combobox('getText'),
+                        Month: $('#selMonth').combobox('getValue') == -1 ? null : $('#selMonth').combobox('getValue'),
+                        BelongModel: row.StructureName == "请选择" ? null : row.StructureName
+                    }
+                });
+            }
+
+        })
+    }
+    //获取json传来的时间格式化为YYYY-MM-DD HH:mm:ss
+    function jsonDateHMSFormat(jsonDate) {
+        var date = new Date(parseInt(jsonDate.replace("/Date(", "").replace(")/", ""), 10));
+        var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+        var day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+        var h = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+        var m = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+        var s = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+        return date.getFullYear() + "-" + month + "-" + day + " " + h + ":" + m + ":" + s;
+    }
+</script>
+
+<div class="easyui-layout" style="height:100%;">
+    <div region="north" style="height:94px">
+        @Html.Partial("_Partialtool")
+    </div>
+    <div region="center">
+        <div id="BodyContentDiv">
+            <table id="grid" fit="true"></table>
+        </div>
+    </div>
+</div>
+

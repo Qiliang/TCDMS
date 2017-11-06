@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="48dc712dff4e448788b64ff620ef381f" Name="Diagram1">
+        <EntityTypeShape EntityType="TCDMS_UserApplyModel.UserApply_ApplyBatch" Width="1.5" PointX="0.75" PointY="1.375" />
+        <EntityTypeShape EntityType="TCDMS_UserApplyModel.UserApply_UserApplyAuthority" Width="1.5" PointX="5.25" PointY="2.125" />
+        <EntityTypeShape EntityType="TCDMS_UserApplyModel.UserApply_UserApplyInfo" Width="1.5" PointX="3" PointY="1" />
+        <AssociationConnector Association="TCDMS_UserApplyModel.FK_USERAPPL_REFERENCE_USERAPPL" />
+        <AssociationConnector Association="TCDMS_UserApplyModel.FK_MASTER_U_REFERENCE_MASTER_U1" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

@@ -1,0 +1,335 @@
+﻿@{
+    Layout = null;
+    ViewBag.SearchOption = "prompt:'支持按产品线，仪器型号模糊查询',searcher:doSearch";
+}
+<script type="text/javascript">
+    $(function () {
+        InitProductLine();
+        $('#grid').datagrid({
+            url: '@Url.Action("GetProductModel", "ProductManagement")',
+            iconCls: 'icon-view',
+            width: function () { return document.body.clientWidth * 0.9 },
+            nowrap: true,
+            autoRowHeight: true,
+            striped: true,
+            collapsible: false,
+            pagination: true,
+            pageSize: 1000,
+            pageList: [1000],
+            rownumbers: true,
+            sortOrder: 'desc',
+            remoteSort: false,
+            singleSelect: true,
+            idField: 'ProductModelID',
+            queryParams: {},
+            animate: true,
+            columns: [[
+                 { title: 'ID', field: 'ProductModelID', hidden: true, width: 1, halign: 'center', align: 'center' },
+                 { title: '状态', field: 'Status', width: 50, halign: 'center', align: 'center' },
+                 { title: '', field: 'IsActive', hidden: true, halign: 'center', align: 'center' },
+                 { title: '产品线', field: 'ProductLineName', width: 380, halign: 'center', align: 'left' },
+                 { title: '仪器型号', field: 'ProductModelName', width: 280, halign: 'center', align: 'left' }
+            ]],
+        });
+        //新增/修改
+        $('#AddorUpdateWindow').dialog({
+            width: 'auto',
+            height: 'auto',
+            top: 130,
+            modal: true,
+            closed: true,
+            inline: true,
+            buttons: [{
+                id:'ModelClose',
+                text: '确定',
+                handler: function () {
+                    Save();
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    $('#AddorUpdateWindow').dialog('close');
+                }
+            }],
+            onOpen: function () {
+                $('#ModelClose').linkbutton({ disabled: false });
+            },
+            onClose: function () {
+                
+            }
+        });
+        $('#ImportProductModel').dialog({
+            width: 'auto',
+            height: 'auto',
+            top: 100,
+            modal: true,
+            closed: true,
+            inline: true,
+            buttons: [{
+                text: '确定',
+                handler: function () {
+                    if ($('#ProductModelFile').filebox("getValue") == "")
+                        alert("请选择导入文件！")
+                    else {
+                        $('#ProductModelFileform').submit();
+                    }
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    $('#ImportProductModel').dialog('close');
+                }
+            }],
+            title: "导入仪器型号",
+            onOpen: function () {
+                
+            },
+            onClose: function () {
+                
+            }
+
+        });
+
+        $('#ProductModelFileform').ajaxForm({
+            url: '@Url.Action("ImportProductModel", "ProductManagement")',
+            dataType: 'json',
+            beforeSend: function () {
+            },
+            success: function () {
+            },
+            complete: function (data) {
+                if (!data.responseJSON) {
+                    alert("导入成功！")
+                    $('#ImportProductModel').dialog('close');
+                    $('#grid').datagrid('reload', { SearchText: $("#serchText").searchbox('getValue') });
+                }
+                else {
+                    if (data.responseJSON == "导入失败") {
+                        alert("导入失败！");
+                    }
+                    else {
+                        alert("导入失败，即将下载错误文件！");
+                        window.location.href = "/ProductManagement/DownloadProductModel?filename=" + data.responseJSON;
+                    }
+                }
+            }
+        });
+    })
+    function ClickAdd() {
+        $("#serchText").searchbox('setValue', null);
+        $('#ProductModelName').textbox('setValue', null);
+        $('#IsActive').val('');
+        $('#ProductModelID').val('');
+        $('#AddUp').val(1);
+        $('#ProductLineName').combobox('setValue', null);
+        $('#AddorUpdateWindow').dialog({ title: "新增仪器型号" });
+        $('#AddorUpdateWindow').dialog('open');
+    }
+    function ClickModify() {
+        var row = $("#grid").datagrid("getSelected");
+        if (row == null) {
+            alert("您还没有选择仪器型号信息，请选择！");
+            return;
+        }
+        $.post('@Url.Action("GetOneProductModel", "ProductManagement")',
+                      { id: row.ProductModelID },
+                          function (data, textStatus, jqXHR) {
+                              if (data.SubmitResult) {
+                                  $('#AddUp').val(2);
+                                  $('#IsActive').val(data.Object.IsActive);
+                                  $('#ProductModelID').val(data.Object.ProductModelID);
+                                  $('#ProductModelName').textbox('setValue', data.Object.ProductModelName);
+                                  $('#ProductLineName').combobox('setValue', data.Object.ProductLineID);
+                                  $('#AddorUpdateWindow').dialog({ title: "修改仪器型号" });
+                                  $('#AddorUpdateWindow').dialog('open');
+                              }
+                              else {
+                                  alert(data.Message);
+                                  return;
+                              }
+                          }, "json");
+
+    }
+    function ClickDel() {
+        var row = $("#grid").datagrid("getSelected");
+        if (row == null) {
+            alert("您还没有选择仪器型号信息，请选择！");
+            return;
+        }
+        $.messager.confirm('提示', '是否删除选中数据?', function (data) {
+            if (!data) {
+                return;
+            }
+
+            $.post(
+            '@Url.Action("DeleteProductModel", "ProductManagement")',
+            {
+                ProductModelID: row.ProductModelID,
+
+            },
+            function success(data, textStatus, jqXHR) {
+                if (!data.SubmitResult) {
+                    alert(data.Message);
+                }
+                else {
+                    alert("删除成功！");
+                    $('#grid').datagrid('clearSelections');
+                    $('#grid').datagrid('reload', { SearchText: $("#serchText").searchbox('getValue') });
+                }
+            }, "json");
+        });
+    }
+    function Save() {
+        if ($("#AddorUpdate").form('validate')) {
+            $('#ModelClose').linkbutton({ disabled: true });
+            if ($('#AddUp').val() == 1) {
+                $.post(
+                 '@Url.Action("AddProductModel", "ProductManagement")',
+                 {
+                     ProductModelName: $('#ProductModelName').textbox('getValue'),
+                     IsActive: $('#IsActive').val(),
+                     ProductLineID: $('#ProductLineName').combobox('getValue'),
+
+                 },
+                 function success(data, textStatus, jqXHR) {
+                     if (!data.SubmitResult) {
+                         alert(data.Message);
+                     }
+                     else {
+                         $('#AddorUpdateWindow').dialog('close');
+                         $('#grid').datagrid('clearSelections');
+                         $('#grid').datagrid('reload', { SearchText: $("#serchText").searchbox('getValue') });
+                     }
+                 }, "json");
+            }
+            else {
+                $.post(
+                  '@Url.Action("UpdateProductModel", "ProductManagement")',
+                  {
+                      ProductModelID: $('#ProductModelID').val(),
+                      ProductModelName: $('#ProductModelName').textbox('getValue'),
+                      IsActive: $('#IsActive').val(),
+                      ProductLineID: $('#ProductLineName').combobox('getValue'),
+                  },
+                  function success(data, textStatus, jqXHR) {
+                      if (!data.SubmitResult) {
+                          alert(data.Message);
+                      }
+                      else {
+                          $('#AddorUpdateWindow').dialog('close');
+                          $('#grid').datagrid('reload', { SearchText: $("#serchText").searchbox('getValue') });
+                      }
+                  }, "json");
+            }
+        }
+    }
+    //停/启用
+    function ClickActived() {
+        var row = $("#grid").datagrid("getSelected");
+        if (row == null) {
+            alert("您还没有选择仪器型号信息，请选择！");
+            return;
+        }
+        $.post(
+            '@Url.Action("ChangeStatusProductModel", "ProductManagement")',
+            {
+                ProductModelID: row.ProductModelID,
+                IsActive: row.IsActive
+            },
+            function success(data, textStatus, jqXHR) {
+                if (!data.SubmitResult) {
+                    alert(data.Message);
+                }
+                else {
+                    $('#grid').datagrid('reload', { SearchText: $("#serchText").searchbox('getValue') });
+                }
+            }, "json");
+    }
+    // 导入
+    function ClickImport() {
+        $("#serchText").searchbox('setValue', null);
+        $('#ProductModelFile').filebox("clear");
+        $('#ImportProductModel').dialog('open');
+    }
+    // 导出
+    function ClickExport() {
+        $.post("@Url.Action("ExportProductModel", "ProductManagement")", {
+            SearchText: $("#serchText").searchbox('getValue')
+        }, function (data) {
+            if (data) {
+                window.location.href = "/ProductManagement/DownloadProductModel?filename=" + data;
+            } else {
+                alert("导出失败！");
+            }
+        })
+    }
+    function doSearch(value) {
+        $('#grid').datagrid('reload', { SearchText: value });
+    }
+    function InitProductLine() {
+        $.ajaxSetup({
+            async: false
+        });
+        $('#ProductLineName').combobox({
+            url: '@Url.Action("GetProductLine", "ProductManagement")',
+            valueField: 'ProductLineID',
+            textField: 'ProductLineName',
+            editable: false,
+            onLoadSuccess: function (data) {
+                return;
+            }
+        });
+        $.ajaxSetup({
+            async: true
+        });
+    }
+</script>
+
+<div class="easyui-layout" style="height:100%;">
+    <div region="north" style="height:94px">
+        @Html.Partial("_Partialtool")
+    </div>
+    <div region="center">
+        <div id="BodyContentDiv" class="DivPage">
+            <table id="grid" style="width:100%;height:100%;"></table>
+        </div>
+    </div>
+</div>
+    @*仪器型号新增/修改*@
+    <div id="AddorUpdateWindow">
+        <div class="AddContent">
+            <input id="ProductModelID" hidden="hidden" />
+            <input id="AddUp" hidden="hidden" />
+            <input id="ProductTypeID" hidden="hidden" />
+            <input id="IsActive" hidden="hidden" />
+            <form id="AddorUpdate">
+                <p>
+                    <span class="cl100">仪器型号：</span>
+                    <input class="easyui-textbox txt150" style="width:150px;" id="ProductModelName" required missingmessage="仪器型号必须填写！" />
+                </p>
+                <p>
+                    <span class="cl100">产品线：</span>
+                    <select class="easyui-combobox txt150" style="width:150px;" id="ProductLineName" editable="false" required missingmessage="产品线必须填写！">
+
+                        <option value="1">血球</option>
+                        <option value="2">生化</option>
+                        <option value="3">免疫</option>
+                    </select>
+                </p>
+            </form>
+        </div>
+    </div>
+    @*导入*@
+    <div id="ImportProductModel">
+        <div class="AddContent">
+            <form id="ProductModelFileform" method="post" enctype="multipart/form-data">
+                <p>
+                    <input id="ProductModelFile" class="easyui-filebox txt410" style="width:410px;" name="ProductModelFile" data-options="prompt:'导入仪器型号文件',accept:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel' ,buttonText:'选择导入文件'">
+                </p>
+                <br />
+                <p>
+                    <a href="~/TempLate/IMP_InstrumentModel.xlsx">下载仪器型号导入模板</a>
+                </p>
+            </form>
+        </div>
+    </div>

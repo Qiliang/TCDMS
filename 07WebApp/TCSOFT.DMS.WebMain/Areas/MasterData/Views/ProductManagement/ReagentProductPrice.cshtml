@@ -1,0 +1,325 @@
+﻿@{
+    Layout = null;
+    ViewBag.SearchOption = "prompt:'支持货号、产品名称模糊查询',searcher:doSearch";
+    ViewBag.SearchCombination = "<select id='searchproductline' class='txt250 ' editable='false' panelHeight='auto' buttonText='产品线'></select>";
+
+}
+
+<script type="text/javascript">
+    $(function () {
+        $('#grid').datagrid({
+            url: '',
+            iconCls: 'icon-view',
+            width: function () { return document.body.clientWidth * 0.9 },
+            nowrap: true,
+            autoRowHeight: true,
+            striped: true,
+            collapsible: false,
+            pagination: true,
+            pageSize: 10,
+            pageList: [10, 20, 30],
+            rownumbers: true,
+            sortOrder: 'desc',
+            remoteSort: false,
+            singleSelect: true,
+            idField: 'Index',
+            queryParams: {},
+            animate: true,
+            columns: [[
+                { title: 'ProductID', field: 'ProductID', hidden: true, width: 1, halign: 'center', align: 'center' },
+                 { title: 'ProductPriceID', field: 'ProductPriceID', hidden: true, width: 1, halign: 'center', align: 'center' },
+                 { title: '货号', field: 'ArtNo', width: 200, halign: 'center', align: 'center' },
+                 { title: '产品名称', field: 'ProductName', width: 380, halign: 'center', align: 'left' },
+                 { title: '产品线', field: 'ProductLineName', width: 380, halign: 'center', align: 'left' },
+                 { title: 'DNP价格(不含税)', field: 'DNPPrice', width: 140, halign: 'center', align: 'right' },
+                 {
+                     title: '开始日期', field: 'DNPPriceStart', width: 140, halign: 'center', align: 'center', formatter: function (value, row, index) {
+                         if (value != null) {
+                             return jsonDateFormat(value);
+                         }
+                     }
+                 },
+                 {
+                     title: '结束日期', field: 'DNPPriceEnd', width: 140, halign: 'center', align: 'center', formatter: function (value, row, index) {
+                         if (value != null) {
+                             return jsonDateFormat(value);
+                         }
+                     }
+                 }
+            ]]
+        });
+
+        $('#searchproductline').combobox({
+            url: '@Url.Action("GetSearchProductLine", "ProductManagement")',
+            valueField: 'ProductLineID',
+            textField: 'ProductLineName',
+            editable: false,
+            value: -1,
+            onSelect: function (row) {
+                $("#serchText").searchbox('setValue', null);
+                $('#grid').datagrid('clearSelections');
+                $('#grid').datagrid({ url: '@Url.Action("GetReagentPriceList", "ProductManagement")', queryParams: { ProductLineID: row.ProductLineID == -1 ? null : row.ProductLineID } });
+            }
+        });
+
+        //新增/修改
+        $('#AddorUpdateWindow').dialog({
+            width: 'auto',
+            height: 'auto',
+            top: 50,
+            modal: true,
+            closed: true,
+            inline: true,
+            buttons: [{
+                text: '确定',
+                handler: function () {
+                    SaveInfo();
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    $('#AddorUpdateWindow').dialog('close');
+                }
+            }],
+            onOpen: function () {
+                
+            },
+            onClose: function () {
+                
+            }
+        });
+        @*导入表单提交*@
+        $('#ReagentPriceData').dialog({
+            width: 'auto',
+            height: 'auto',
+            top: 100,
+            modal: true,
+            closed: true,
+            inline: true,
+            buttons: [{
+                text: '确定',
+                handler: function () {
+                    if ($("#ProductFile").filebox("getValue") == "") {
+                        alert("请选择导入文件！")
+                    }
+                    else {
+                        $('#ReagentPrice').submit();
+                    }
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    $('#ReagentPriceData').dialog('close');
+                }
+            }],
+            title: "导入试剂产品价格",
+            onOpen: function () {
+                
+            },
+            onClose: function () {
+                
+            }
+        });
+
+        $('#ReagentPrice').ajaxForm({
+            url: '@Url.Action("LeadReagentPrice", "ProductManagement")',
+            dataType: 'json',
+            beforeSend: function () {
+            },
+            success: function () {
+            },
+            complete: function (data) {
+                if (!data.responseJSON) {
+                    alert("导入成功！")
+                    $('#ReagentPriceData').dialog('close');
+                    $('#grid').datagrid('clearSelections');
+                    $('#grid').datagrid('reload', { ProductLineID: null, SearchText: null });
+                }
+                else {
+                    if (data.responseJSON == "导入失败") {
+                        alert("导入失败！");
+                    }
+                    else {
+                        alert("导入失败，即将下载错误文件！");
+                        window.location.href = "/ProductManagement/DownloadReagentPrice?filename=" + data.responseJSON;
+                    }
+                }
+            }
+        });
+    })
+    function doSearch(value) {
+        var productline = null;
+        if ($('#searchproductline').combobox("getValue") != "-1") {
+            productline = $('#searchproductline').combobox("getValue");
+        }
+        $('#grid').datagrid('clearSelections');
+        $('#grid').datagrid('reload', { SearchText: value, ProductLineID: productline });
+    }
+    function ClickModify() {
+        var row = $('#grid').datagrid('getSelected');
+        if (!row) {
+            alert("您还没有选择试剂产品价格，请选择！");
+            return;
+        }
+        $("#ArticleNumber").textbox({ disabled: true });
+        $("#ProductName").textbox({ disabled: true });
+        $("#ProductLine").textbox({ disabled: true });
+
+        $('#ProductID').val(row.ProductID);
+        $('#ArticleNumber').textbox('setValue', row.ArtNo);
+        $('#ProductLine').textbox('setValue', row.ProductLineName);
+        $('#ProductName').textbox('setValue', row.ProductName);
+        $('#DNPPrice').numberbox('setValue', row.DNPPrice);
+        $('#StartTime').datebox('setValue', jsonDateFormat(row.DNPPriceStart));
+        $('#EndTime').datebox('setValue', jsonDateFormat(row.DNPPriceEnd));
+
+        $('#AddorUpdateWindow').dialog({ title: "修改试剂产品价格" });
+        $('#AddorUpdateWindow').dialog('open');
+    }
+    function ClickDel() {
+        var row = $('#grid').datagrid('getSelected');
+        if (!row) {
+            alert("您还没有选择试剂产品价格，请选择！");
+            return;
+        }
+        if (row.DNPPrice == null) {
+            alert("此条产品未设置价格，不可删除");
+            return;
+        }
+        $.messager.confirm('提示', '是否删除选中数据?', function (data) {
+            if (!data) {
+                return;
+            }
+            $.post("@Url.Action("DeleteReagentPrice", "ProductManagement")", {
+                ProductPriceID: row.ProductPriceID
+            }, function (data) {
+                if (data.SubmitResult) {
+                    $('#grid').datagrid("reload");
+                    $('#grid').datagrid('clearSelections');
+                } else {
+                    alert(data.Message);
+                }
+            });
+        });
+    }
+    function SaveInfo() {
+        if ($("#AddorUpdate").form('validate')) {
+            var sdate = new Date($('#StartTime').datebox('getValue'));
+            var edate = new Date($('#EndTime').datebox('getValue'));
+            if (edate - sdate < 0) {
+                alert("时间区域选择有误，请重新选择！")
+                return;
+            }
+            var row = $('#grid').datagrid('getSelected');
+            $.post("@Url.Action("UpdateReagentPrice", "ProductManagement")", {
+                ProductID: $('#ProductID').val(),
+                ProductPriceID: row.ProductPriceID,
+                DNPPrice: $('#DNPPrice').numberbox('getValue'),
+                DNPPriceStart: $('#StartTime').datebox('getValue'),
+                DNPPriceEnd: $('#EndTime').datebox('getValue')
+            }, function (data) {
+                if (data.SubmitResult) {
+                    $('#grid').datagrid("reload");
+                    $('#AddorUpdateWindow').dialog('close')
+                } else {
+                    alert(data.Message);
+                }
+            });
+        }
+    }
+    // 导出
+    function ClickExport() {
+        $.post("@Url.Action("ExportReagentPrice", "ProductManagement")", {
+            SearchText: $("#serchText").searchbox('getValue'),
+            ProductLineID: $('#searchproductline').combobox('getValue') == -1 ? null : $('#searchproductline').combobox('getValue'),
+        }, function (data) {
+            if (data) {
+                window.location.href = "/ProductManagement/DownloadReagentPrice?filename=" + data;
+            } else {
+                alert("导出失败！");
+            }
+        })
+    }
+    // 导入
+    function ClickImport() {;
+        $('#ProductFile').filebox("clear");
+        $('#ReagentPriceData').dialog('open');
+    }
+    //获取json传来的时间格式化为YYYY-MM-DD HH:mm:ss
+    function jsonDateHMSFormat(jsonDate) {
+        var date = new Date(parseInt(jsonDate.replace("/Date(", "").replace(")/", ""), 10));
+        var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+        var day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+        var h = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+        var m = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+        var s = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+        return date.getFullYear() + "-" + month + "-" + day + " " + h + ":" + m + ":" + s;
+    }
+    //获取json传来的时间格式化为YYYY-MM-DD
+    function jsonDateFormat(jsonDate) {
+        if (jsonDate != null) {
+            var date = new Date(parseInt(jsonDate.replace("/Date(", "").replace(")/", ""), 10));
+            var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+            var day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+            return date.getFullYear() + "-" + month + "-" + day;
+        }
+    }
+</script>
+
+<div class="easyui-layout" style="height:100%;">
+    <div region="north" style="height:94px">
+        @Html.Partial("_Partialtool")
+    </div>
+    <div region="center">
+        <div id="BodyContentDiv">
+            <table id="grid" fit="true"></table>
+        </div>
+    </div>
+</div>
+@*产品类型新增/修改*@
+<div id="AddorUpdateWindow">
+    <div class="AddContent">
+        <input id="ProductID" hidden="hidden" />
+        <form id="AddorUpdate">
+            <p>
+                <span class="cl120">货号：</span>
+                <input class="easyui-textbox txt150" style="width:150px;" id="ArticleNumber" />
+            </p>
+            <p>
+                <span class="cl120">产品线：</span>
+                <input class="easyui-textbox txt150" style="width:150px;" id="ProductLine" />
+            </p>
+            <p>
+                <span class="cl120">产品名称：</span>
+                <input class="easyui-textbox txt150" style="width:210px" id="ProductName" />
+            </p>
+            <p>
+                <span class="cl120">DNP价格(不含税)：</span>
+                <input class="easyui-numberbox txt150" id="DNPPrice" style="width:150px;text-align:right" precision="10" required missingmessage="DNP价格必须填写！" />
+            </p>
+            <p>
+                <span class="cl120">开始时间：</span>
+                <input class="easyui-datebox txt150" style="width:150px;" id="StartTime" editable="false" required missingmessage="开始时间必须填写！" />
+            </p>
+            <p>
+                <span class="cl120">结束时间：</span>
+                <input class="easyui-datebox txt150" style="width:150px;" id="EndTime" editable="false" required missingmessage="结束时间必须填写！" />
+            </p>
+        </form>
+    </div>
+</div>
+@*导入对话框*@
+<div id="ReagentPriceData">
+    <div class="AddContent">
+        <form id="ReagentPrice" method="post" enctype="multipart/form-data">
+            <p>
+                <input id="ProductFile" class="easyui-filebox txt410" style="width:410px;" name="ProductFile" data-options="prompt:'导入剂产品价格文件',accept:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel' ,buttonText:'选择导入文件'">
+            </p>
+            <br />
+            <p>
+                <a href="~/TempLate/IMP_ReagentPrice.xlsx">下载试剂产品价格导入模板</a>
+            </p>
+        </form>
+    </div>
+</div>
+

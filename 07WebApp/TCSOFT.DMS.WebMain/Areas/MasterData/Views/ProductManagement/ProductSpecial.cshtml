@@ -1,0 +1,780 @@
+﻿@{
+    Layout =null;
+    ViewBag.SearchOption = "prompt:'支持按OKC号模糊查询',searcher:doSearch";
+}
+
+<script type="text/javascript">
+    $(function () {
+        $("#btnImport").hide();
+        if ($("#btnImport").length > 0) {
+            $(".btnImport").show();
+        } else {
+            $(".btnImport").hide();
+        }
+        $('#gridokc').datagrid({
+            url: '@Url.Action("GetOKCList", "ProductManagement")',
+            iconCls: 'icon-view',
+            width: function () { return document.body.clientWidth * 0.9 },
+            nowrap: true,
+            autoRowHeight: true,
+            striped: true,
+            collapsible: false,
+            pagination: true,
+            pageSize: 10,
+            pageList: [10, 20, 30],
+            rownumbers: true,
+            sortOrder: 'desc',
+            remoteSort: false,
+            singleSelect: true,
+            idField: 'OKCID',
+            animate: true,
+            columns: [[
+                 { title: 'OKCID', field: 'OKCID', hidden: true, width: 1, halign: 'center', align: 'center' },
+                 { title: 'OKC号', field: 'OKCNO', width: 200, halign: 'center', align: 'center' },
+                 {
+                     title: '生效日期', field: 'OKCStart', width: 150, halign: 'center', align: 'center', formatter: function (value, row, index) {
+                         if (value != null) {
+                             return jsonDateFormat(value);
+                         }
+                     }
+                 },
+                 {
+                     title: '结束日期', field: 'OKCEnd', width: 150, halign: 'center', align: 'center', formatter: function (value, row, index) {
+                         if (value != null) {
+                             return jsonDateFormat(value);
+                         }
+                     }
+                 },
+            ]],
+            onSelect: function (rowIndex, rowData) {
+                $("#serchTextpro").searchbox('setValue', null);
+                $("#serchTextdep").searchbox('setValue', null);
+                $('#gridokcpro').datagrid("clearSelections");
+                $('#gridokcdepcut').datagrid("clearSelections");
+                OKCProduct(null, rowData.OKCID);
+                OKCDistributor(null, rowData.OKCID);
+            }
+        });
+        $('#gridokcpro').datagrid({
+            iconCls: 'icon-view',
+            width: function () { return document.body.clientWidth * 0.9 },
+            nowrap: true,
+            autoRowHeight: true,
+            striped: true,
+            collapsible: false,
+            pagination: true,
+            pageSize: 10,
+            pageList: [10, 20, 30],
+            rownumbers: true,
+            sortOrder: 'desc',
+            remoteSort: false,
+            singleSelect: true,
+            idField: 'ProductOKCPriceInfoID',
+            animate: true,
+            columns: [[
+                 { title: 'ProductOKCPriceInfoID', field: 'ProductOKCPriceInfoID', hidden: true, width: 1, halign: 'center', align: 'center' },
+                 { title: '货号', field: 'ArtNo', width: 150, halign: 'center', align: 'center' },
+                 { title: '产品名称', field: 'ProductName', width: 450, halign: 'center', align: 'left' },
+                 { title: '产品线', field: 'ProductLineName', width: 350, halign: 'center', align: 'left' },
+                 { title: 'OKC价格', field: 'ProductOKCPrice', width: 200, halign: 'center', align: 'right' },
+            ]]
+        });
+        $('#gridokcdepcut').datagrid({
+            iconCls: 'icon-view',
+            width: function () { return document.body.clientWidth * 0.9 },
+            nowrap: true,
+            autoRowHeight: true,
+            striped: true,
+            collapsible: false,
+            pagination: true,
+            pageSize: 10,
+            pageList: [10, 20, 30],
+            rownumbers: true,
+            sortOrder: 'desc',
+            remoteSort: false,
+            singleSelect: true,
+            idField: 'DistributorOKCID',
+            animate: true,
+            columns: [[
+                 { title: 'DistributorOKCID', field: 'DistributorOKCID', hidden: true, width: 1, halign: 'center', align: 'center' },
+                 { title: '经销商', field: 'DistributorName', width: 300, halign: 'center', align: 'left' },
+                 { title: '最终客户', field: 'CustomerName', width: 300, halign: 'center', align: 'left' },
+            ]]
+        });
+        $('#gridpro').datagrid({
+            title: "选择产品",
+            iconCls: 'icon-view',
+            width: 550,
+            nowrap: true,
+            autoRowHeight: true,
+            striped: true,
+            collapsible: false,
+            pagination: true,
+            pageSize: 10,
+            pageList: [10, 20, 30],
+            rownumbers: true,
+            sortOrder: 'desc',
+            remoteSort: false,
+            singleSelect: true,
+            idField: 'ProductID',
+            animate: true,
+            columns: [[
+                 { title: 'ProductID', field: 'ProductID', hidden: true, width: 1, halign: 'center', align: 'center' },
+                 { title: '货号', field: 'ArtNo', width: 100, halign: 'center', align: 'center' },
+                 { title: '产品名称', field: 'ProductName', width: 200, halign: 'center', align: 'left' },
+                 { title: '产品线', field: 'ProductLineName', width: 200, halign: 'center', align: 'center' },
+            ]]
+        });
+        $('#griddep').datagrid({
+            title: "选择经销商",
+            iconCls: 'icon-view',
+            width: 600,
+            nowrap: true,
+            autoRowHeight: true,
+            striped: true,
+            collapsible: false,
+            pagination: true,
+            pageSize: 10,
+            pageList: [10, 20, 30],
+            rownumbers: true,
+            sortOrder: 'desc',
+            remoteSort: false,
+            singleSelect: true,
+            idField: 'DistributorID',
+            animate: true,
+            columns: [[
+                 { title: 'DistributorID', field: 'DistributorID', hidden: true, width: 1, halign: 'center', align: 'center' },
+                 { title: '经销商编号', field: 'DistributorCode', width: 150, halign: 'center', align: 'center' },
+                 { title: '经销商', field: 'DistributorName', width: 150, halign: 'center', align: 'center' },
+                 { title: '注册省份', field: 'RegionName', width: 100, halign: 'center', align: 'center' },
+                 { title: '经销商类别', field: 'DistributorTypeName', width: 200, halign: 'center', align: 'center' },
+                 { title: '经销商服务类型', field: 'DistributorServiceTypeName', width: 100, halign: 'center', align: 'center' }
+            ]]
+        });
+
+        //新增/修改OKC
+        $('#AddorUpdateOKCWindow').dialog({
+            width: 'auto',
+            height: 'auto',
+            top: 20,
+            modal: true,
+            closed: true,
+            inline: true,
+            buttons: [{
+                text: '确定',
+                handler: function () {
+                    SaveInfookc();
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    $('#AddorUpdateOKCWindow').dialog('close');
+                }
+            }],
+            onOpen: function () {
+                
+            },
+            onClose: function () {
+                
+            }
+        });
+        //新增/修改OKC产品
+        $('#AddorUpdateOKCProWindow').dialog({
+            width: 'auto',
+            height: 'auto',
+            top: 1,
+            modal: true,
+            closed: true,
+            inline: true,
+            buttons: [{
+                text: '确定',
+                handler: function () {
+                    SaveInfookcpro();
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    $('#AddorUpdateOKCProWindow').dialog('close');
+                }
+            }],
+            onOpen: function () {
+                
+            },
+            onClose: function () {
+                
+            }
+        });
+        //新增/修改OKC经销商及最终客户
+        $('#AddorUpdateOKCdepcutWindow').dialog({
+            width: 'auto',
+            height: 'auto',
+            top: 1,
+            modal: true,
+            closed: true,
+            inline: true,
+            buttons: [{
+                text: '确定',
+                handler: function () {
+                    SaveInfookcdepcut();
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    $('#AddorUpdateOKCdepcutWindow').dialog('close');
+                }
+            }],
+            onOpen: function () {
+                
+            },
+            onClose: function () {
+                
+            }
+        });
+        //插入
+        $('#InsertWindow').dialog({
+            width: 'auto',
+            height: 'auto',
+            top: 1,
+            modal: true,
+            closed: true,
+            inline: true,
+            buttons: [{
+                text: '确定',
+                handler: function () {
+                    SaveInfoInsert();
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    $('#InsertWindow').dialog('close');
+                }
+            }],
+            onOpen: function () {
+                
+            },
+            onClose: function () {
+                
+            }
+        });
+        //导入
+        $('#ImportProductSpecial').dialog({
+            width: 'auto',
+            height: 'auto',
+            top: 100,
+            modal: true,
+            closed: true,
+            inline: true,
+            buttons: [{
+                text: '确定',
+                handler: function () {
+                    if ($('#ProductSpecialFile').filebox("getValue") == "")
+                    { alert("请选择导入文件") }
+                    else
+                    {
+                        $('#ProductSpecialFileform').submit();;
+                    }
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    $('#ImportProductSpecial').dialog('close');
+                }
+            }],
+            title: "导入试剂产品特价",
+            onOpen: function () {
+                
+            },
+            onClose: function () {
+                
+            }
+        });
+        //导入
+        $('#ProductSpecialFileform').ajaxForm({
+            url: '@Url.Action("ImportReagentSpecial", "ProductManagement")',
+            dataType: 'json',
+            beforeSend: function () {
+            },
+            success: function () {
+            },
+            complete: function (data) {
+                if (!data.responseJSON) {
+                    alert("导入成功！")
+                    $('#ImportProductSpecial').dialog('close');
+                    $("#serchTextpro").searchbox('setValue', null);
+                    $("#serchTextdep").searchbox('setValue', null);
+                    $('#gridokcpro').datagrid("clearSelections");
+                    $('#gridokcdepcut').datagrid("clearSelections");
+                    OKCProduct(null, $("#OKCID").val());
+                    OKCDistributor(null, $("#OKCID").val());
+                } else {
+                    if (data.responseJSON == "导入失败") {
+                        alert("导入失败！");
+                    }
+                    else {
+                        alert("导入失败，即将下载错误文件！");
+                        window.location.href = "/ProductManagement/DownloadReagentSpecial?filename=" + data.responseJSON;
+                    }
+                }
+            }
+        });
+    })
+    function doSearch(value) {
+        $('#gridokc').datagrid("clearSelections");
+        $('#gridokcpro').datagrid("clearSelections");
+        $('#gridokcdepcut').datagrid("clearSelections");
+        $('#gridokcpro').datagrid('loadData', { total: 0, rows: [] });
+        $('#gridokcdepcut').datagrid('loadData', { total: 0, rows: [] });
+        $('#gridokc').datagrid('reload', { SearchText: value });
+    }
+    function doSearchokcpro(value) {
+        var row = $('#gridokc').datagrid('getSelected');
+        if (row == null) {
+            alert("请先选择OKC");
+            return;
+        }
+        $('#gridokcpro').datagrid("clearSelections");
+        OKCProduct(value, row.OKCID);
+    }
+    function doSearchokcdepcut(value) {
+        var row = $('#gridokc').datagrid('getSelected');
+        if (row == null) {
+            alert("请先选择OKC");
+            return;
+        }
+        $('#gridokcdepcut').datagrid("clearSelections");
+        OKCDistributor(value, row.OKCID);
+    }
+    function ClickAdd() {
+        $("#serchText").searchbox('setValue', null);
+        $("#serchTextpro").searchbox('setValue', null);
+        $("#serchTextdep").searchbox('setValue', null);
+        $("#OKCNO").textbox("setValue", null);
+        $("#StartTime").datebox("setValue", null);
+        $("#EndTime").datebox("setValue", null);
+        $("#AddUp").val(0);
+        $('#AddorUpdateOKCWindow').dialog({ title: "新增OKC" });
+        $('#AddorUpdateOKCWindow').dialog('open');
+    }
+    function ClickAddokcpro() {
+        var row = $('#gridokc').datagrid('getSelected');
+        if (row == null) {
+            alert("请先选择OKC");
+            return;
+        }
+        $("#serchTextpro").searchbox('setValue', null);
+        $('#gridpro').datagrid("clearSelections");
+        $('#gridpro').datagrid({ url: '@Url.Action("GetIsActiveReagentInfo", "ProductManagement")' })
+        $("#OKCProvider").textbox("setValue", null);
+        $('#AddorUpdateOKCProWindow').dialog({ title: "新增OKC产品特价" });
+        $('#AddorUpdateOKCProWindow').dialog('open');
+    }
+
+    function ClickAddokcdepcut() {
+        var row = $('#gridokc').datagrid('getSelected');
+        if (row == null) {
+            alert("请先选择OKC");
+            return;
+        }
+        OKCDepcut();
+        $("#serchTextdep").searchbox('setValue', null);
+        $('#griddep').datagrid("clearSelections");
+        $('#griddep').datagrid({ url: '@Url.Action("GetIsActiveDistributorList", "ProductManagement")' })
+        $("#OKCDepcut").combobox("setValue", null);
+        $('#AddorUpdateOKCdepcutWindow').dialog({ title: "新增OKC经销商及最终客户" });
+        $('#AddorUpdateOKCdepcutWindow').dialog('open');
+    }
+    function ClickInsert() {
+        $('#OldArtNo').textbox('setValue', null);
+        $('#OldOKCPrice').numberbox('setValue', null);
+        $('#NewArtNo').textbox('setValue', null);
+        $('#NewOKCPrice').numberbox('setValue', null);
+        $('#InsertWindow').dialog({ title: "插入" });
+        $('#InsertWindow').dialog('open');
+    }
+    function ClickModify() {
+        var row = $('#gridokc').datagrid('getSelected');
+        if (row == null) {
+            alert("请选择要修改的OKC");
+            return;
+        }
+        $.post("@Url.Action("GetOneOKC", "ProductManagement")", {
+            OKCID: row.OKCID
+        }, function (data) {
+            if (data.SubmitResult) {
+                $("#OKCNO").textbox("setValue", data.Object.OKCNO);
+                $("#StartTime").datebox("setValue", jsonDateFormat(data.Object.OKCStart));
+                $("#EndTime").datebox("setValue", jsonDateFormat(data.Object.OKCEnd));
+                $("#AddUp").val(1);
+                $('#AddorUpdateOKCWindow').dialog({ title: "修改OKC" });
+                $('#AddorUpdateOKCWindow').dialog('open');
+            } else {
+                alert(data.Message);
+            }
+        });
+    }
+
+    function ClickDel() {
+        var row = $('#gridokc').datagrid('getSelected');
+        if (row == null) {
+            alert("请选择要删除的OKC");
+            return;
+        }
+        $.messager.confirm('提示', '是否删除选中数据?', function (data) {
+            if (!data) {
+                return;
+            }
+            $.post("@Url.Action("DeleteOKC", "ProductManagement")", {
+                OKCID: row.OKCID
+            }, function (data) {
+                if (data.SubmitResult) {
+                    $('#gridokc').datagrid("clearSelections");
+                    $('#gridokcpro').datagrid("clearSelections");
+                    $('#gridokcdepcut').datagrid("clearSelections");
+                    $('#gridokcpro').datagrid('loadData', { total: 0, rows: [] });
+                    $('#gridokcdepcut').datagrid('loadData', { total: 0, rows: [] });
+                    $('#gridokc').datagrid("reload");
+                } else {
+                    alert(data.Message);
+                }
+            });
+        });
+    }
+    function ClickDelokcpro() {
+        var row = $('#gridokcpro').datagrid('getSelected');
+        if (row == null) {
+            alert("请选择要删除的OKC产品特价");
+            return;
+        }
+        $.messager.confirm('提示', '是否删除选中数据?', function (data) {
+            if (!data) {
+                return;
+            }
+            $.post("@Url.Action("DeleteOKCProduct", "ProductManagement")", {
+                ProductOKCPriceInfoID: row.ProductOKCPriceInfoID
+            }, function (data) {
+                if (data.SubmitResult) {
+                    $('#gridokcpro').datagrid("clearSelections");
+                    OKCProduct(null, row.OKCID);
+                } else {
+                    alert(data.Message);
+                }
+            });
+        });
+    }
+    function ClickDelokcdepcut() {
+        var row = $('#gridokcdepcut').datagrid('getSelected');
+        if (row == null) {
+            alert("请选择要删除的OKC经销商");
+            return;
+        }
+        $.messager.confirm('提示', '是否删除选中数据?', function (data) {
+            if (!data) {
+                return;
+            }
+            $.post("@Url.Action("DeleteOKCDepAndCus", "ProductManagement")", {
+                DistributorOKCID: row.DistributorOKCID
+            }, function (data) {
+                if (data.SubmitResult) {
+                    $('#gridokcdepcut').datagrid("clearSelections");
+                    OKCDistributor(null, row.OKCID);
+                } else {
+                    alert(data.Message);
+                }
+            });
+        });
+    }
+    function SaveInfookc() {
+        if ($("#AddorUpdateOKC").form('validate')) {
+            var sdate = new Date($('#StartTime').datebox('getValue'));
+            var edate = new Date($('#EndTime').datebox('getValue'));
+            if (edate - sdate < 0) {
+                alert("时间区域选择有误，请重新选择！")
+                return;
+            }
+            if ($("#AddUp").val() == 0) {
+                $.post("@Url.Action("AddOKC", "ProductManagement")", {
+                    OKCNO: $('#OKCNO').textbox('getValue'),
+                    OKCStart: $('#StartTime').datebox('getValue'),
+                    OKCEnd: $('#EndTime').datebox('getValue'),
+                }, function (data) {
+                    if (data.SubmitResult) {
+                        $('#gridokc').datagrid("reload", { SearchText: null });
+                        $('#gridokc').datagrid("clearSelections");
+                        $('#gridokcpro').datagrid("clearSelections");
+                        $('#gridokcdepcut').datagrid("clearSelections");
+                        $('#gridokcpro').datagrid('loadData', { total: 0, rows: [] });
+                        $('#gridokcdepcut').datagrid('loadData', { total: 0, rows: [] });
+                        $('#AddorUpdateOKCWindow').dialog('close')
+                    } else {
+                        alert(data.Message);
+                    }
+                });
+            } else {
+                var row = $('#gridokc').datagrid('getSelected');
+                $.post("@Url.Action("UpdateOKC", "ProductManagement")", {
+                    OKCID: row.OKCID,
+                    OKCNO: $('#OKCNO').textbox('getValue'),
+                    OKCStart: $('#StartTime').datebox('getValue'),
+                    OKCEnd: $('#EndTime').datebox('getValue'),
+                }, function (data) {
+                    if (data.SubmitResult) {
+                        $('#gridokc').datagrid("reload");
+                        $('#AddorUpdateOKCWindow').dialog('close')
+                    } else {
+                        alert(data.Message);
+                    }
+                });
+            }
+        }
+    }
+    //新增OKC产品特价
+    function SaveInfookcpro() {
+        if ($("#AddorUpdateOKCPro").form('validate')) {
+            var row = $('#gridokc').datagrid('getSelected');
+            var rowpro = $('#gridpro').datagrid('getSelected');
+            if (rowpro == null) {
+                alert("请选择产品");
+                return;
+            }
+            $.post("@Url.Action("AddOKCProduct", "ProductManagement")", {
+                OKCID: row.OKCID,
+                ProductID: rowpro.ProductID,
+                ProductOKCPrice: $('#OKCProvider').textbox('getValue'),
+            }, function (data) {
+                if (data.SubmitResult) {
+                    $('#gridokcpro').datagrid("clearSelections");
+                    OKCProduct(null, row.OKCID);
+                    $('#AddorUpdateOKCProWindow').dialog('close');
+                } else {
+                    alert(data.Message);
+                }
+            });
+        }
+    }
+    //新增OKC经销商及客户
+    function SaveInfookcdepcut() {
+        if ($("#AddorUpdateOKCdepcut").form('validate')) {
+            var row = $('#gridokc').datagrid('getSelected');
+            var rowdep = $('#griddep').datagrid('getSelected');
+            if (rowdep == null) {
+                alert("请选择经销商");
+                return;
+            }
+            $.post("@Url.Action("AddOKCDepAndCus", "ProductManagement")", {
+                OKCID: row.OKCID,
+                DistributorID: rowdep.DistributorID,
+                CustomerID: $('#OKCDepcut').combobox("getValue")
+            }, function (data) {
+                if (data.SubmitResult) {
+                    $('#gridokcdepcut').datagrid("clearSelections");
+                    OKCDistributor(null, row.OKCID);
+                    $('#AddorUpdateOKCdepcutWindow').dialog('close');
+                } else {
+                    alert(data.Message);
+                }
+            });
+        }
+    }
+    //插入
+    function SaveInfoInsert() {
+        if ($("#Insertform").form('validate')) {
+            $.post("@Url.Action("OKCInfoInsert", "ProductManagement")", {
+                OldArtNo: $('#OldArtNo').textbox('getValue'),
+                OldOKCPrice: $('#OldOKCPrice').numberbox('getValue'),
+                NewArtNo: $('#NewArtNo').textbox('getValue'),
+                NewOKCPrice: $('#NewOKCPrice').numberbox('getValue'),
+            }, function (data) {
+                if (data.SubmitResult) {
+                    $('#gridokc').datagrid("clearSelections");
+                    $('#gridokcpro').datagrid("clearSelections");
+                    $('#gridokcdepcut').datagrid("clearSelections");
+                    $('#gridokcpro').datagrid('loadData', { total: 0, rows: [] });
+                    $('#gridokcdepcut').datagrid('loadData', { total: 0, rows: [] });
+                    $('#gridokc').datagrid("reload");
+                    $('#InsertWindow').dialog('close');
+                } else {
+                    alert(data.Message);
+                }
+            });
+        }
+    }
+    // okc产品价格
+    function OKCProduct(value, okcid) {
+        $('#gridokcpro').datagrid({ url: '@Url.Action("GetOKCProduct", "ProductManagement")', queryParams: { SearchText: value, OKCID: okcid } });
+
+    }
+    //okc经销商及客户
+    function OKCDistributor(value, okcid) {
+        $('#gridokcdepcut').datagrid({ url: '@Url.Action("GetOKCDistributor", "ProductManagement")', queryParams: { SearchText: value, OKCID: okcid } });
+    }
+    // 导出
+    function ClickExport() {
+        $.post("@Url.Action("ExportReagentSpecial", "ProductManagement")", {
+            SearchText: $("#serchText").searchbox('getValue'),
+        }, function (data) {
+            if (data) {
+                window.location.href = "/ProductManagement/DownloadReagentSpecial?filename=" + data;
+            } else {
+                alert("导出失败！");
+            }
+        })
+    }
+    // 导入
+    function ClickImportpro() {
+        var row = $('#gridokc').datagrid('getSelected');
+        if (row == null) {
+            alert("请先选择OKC");
+            return;
+        }
+        $("#OKCID").val(row.OKCID);
+        $('#ProductSpecialFile').filebox("clear");
+        $('#ImportProductSpecial').dialog('open');
+    }
+    function OKCDepcut() {
+        $('#OKCDepcut').combobox({
+            url: '@Url.Action("GetIsActiveCustomerList", "ProductManagement")',
+            valueField: 'CustomerID',
+            textField: 'CustomerName',
+            editable: false,
+            onLoadSuccess: function (data) {
+                return;
+            }
+        });
+    }
+    //获取json传来的时间格式化为YYYY-MM-DD HH:mm:ss
+    function jsonDateHMSFormat(jsonDate) {
+        var date = new Date(parseInt(jsonDate.replace("/Date(", "").replace(")/", ""), 10));
+        var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+        var day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+        var h = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+        var m = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+        var s = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+        return date.getFullYear() + "-" + month + "-" + day + " " + h + ":" + m + ":" + s;
+    }
+    //获取json传来的时间格式化为YYYY-MM-DD
+    function jsonDateFormat(jsonDate) {
+        if (jsonDate != null) {
+            var date = new Date(parseInt(jsonDate.replace("/Date(", "").replace(")/", ""), 10));
+            var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+            var day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+            return date.getFullYear() + "-" + month + "-" + day;
+        }
+    }
+</script>
+<div class="easyui-layout" data-options="fit:true">
+    <div region="north" style="height:94px">
+        @Html.Partial("_Partialtool")
+    </div>
+    <div region="center">
+        <div region="north" style="height:30%;">
+            <table id="gridokc" fit="true"></table>
+        </div>
+        <div region="center" style="height:36%;">
+            <div style="padding:5px 0 5px 45px;">
+                <input class="easyui-searchbox" id="serchTextpro" data-options="prompt:'支持货号、产品名称模糊查询',searcher:doSearchokcpro" style="width:270px;height:32px;" />
+                <a href="#" class="easyui-linkbutton" onclick="ClickAddokcpro()">新增</a>
+                <a href="#" class="easyui-linkbutton btnImport" onclick="ClickImportpro()">导入</a>
+                <a href="#" class="easyui-linkbutton" onclick="ClickDelokcpro()">删除</a>
+            </div>
+            <div style="height:73%;">
+                <table id="gridokcpro" fit="true"></table>
+            </div>
+        </div>
+        <div region="south" style="height:34%;">
+            <div style="padding:5px 0 5px 45px">
+                <input class="easyui-searchbox" id="serchTextdep" data-options="prompt:'支持经销商名称模糊查询',searcher:doSearchokcdepcut" style="width:270px;height:32px;" />
+                <a href="#" class="easyui-linkbutton" onclick="ClickAddokcdepcut()">新增</a>
+                <a href="#" class="easyui-linkbutton" onclick="ClickDelokcdepcut()">删除</a>
+            </div>
+            <div style="height:73%;">
+                <table id="gridokcdepcut" fit="true"></table>
+            </div>
+        </div>
+    </div>
+</div>
+<input id="AddUp" type="text" hidden="hidden" />
+@*新增/修改OKC*@
+<div id="AddorUpdateOKCWindow">
+    <div class="AddContent">
+        <form id="AddorUpdateOKC">
+            <p>
+                <span class="cl100">OKC号：</span>
+                <input class="easyui-textbox txt150" style="width:150px;" id="OKCNO" required missingmessage="OKC号必须填写！" />
+            </p>
+            <p>
+                <span class="cl100">生效日期：</span>
+                <input class="easyui-datebox txt150" style="width:150px;" id="StartTime" editable="false" required missingmessage="生效日期必须填写！" />
+                <span class="cl100">结束日期：</span>
+                <input class="easyui-datebox txt150" style="width:150px;" id="EndTime" editable="false" required missingmessage="结束日期必须填写！" />
+            </p>
+        </form>
+    </div>
+</div>
+@*新增/修改OKC产品特价*@
+<div id="AddorUpdateOKCProWindow">
+    <div class="AddContent">
+        <form id="AddorUpdateOKCPro">
+            <span class="cl100">OKC价格：</span>
+            <input class="easyui-textbox txt200" style="width:200px;" id="OKCProvider" required missingmessage="OKC价格必须填写！" />
+        </form>
+    </div>
+    <table id="gridpro" style="height:330px;"></table>
+
+</div>
+@*新增/修改OKC经销商及客户*@
+<div id="AddorUpdateOKCdepcutWindow">
+    <div class="AddContent">
+        <form id="AddorUpdateOKCdepcut">
+            <span class="cl100">最终客户</span>
+            <input class="easyui-combobox txt200" style="width:200px;" id="OKCDepcut" />
+        </form>
+    </div>
+    <table id="griddep" style="height:330px;"></table>
+
+</div>
+@*插入*@
+<div id="InsertWindow">
+    <div class="AddContent">
+        <form id="Insertform" style="clear:both;overflow:auto;">
+            <div style="display:inline-block;margin-right:10px;">
+                <p style="margin-bottom:8px;">要查找的产品</p>
+                <p>
+                    <span class="cl80" style="text-align:left;">旧货号</span>
+                    <input class="easyui-textbox txt150" style="width:150px;" id="OldArtNo" required missingmessage="货号必须填写！" />
+                </p>
+                <p>
+                    <span class="cl80" style="text-align:left;">旧OKC价格</span>
+                    <input class="easyui-numberbox txt150" style="width:150px;" id="OldOKCPrice" precision="10" required missingmessage="OKC价格必须填写！" />
+                </p>
+            </div>
+            <div style="display:inline-block;">
+                <p style="margin-bottom:8px;">要插入的产品</p>
+                <p>
+                    <span class="cl80" style="text-align:left;">新货号</span>
+                    <input class="easyui-textbox txt150" style="width:150px;" id="NewArtNo" required missingmessage="货号必须填写！" />
+                </p>
+                <p>
+                    <span class="cl80" style="text-align:left;">新OKC价格</span>
+                    <input class="easyui-numberbox txt150" style="width:150px;" id="NewOKCPrice" precision="10" required missingmessage="OKC价格必须填写！" />
+                </p>
+            </div>
+        </form>
+    </div>
+</div>
+
+@*导入*@
+<div id="ImportProductSpecial">
+    <div class="AddContent">
+        <form id="ProductSpecialFileform" method="post" enctype="multipart/form-data">
+            <input type="text" id="OKCID" name="OKCID" hidden="hidden" />
+            <p>
+                <input id="ProductSpecialFile" class="easyui-filebox txt410" style="width:410px;" name="ProductSpecialFile" data-options="prompt:'导入试剂产品特价文件',accept:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel' ,buttonText:'选择导入文件'">
+            </p>
+            <br />
+            <p>
+                <a href="~/TempLate/IMP_ProductSpecial.xlsx">下载试剂产品特价导入模板</a>
+            </p>
+        </form>
+    </div>
+</div>
+

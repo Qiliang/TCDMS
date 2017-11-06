@@ -1,0 +1,349 @@
+﻿@{
+    Layout =null;
+    ViewBag.SearchOption = "prompt:'支持产品小类模糊查询',searcher:doSearch";
+    ViewBag.SearchCombination = "<select id='searchproductline' class=' txt250 ' panelHeight='auto' editable='false' buttonText='产品线' ></select>";
+}
+
+
+<script type="text/javascript">
+    $(function () {
+        InitSearchProductLine();
+        InitProductLine();
+        $('#grid').datagrid({
+            iconCls: 'icon-view',
+            width: function () { return document.body.clientWidth * 0.9 },
+            nowrap: true,
+            autoRowHeight: true,
+            striped: true,
+            collapsible: false,
+            pagination: true,
+            pageSize: 1000,
+            pageList: [1000],
+            rownumbers: true,
+            sortOrder: 'desc',
+            remoteSort: false,
+            singleSelect: true,
+            idField: 'ProductSmallTypeID',
+            queryParams: {},
+            animate: true,
+            columns: [[
+                 { title: 'ID', field: 'ProductSmallTypeID', hidden: true, width: 1, halign: 'center', align: 'center' },
+                 { title: '状态', field: 'Status', width: 50, halign: 'center', align: 'center' },
+                 { title: '', field: 'IsActive', hidden: true, halign: 'center', align: 'center' },
+                 { title: '产品线', field: 'ProductLineName', width: 380, halign: 'center', align: 'left' },
+                 { title: '小类名称', field: 'ProductSmallTypeName', width: 280, halign: 'center', align: 'left' }
+            ]],
+        });
+        //新增/修改
+        $('#AddorUpdateWindow').dialog({
+            width: 'auto',
+            height: 'auto',
+            top: 100,
+            modal: true,
+            closed: true,
+            inline: true,
+            buttons: [{
+                text: '确定',
+                handler: function () {
+                    Save();
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    $('#AddorUpdateWindow').dialog('close');
+                }
+            }],
+            onOpen: function () {
+                
+            },
+            onClose: function () {
+                
+            }
+        });
+        $('#ImportProductSmallType').dialog({
+            width: 'auto',
+            height: 'auto',
+            top: 100,
+            modal: true,
+            closed: true,
+            inline: true,
+            buttons: [{
+                text: '确定',
+                handler: function () {
+                    if ($("#ProductSmallTypeFile").filebox("getValue") == "")
+                    { alert("请选择导入文件！") }
+                    else {
+                        $('#ProductSmallTypeFileform').submit();
+                    }
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    $('#ImportProductSmallType').dialog('close');
+                }
+            }],
+            title: "导入产品小类",
+            onOpen: function () {
+                
+            },
+            onClose: function () {
+                
+            }
+        });
+
+        $('#ProductSmallTypeFileform').ajaxForm({
+            url: '@Url.Action("ImportProductSmallType", "ProductManagement")',
+            dataType: 'json',
+            beforeSend: function () {
+            },
+            success: function () {
+            },
+            complete: function (data) {
+                if (!data.responseJSON) {
+                    alert("导入成功！")
+                    $('#ImportProductSmallType').dialog('close');
+                    $('#grid').datagrid('reload', { SearchText: $("#serchText").searchbox('getValue'), ProductLineID: $('#searchproductline').combobox('getValue') == -1 ? null : $('#searchproductline').combobox('getValue') });
+                }
+                else {
+                    if (data.responseJSON == "导入失败") {
+                        alert("导入失败！");
+                    }
+                    else {
+                        alert("导入失败，即将下载错误文件！");
+                        window.location.href = "/ProductManagement/DownloadProductSmallType?filename=" + data.responseJSON;
+                    }
+                }
+            }
+        });
+    })
+    function doSearch(value) {
+        $('#grid').datagrid('reload', { SearchText: value, ProductLineID: $('#searchproductline').combobox('getValue') == -1 ? null : $('#searchproductline').combobox('getValue') });
+    }
+    function ClickAdd() {
+        $("#serchText").searchbox('setValue', null);
+        $('#searchproductline').combobox('setValue', '请选择', '-1');
+        $('#ProductSmallTypeName').textbox('setValue', null);
+        $('#ProductLineID').combobox('setValue', null);
+        $('#IsActive').val('');
+        $('#ProductSmallTypeID').val('');
+        $('#AddUp').val(1);
+
+        $('#AddorUpdateWindow').dialog({ title: "新增产品小类" });
+        $('#AddorUpdateWindow').dialog('open');
+
+    }
+    function ClickDel() {
+        var row = $("#grid").datagrid("getSelected");
+        if (row == null) {
+            alert("您还没有选择产品小类信息，请选择！");
+            return;
+        }
+        $.messager.confirm('提示', '是否删除选中数据?', function (data) {
+            if (!data) {
+                return;
+            }
+
+            $.post(
+            '@Url.Action("DeleteProductSmallType", "ProductManagement")',
+            {
+                ProductSmallTypeID: row.ProductSmallTypeID
+            },
+            function success(data, textStatus, jqXHR) {
+                if (!data.SubmitResult) {
+                    alert(data.Message);
+                }
+                else {
+                    alert("删除成功！");
+                    $('#grid').datagrid('clearSelections');
+                    $('#grid').datagrid('reload');
+                }
+            }, "json");
+        });
+    }
+    function Save() {
+        if ($("#AddorUpdate").form('validate')) {
+
+            if ($('#AddUp').val() == 1) {
+
+                $.post(
+                 '@Url.Action("AddProductSmallType", "ProductManagement")',
+                 {
+                     ProductSmallTypeName: $('#ProductSmallTypeName').textbox('getValue'),
+                     ProductLineID: $('#ProductLineID').combobox('getValue'),
+                     IsActive: $('#IsActive').val(),
+                 },
+                 function success(data, textStatus, jqXHR) {
+                     if (!data.SubmitResult) {
+                         alert(data.Message);
+                     }
+                     else {
+                         $('#AddorUpdateWindow').dialog('close');
+                         $('#grid').datagrid('clearSelections');
+                         $('#grid').datagrid('reload', { SearchText: $("#serchText").searchbox('getValue'), ProductLineID: $('#searchproductline').combobox('getValue') == -1 ? null : $('#searchproductline').combobox('getValue') });
+                     }
+                 }, "json");
+            }
+            else {
+                $.post(
+                  '@Url.Action("UpdateProductSmallType", "ProductManagement")',
+                  {
+                      ProductSmallTypeName: $('#ProductSmallTypeName').textbox('getValue'),
+                      ProductLineID: $('#ProductLineID').combobox('getValue'),
+                      IsActive: $('#IsActive').val(),
+                      ProductSmallTypeID: $('#ProductSmallTypeID').val(),
+                  },
+                  function success(data, textStatus, jqXHR) {
+                      if (!data.SubmitResult) {
+                          alert(data.Message);
+                      }
+                      else {
+                          $('#AddorUpdateWindow').dialog('close');
+                          $('#grid').datagrid('reload', { SearchText: $("#serchText").searchbox('getValue'), ProductLineID: $('#searchproductline').combobox('getValue') == -1 ? null : $('#searchproductline').combobox('getValue') });
+                      }
+                  }, "json");
+            }
+        }
+    }
+    function ClickModify() {
+        var row = $("#grid").datagrid("getSelected");
+        if (row == null) {
+            alert("您还没有选择产品小类信息，请选择！");
+            return;
+        }
+        $.post('@Url.Action("GetOneProductSmallType", "ProductManagement")',
+                      { id: row.ProductSmallTypeID },
+                          function (data, textStatus, jqXHR) {
+                              if (data.SubmitResult) {
+                                  $('#AddUp').val(2);
+                                  $('#ProductSmallTypeName').textbox('setValue', data.Object.ProductSmallTypeName),
+                                  $('#ProductLineID').combobox('setValue', data.Object.ProductLineID),
+                                  $('#IsActive').val(data.Object.IsActive),
+                                  $('#ProductSmallTypeID').val(data.Object.ProductSmallTypeID),
+                                  $('#AddorUpdateWindow').dialog({ title: "修改产品小类" });
+                                  $('#AddorUpdateWindow').dialog('open');
+                              }
+                              else {
+                                  alert(data.Message);
+                                  return;
+                              }
+                          }, "json");
+    }
+    function ClickActived() {
+        var row = $("#grid").datagrid("getSelected");
+        if (row == null) {
+            alert("您还没有选择产品小类信息，请选择！");
+            return;
+        }
+        $.post(
+            '@Url.Action("ChangeStatusProductSmallType", "ProductManagement")',
+            {
+                ProductSmallTypeID: row.ProductSmallTypeID,
+                IsActive: row.IsActive
+            },
+            function success(data, textStatus, jqXHR) {
+                if (!data.SubmitResult) {
+                    alert(data.Message);
+                }
+                else {
+                    $('#grid').datagrid('reload');
+                }
+            }, "json");
+    }
+    function ClickImport() {
+        $("#serchText").searchbox('setValue', null);
+        $('#searchproductline').combobox('setValue', '请选择', '-1');
+        $('#ProductSmallTypeFile').filebox("clear");
+        $('#ImportProductSmallType').dialog('open');
+    }
+    // 导出
+    function ClickExport() {
+        $.post("@Url.Action("ExportProductSmallType", "ProductManagement")", {
+            SearchText: $("#serchText").searchbox('getValue'),
+            ProductLineID: $('#searchproductline').combobox('getValue') == -1 ? null : $('#searchproductline').combobox('getValue')
+        }, function (data) {
+            if (data) {
+                window.location.href = "/ProductManagement/DownloadProductSmallType?filename=" + data;
+            } else {
+                alert("导出失败！");
+            }
+        })
+    }
+    function InitProductLine() {
+        $.ajaxSetup({
+            async: false
+        });
+        $('#ProductLineID').combobox({
+            url: '@Url.Action("GetProductLine", "ProductManagement")',
+            valueField: 'ProductLineID',
+            textField: 'ProductLineName',
+            editable: false,
+            onLoadSuccess: function (data) {
+                return;
+            }
+        });
+        $.ajaxSetup({
+            async: true
+        });
+    }
+    function InitSearchProductLine() {
+        $('#searchproductline').combobox({
+            url: '@Url.Action("GetSearchProductLine", "ProductManagement")',
+            queryParams: {},
+            valueField: 'ProductLineID',
+            textField: 'ProductLineName',
+            editable: false,
+            value: -1,
+            onSelect: function (row) {
+                $("#serchText").searchbox('setValue', null);
+                $('#grid').datagrid({ url: '@Url.Action("GetProductSmallType", "ProductManagement")', queryParams: { ProductLineID: row.ProductLineID == -1 ? null : row.ProductLineID } });
+            }
+
+        })
+    }
+</script>
+
+<div class="easyui-layout" style="height:100%;">
+    <div region="north" style="height:94px">
+        @Html.Partial("_Partialtool")
+    </div>
+    <div region="center">
+        <div id="BodyContentDiv" class="DivPage">
+            <table id="grid" style="width:100%;height:100%;"></table>
+        </div>
+    </div>
+</div>
+
+@*产品小类新增/修改*@
+<div id="AddorUpdateWindow">
+    <div class="AddContent">
+        <input id="AddUp" hidden="hidden" />
+
+        <input id="ProductSmallTypeID" hidden="hidden" />
+        <input id="IsActive" hidden="hidden" />
+        <form id="AddorUpdate">
+            <p>
+                <span class="cl100">小类名称：</span>
+                <input class="easyui-textbox txt150" id="ProductSmallTypeName" style="width:150px;" required missingmessage="产品小类必须填写！" />
+            </p>
+            <p>
+                <span class="cl100">产品线：</span>
+                <select class="easyui-combobox txt150" id="ProductLineID" style="width:150px;" editable="false" required missingmessage="产品线必须选择！"></select>
+            </p>
+        </form>
+    </div>
+</div>
+@*导入*@
+<div id="ImportProductSmallType">
+    <div class="AddContent">
+        <form id="ProductSmallTypeFileform" method="post" enctype="multipart/form-data">
+            <p>
+                <input id="ProductSmallTypeFile" class="easyui-filebox txt410" style="width:410px;" name="ProductSmallTypeFile" data-options="prompt:'导入产品小类文件',accept:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel' ,buttonText:'选择导入文件'">
+            </p>
+            <br />
+            <p>
+                <a href="~/TempLate/IMP_ProductSmallClass.xlsx">下载产品小类导入模板</a>
+            </p>
+        </form>
+    </div>
+</div>
+

@@ -1,0 +1,178 @@
+﻿@{
+    Layout = null;
+}
+<script type="text/javascript">
+    $(function () {
+        $('#grid').datagrid({
+            url: '@Url.Action("GetInstrumentTypeList", "ProductManagement")',
+            iconCls: 'icon-view',
+            width: function () { return document.body.clientWidth * 0.9 },
+            nowrap: true,
+            autoRowHeight: true,
+            striped: true,
+            collapsible: false,
+            pagination: true,
+             pageSize: 1000,
+            pageList: [1000],
+            rownumbers: true,
+            sortOrder: 'desc',
+            remoteSort: false,
+            singleSelect: true,
+            idField: 'InstrumentTypeID',
+            queryParams: {},
+            animate: true,
+            columns: [[
+                 { title: 'ID', field: 'InstrumentTypeID', hidden: true, width: 1, halign: 'center', align: 'center' },
+                 { title: '仪器类型', field: 'InstrumentTypeName', width: 280, halign: 'center', align: 'left' },
+            ]],
+        });
+        //新增/修改
+        $('#AddorUpdateWindow').dialog({
+            width: 'auto',
+            height: 'auto',
+            top: 130,
+            modal: true,
+            closed: true,
+            inline: true,
+            buttons: [{
+                text: '确定',
+                handler: function () {
+                    Save();
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    $('#AddorUpdateWindow').dialog('close');
+                }
+            }],
+            onOpen: function () {
+                
+            },
+            onClose: function () {
+                
+            }
+        });
+    })
+    function ClickAdd() {
+        $('#InstrumentTypeName').textbox('setValue', null);
+        $('#AddID').val('');
+        $('#AddUp').val(1);
+        $('#AddorUpdateWindow').dialog({ title: "新增仪器类型" });
+        $('#AddorUpdateWindow').dialog('open');
+
+    }
+    function ClickModify() {
+        var row = $("#grid").datagrid("getSelected");
+        if (row == null) {
+            alert("您还没有选择仪器类型信息，请选择！");
+            return;
+        }
+        $.post('@Url.Action("GetInstrumentType", "ProductManagement")',
+                      { id: row.InstrumentTypeID },
+                          function (data, textStatus, jqXHR) {
+                              if (data.SubmitResult) {
+                                  $('#AddUp').val(2);
+                                  $('#AddID').val(data.Object.InstrumentTypeID);
+                                  $('#InstrumentTypeName').textbox('setValue', data.Object.InstrumentTypeName);
+                                  $('#AddorUpdateWindow').dialog({ title: "修改仪器类型" });
+                                  $('#AddorUpdateWindow').dialog('open');
+                              }
+                              else {
+                                  alert(data.Message);
+                                  return;
+                              }
+                          }, "json");
+    }
+    function ClickDel() {
+        var row = $("#grid").datagrid("getSelected");
+        if (row == null) {
+            alert("您还没有选择仪器类型信息，请选择！");
+            return;
+        }
+        $.messager.confirm('提示', '是否删除选中数据?', function (data) {
+            if (!data) {
+                return;
+            }
+
+            $.post(
+            '@Url.Action("DeleteInstrumentType", "ProductManagement")',
+            {
+                InstrumentTypeID: row.InstrumentTypeID
+            },
+            function success(data, textStatus, jqXHR) {
+                if (!data.SubmitResult) {
+                    alert(data.Message);
+                }
+                else {
+                    alert("删除成功！");
+                    $('#grid').datagrid('clearSelections');
+                    $('#grid').datagrid('reload');
+                }
+            }, "json");
+        });
+    }
+    function Save() {
+        if ($("#AddorUpdate").form('validate')) {
+            if ($('#AddUp').val() == 1) {
+                $.post(
+                 '@Url.Action("AddInstrumentType", "ProductManagement")',
+                 {
+                     InstrumentTypeName: $('#InstrumentTypeName').textbox('getValue')
+                 },
+                 function success(data, textStatus, jqXHR) {
+                     if (!data.SubmitResult) {
+                         alert(data.Message);
+                     }
+                     else {
+                         $('#AddorUpdateWindow').dialog('close');
+                         $('#grid').datagrid('clearSelections');
+                         $('#grid').datagrid('reload');
+                     }
+                 }, "json");
+            }
+            else {
+                $.post(
+                  '@Url.Action("UpdateInstrumentType", "ProductManagement")',
+                  {
+                      InstrumentTypeID: $('#AddID').val(),
+                      InstrumentTypeName: $('#InstrumentTypeName').textbox('getValue')
+                  },
+                  function success(data, textStatus, jqXHR) {
+                      if (!data.SubmitResult) {
+                          alert(data.Message);
+                      }
+                      else {
+                          $('#AddorUpdateWindow').dialog('close');
+                          $('#grid').datagrid('reload');
+                      }
+                  }, "json");
+            }
+        }
+    }
+</script>
+
+<div class="easyui-layout" style="height:100%;">
+    <div region="north" style="height:94px">
+        @Html.Partial("_Partialtool")
+    </div>
+    <div region="center">
+        <div id="BodyContentDiv" class="DivPage">
+            <table id="grid" style="width:100%;height:100%;"></table>
+        </div>
+    </div>
+</div>
+@*仪器类型新增/修改*@
+<div id="AddorUpdateWindow">
+    <div class="AddContent">
+        <input id="AddID" hidden="hidden" />
+        <input id="AddUp" hidden="hidden" />
+        <form id="AddorUpdate">
+            <p>
+                <span class="cl100">仪器类型：</span>
+                <input class="easyui-textbox txt150" style="width:150px;" id="InstrumentTypeName" required missingmessage="仪器类型必须填写！" />
+            </p>
+        </form>
+    </div>
+</div>
+     
+

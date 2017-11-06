@@ -1,0 +1,38 @@
+﻿<script type="text/javascript">
+    function PartialLogger() {
+        $('#PartialLoggergrid').datagrid({
+            url: '',
+            iconCls: 'icon-view',
+            width: function () { return document.body.clientWidth * 0.9 },
+            nowrap: true,
+            height:360,
+            autoRowHeight: true,
+            striped: true,
+            collapsible: false,
+            pagination: true,
+            pageSize: 10,
+            pageList: [10, 20, 30],
+            rownumbers: true,
+            sortOrder: 'desc',
+            remoteSort: false,
+            singleSelect: true,
+            idField: 'ID',
+            queryParams: { },
+            animate: true,
+            columns: [[
+                  { title: 'ID', field: 'ID', hidden: true, width: 1, halign: 'center', align: 'center' },
+                  { title: '操作人', field: '操作人', width: 100, halign: 'center', align: 'center' },
+                  { title: '操作时间', field: '操作时间', width: 150, halign: 'center', align: 'center' },
+                  { title: '操作类型', field: '操作类型', width: 100, halign: 'center', align: 'center' },
+                  { title: '操作内容', field: '操作内容', width: 300, halign: 'center', align: 'center' }
+            ]]
+        });
+    }
+</script>
+
+<div style="height:100%;">
+    <div style="width: 100% ;height:80%;">
+        <table id="PartialLoggergrid" style="height:100%;"></table>
+    </div>
+</div>
+

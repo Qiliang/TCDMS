@@ -1,0 +1,1027 @@
+﻿@{
+    Layout = null;
+    ViewBag.SearchOption = "prompt:'支持经销商名称模糊查询',searcher:doSearch";
+}
+<style type="text/css">
+    /*分页只显示总页数*/
+    #PayPage .pagination {
+        height: 30px;
+    }
+
+        #PayPage .pagination table {
+            display: none;
+        }
+
+    #TransPage .pagination {
+        height: 30px;
+    }
+
+        #TransPage .pagination table {
+            display: none;
+        }
+</style>
+<script type="text/javascript">
+    $(function () {
+        $("#btnAuthority").hide();
+        if ($("#btnAuthority").length > 0) {
+            $(".btnAuthority").show();
+            $(".OrderGoods").removeAttr("disabled");
+        } else {
+            $(".btnAuthority").hide();
+            $(".OrderGoods").attr({ "disabled": "disabled" });
+        }
+        $('#grid').datagrid({
+            url: '@Url.Action("GetDistributor", "Distributor")',
+            iconCls: 'icon-view',
+            width: function () { return document.body.clientWidth * 0.9 },
+            nowrap: true,
+            autoRowHeight: true,
+            striped: true,
+            collapsible: false,
+            rownumbers: true,
+            pagination: true,
+            pageSize: 10,
+            pageList: [10, 20, 30],
+            sortOrder: 'desc',
+            remoteSort: false,
+            singleSelect: true,
+            idField: 'DistributorID',
+            animate: true,
+            columns: [[
+            { title: 'DistributorID', field: 'DistributorID', hidden: true, width: 1, halign: 'center', align: 'center' },
+            { title: '经销商编号', field: 'DistributorCode', width: 250, halign: 'center', align: 'left' },
+            { title: '经销商名称', field: 'DistributorName', width: 380, halign: 'center', align: 'left' },
+            { title: '注册省份', field: 'RegionName', width: 150, halign: 'center', align: 'center' },
+            { title: '经销商类别', field: 'DistributorTypeName', width: 300, halign: 'center', align: 'left' },
+            { title: '经销商服务类型', field: 'DistributorServiceTypeName', width: 300, halign: 'center', align: 'left' }
+            ]],
+            onSelect: function (rowIndex, rowData) {
+                $.post("@Url.Action("GetOneDistributorAuthority", "Distributor")", {
+                    DistributorID: rowData.DistributorID
+                }, function (data) {
+                    if (data.SubmitResult) {
+                        if (data.Object.IsOrderGoods == true) {
+                            $("#OrderGoodsNO").prop("checked", false);
+                            $("#OrderGoodsYES").prop("checked", true);
+                        } else if (data.Object.IsOrderGoods == false) {
+                            $("#OrderGoodsYES").prop("checked", false);
+                            $("#OrderGoodsNO").prop("checked", true);
+                        } else {
+                            $("#OrderGoodsYES").prop("checked", false);
+                            $("#OrderGoodsNO").prop("checked", false);
+                        }
+                        $('#PayTable').datagrid("clearSelections");
+                        $('#TransTable').datagrid("clearSelections");
+                        $('#ProLineTable').datagrid("clearSelections");
+                        $('#RegionTable').datagrid("clearSelections");
+                        DistributorAuthorityPay(rowData.DistributorID)
+                        DistributorAuthorityTransport(rowData.DistributorID)
+                        DistributorAuthorityProductLine(rowData.DistributorID)
+                        $('#RegionTable').datagrid('loadData', { total: 0, rows: [] });
+                    }
+                });
+            }
+        });
+        //付款条款
+        $('#PayTable').datagrid({
+            width: function () { return document.body.clientWidth * 0.9 },
+            nowrap: true,
+            autoRowHeight: true,
+            striped: true,
+            collapsible: false,
+            pagination: true,
+            pageSize: 1000,
+            pageList: [1000],
+            rownumbers: true,
+            sortOrder: 'desc',
+            remoteSort: false,
+            singleSelect: true,
+            idField: 'DistributorPayID',
+            queryParams: {},
+            animate: true,
+            columns: [[
+            { title: 'DistributorPayID', field: 'DistributorPayID', hidden: true, width: 1, halign: 'center', align: 'center' },
+            { title: 'PayID', field: 'PayID', hidden: true, width: 1, halign: 'center', align: 'center' },
+            { title: '付款条款', field: 'PayName', width: 180, halign: 'center', align: 'left' },
+            ]]
+        });
+        //运输方式
+        $('#TransTable').datagrid({
+            width: function () { return document.body.clientWidth * 0.9 },
+            nowrap: true,
+            autoRowHeight: true,
+            striped: true,
+            collapsible: false,
+            pagination: true,
+            pageSize: 1000,
+            pageList: [1000],
+            rownumbers: true,
+            sortOrder: 'desc',
+            remoteSort: false,
+            singleSelect: true,
+            idField: 'DistributorTransportID',
+            queryParams: {},
+            animate: true,
+            columns: [[
+            { title: 'DistributorTransportID', field: 'DistributorTransportID', hidden: true, width: 1, halign: 'center', align: 'center' },
+            { title: 'TransportID', field: 'TransportID', hidden: true, width: 1, halign: 'center', align: 'center' },
+            { title: '运输方式', field: 'TransportName', width: 180, halign: 'center', align: 'center' },
+            ]],
+        });
+        //产品线
+        $('#ProLineTable').datagrid({
+            iconCls: 'icon-view',
+            width: function () { return document.body.clientWidth * 0.9 },
+            nowrap: true,
+            autoRowHeight: true,
+            striped: true,
+            width: 540,
+            height: 240,
+            collapsible: false,
+            pagination: true,
+            pageSize: 10,
+            pageList: [10, 20, 30],
+            rownumbers: true,
+            sortOrder: 'desc',
+            remoteSort: false,
+            singleSelect: true,
+            idField: 'DistributorProductLineID',
+            queryParams: {},
+            animate: true,
+            columns: [[
+                { title: 'DistributorProductLineID', field: 'DistributorProductLineID', hidden: true, width: 1, halign: 'center', align: 'center' },
+                 { title: 'ProductLineID', field: 'ProductLineID', hidden: true, width: 1, halign: 'center', align: 'center' },
+                 { title: '产品线名称', field: 'ProductLineName', width: 320, halign: 'center', align: 'left' },
+                 { title: '产品线部门', field: 'DepartName', width: 180, halign: 'center', align: 'left' }
+            ]],
+            onSelect: function (rowIndex, rowData) {
+                //点产品线联动区域
+                $('#RegionTable').datagrid("clearSelections");
+                DistributorAuthorityRegion(rowData.DistributorProductLineID)
+            }
+        });
+        //区域
+        $('#RegionTable').datagrid({
+            iconCls: 'icon-view',
+            rownumbers: true,
+            pagination: true,
+            width: 540,
+            height: 240,
+            pageSize: 10,
+            pageList: [10, 20, 30],
+            idField: 'DistributorRegionID',
+            treeField: 'RegionName',
+            animate: true,
+            singleSelect: true,
+            columns: [[
+                 { title: 'DistributorRegionID', field: 'DistributorRegionID', width: 1, hidden: 'true', halign: 'center', align: 'center' },
+                 { title: '部门', field: 'DepartName', width: 100, halign: 'center', align: 'left' },
+                 { title: '大区', field: 'LargeAreaName', width: 100, halign: 'center', align: 'left' },
+                 { title: '小区', field: 'SmallAreaName', width: 100, halign: 'center', align: 'left' },
+                 { title: '省份', field: 'RegionName', width: 150, halign: 'center', align: 'left' }
+            ]]
+        });
+        //付款条款新增
+        $('#OrderPay').datagrid({
+            url: '@Url.Action("GetPaymentList", "BaseInfo")',
+            width: 500,
+            height: 350,
+            nowrap: true,
+            autoRowHeight: true,
+            striped: true,
+            collapsible: false,
+            pagination: true,
+            pageSize: 1000,
+            pageList: [1000],
+            rownumbers: true,
+            sortOrder: 'desc',
+            remoteSort: false,
+            singleSelect: false,
+            idField: 'PayID',
+            queryParams: {},
+            animate: true,
+            columns: [[
+                { title: '', field: 'IsChecked', checkbox: true },
+                { title: 'PayID', field: 'PayID', hidden: true, width: 1, halign: 'center', align: 'center' },
+                { title: '付款条款', field: 'PayName', width: 280, halign: 'center', align: 'left' },
+               { title: 'Oracle Name', field: 'OracleName', width: 280, halign: 'center', align: 'left' },
+               {
+                   title: '开始时间', field: 'PayStartTime', width: 200, halign: 'center', align: 'center', formatter: function (value, row, index) {
+                       if (value != null) {
+                           return jsonDateFormat(value);
+                       }
+                   }
+               },
+               {
+                   title: '结束时间', field: 'PayEndTime', width: 200, halign: 'center', align: 'center', formatter: function (value, row, index) {
+                       if (value != null) {
+                           return jsonDateFormat(value);
+                       }
+                   }
+               },
+            ]]
+        });
+        //产品线新增
+        $('#LineTable').datagrid({
+            url: '@Url.Action("GetProductLine", "ProductManagement")',
+            nowrap: true,
+            autoRowHeight: true,
+            striped: true,
+            collapsible: false,
+            pagination: true,
+            pageSize: 10,
+            pageList: [10, 20, 30],
+            rownumbers: true,
+            sortOrder: 'desc',
+            remoteSort: false,
+            singleSelect: true,
+            idField: 'ID',
+            queryParams: {},
+            animate: true,
+            columns: [[
+                 { title: 'ID', field: 'ProductLineID', hidden: true, width: 1, halign: 'center', align: 'center' },
+                 { title: '产品线名称', field: 'ProductLineName', width: 280, halign: 'center', align: 'left' },
+                 { title: '产品线缩写', field: 'ProductLineNameAB', width: 200, halign: 'center', align: 'center' },
+                 { title: '部门', field: 'DepartName', width: 200, halign: 'center', align: 'center' }
+            ]],
+        });
+        $('#Departtree').treegrid({
+            url: '@Url.Action("GetDepartmentList", "UserAuthority")',
+            width: 300,
+            height: 300,
+            idField: 'FictitiousID',
+            treeField: 'DepartName',
+            animate: true,
+            columns: [[
+                { title: 'DepartID', field: 'DepartID', hidden: true, width: 1 },
+                { title: 'FictitiousID', field: 'FictitiousID', hidden: true, width: 1 },
+                { title: 'DepartParentID', field: 'DepartParentID', hidden: true, width: 1 },
+                { title: '部门名称', field: 'DepartName', halign: 'center', align: 'left' },
+            ]],
+            onSelect: function (rowIndex, rowData) {
+                $('#RegionTree').treegrid("clearSelections");
+                $('#RegionTree').treegrid({ url: '@Url.Action("GetArea", "Distributor")', queryParams: { DepartID: rowIndex.DepartID }, });
+            }
+        });
+        //新增区域
+        $('#RegionTree').treegrid({
+            width: 300,
+            height: 300,
+            rownumbers: true,
+            idField: 'FictitiousID',
+            treeField: 'AreaName',
+            animate: true,
+            queryParams: {},
+            columns: [[
+                {
+                    title: '', field: 'Ckid', width: 20, halign: 'center', align: 'center', formatter: function (value, row, index) {
+                        return value ? "<input name='ckname' type='checkbox' value='" + row.RegionID + "," + row.AreaPID + "'>" : ""
+                    }
+                },
+            { title: 'AreaID', field: 'AreaID', hidden: true, width: 1, halign: 'center', align: 'center' },
+            { title: 'RegionID', field: 'RegionID', hidden: true, width: 1, halign: 'center', align: 'center' },
+            { title: 'FictitiousID', field: 'FictitiousID', hidden: true, width: 1, halign: 'center', align: 'center' },
+            { title: 'AreaPID', field: 'AreaPID', hidden: true, width: 1, halign: 'center', align: 'center' },
+            { title: '名称', field: 'AreaName', width: 400, halign: 'center', align: 'left' },
+            ]]
+        });
+        //table选项卡
+        $('#table').tabs({
+            border: true,
+            onSelect: function (title, index) {
+                var row = $('#grid').datagrid('getSelected');
+                if (row) {
+                    if (index == 0) {
+                        $('#PayTable').datagrid("clearSelections");
+                        $('#TransTable').datagrid("clearSelections");
+                        $('#PayTable').datagrid('reload');
+                        $('#TransTable').datagrid('reload');
+                    } else if (index == 1) {
+                        $('#ProLineTable').datagrid("clearSelections");
+                        $('#RegionTable').datagrid("clearSelections");
+                        $('#ProLineTable').datagrid('reload');
+                        $('#RegionTable').datagrid('loadData', { total: 0, rows: [] });
+                    }
+                }
+            }
+        });
+
+        //新增付款条款
+        $('#AddorUpdatePayWindow').dialog({
+            width: 'auto',
+            height: 'auto',
+            top: 1,
+            modal: true,
+            closed: true,
+            inline: true,
+            buttons: [{
+                text: '确定',
+                handler: function () {
+                    SavePay();
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    $('#AddorUpdatePayWindow').dialog('close');
+                }
+            }]
+        });
+        //新增运输方式
+        $('#AddorUpdateTransWindow').dialog({
+            width: 'auto',
+            height: 'auto',
+            top: 20,
+            modal: true,
+            closed: true,
+            inline: true,
+            buttons: [{
+                text: '确定',
+                handler: function () {
+                    SaveTrans();
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    $('#AddorUpdateTransWindow').dialog('close');
+                }
+            }],
+            onOpen: function () {
+
+            },
+            onClose: function () {
+
+            }
+        });
+        //新增产品线
+        $('#AddorUpdateLineWindow').dialog({
+            width: 'auto',
+            height: 'auto',
+            top: 20,
+            modal: true,
+            closed: true,
+            inline: true,
+            buttons: [{
+                text: '确定',
+                handler: function () {
+                    SaveLine();
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    $('#AddorUpdateLineWindow').dialog('close');
+                }
+            }],
+            onOpen: function () {
+
+            },
+            onClose: function () {
+
+            }
+        });
+        //新增区域
+        $('#AddorUpdateRegionWindow').dialog({
+            width: 'auto',
+            height: 'auto',
+            top: 1,
+            modal: true,
+            closed: true,
+            inline: true,
+            buttons: [{
+                text: '确定',
+                handler: function () {
+                    SaveRegion();
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    $('#AddorUpdateRegionWindow').dialog('close');
+                }
+            }],
+            onOpen: function () {
+
+            },
+            onClose: function () {
+
+            }
+        });
+        //导入
+        $('#ImportDistributorAuthority').dialog({
+            width: 'auto',
+            height: 'auto',
+            top: 100,
+            modal: true,
+            closed: true,
+            inline: true,
+            buttons: [{
+                text: '确定',
+                handler: function () {
+                    if ($("#DistributorAuthorityFile").filebox('getValue') == "") {
+                        alert("请选择导入文件！");
+                    }
+                    else {
+                        $('#DistributorAuthorityFileform').submit();
+                    }
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    $('#ImportDistributorAuthority').dialog('close');
+                }
+            }],
+            title: "导入经销商授权信息",
+            onOpen: function () {
+
+            },
+            onClose: function () {
+
+            }
+        });
+        //导入
+        $('#DistributorAuthorityFileform').ajaxForm({
+            url: '@Url.Action("ImportDistributorAuthority", "Distributor")',
+            dataType: 'json',
+            beforeSend: function () {
+            },
+            success: function () {
+            },
+            complete: function (data) {
+
+                if (!data.responseJSON) {
+                    alert("导入成功！")
+                    $('#ImportDistributorAuthority').dialog('close');
+                    $('#grid').datagrid("clearSelections");
+                    $('#PayTable').datagrid("clearSelections");
+                    $('#TransTable').datagrid("clearSelections");
+                    $('#ProLineTable').datagrid("clearSelections");
+                    $('#RegionTable').datagrid("clearSelections");
+                    $('#PayTable').datagrid('loadData', { total: 0, rows: [] });
+                    $('#TransTable').datagrid('loadData', { total: 0, rows: [] });
+                    $('#ProLineTable').datagrid('loadData', { total: 0, rows: [] });
+                    $('#RegionTable').datagrid('loadData', { total: 0, rows: [] });
+                    $('#grid').datagrid('reload', { SearchText: null });
+                }
+                else {
+                    if (data.responseJSON == "导入失败") {
+                        alert("导入失败！");
+                    }
+                    else {
+                        alert("导入失败，即将下载错误文件！");
+                        window.location.href = "/Distributor/DownloadDistributorAuthority?filename=" + data.responseJSON;
+                    }
+                }
+            }
+        });
+    })
+    function doSearch(value) {
+        $('#grid').datagrid("clearSelections");
+        $('#PayTable').datagrid("clearSelections");
+        $('#TransTable').datagrid("clearSelections");
+        $('#ProLineTable').datagrid("clearSelections");
+        $('#RegionTable').datagrid("clearSelections");
+        $('#PayTable').datagrid('loadData', { total: 0, rows: [] });
+        $('#TransTable').datagrid('loadData', { total: 0, rows: [] });
+        $('#ProLineTable').datagrid('loadData', { total: 0, rows: [] });
+        $('#RegionTable').datagrid('loadData', { total: 0, rows: [] });
+        $('#grid').datagrid('reload', { SearchText: value });
+    }
+    function ClickImport() {
+    }
+    function ClickExport() {
+    }
+    //付款条款新增
+    function ClickAddPay() {
+        var row = $('#grid').datagrid('getSelected');
+        if (!row) {
+            alert("请先选择经销商！");
+            return;
+        }
+        Pay();
+        $('#OrderPay').datagrid('clearSelections');
+        $('#AddorUpdatePayWindow').dialog({ title: "新增付款条款" });
+        $('#AddorUpdatePayWindow').dialog('open');
+    }
+    //删除付款条款
+    function ClickDelPay() {
+        var row = $('#PayTable').datagrid('getSelected');
+        if (!row) {
+            alert("您还没有选择付款条款，请选择！");
+            return;
+        }
+        $.messager.confirm('提示', '是否删除选中数据?', function (data) {
+            if (!data) {
+                return;
+            }
+            $.post("@Url.Action("DeleteDistributorPayAuthority", "Distributor")", {
+                DistributorPayID: row.DistributorPayID
+            }, function (data) {
+                if (data.SubmitResult) {
+                    $('#PayTable').datagrid("clearSelections");
+                    DistributorAuthorityPay(row.DistributorID)
+                    $('#AddorUpdatePayWindow').dialog('close');
+                } else {
+                    alert(data.Message);
+                }
+            })
+        })
+    }
+    //运输方式新增
+    function ClickAddTrans() {
+        var row = $('#grid').datagrid('getSelected');
+        if (!row) {
+            alert("请先选择经销商！");
+            return;
+        }
+        Transport();
+        $("#OrderTrans").combobox("setValue", null);
+        $('#AddorUpdateTransWindow').dialog({ title: "新增运输方式" });
+        $('#AddorUpdateTransWindow').dialog('open');
+    }
+    //删除运输方式
+    function ClickDelTrans() {
+        var row = $('#TransTable').datagrid('getSelected');
+        if (!row) {
+            alert("您还没有选择运输方式，请选择！");
+            return;
+        }
+        $.messager.confirm('提示', '是否删除选中数据?', function (data) {
+            if (!data) {
+                return;
+            }
+            $.post("@Url.Action("DeleteDistributorTransportAuthority", "Distributor")", {
+                DistributorTransportID: row.DistributorTransportID
+            }, function (data) {
+                if (data.SubmitResult) {
+                    $('#TransTable').datagrid("clearSelections");
+                    DistributorAuthorityTransport(row.DistributorID)
+                    $('#AddorUpdateTransWindow').dialog('close');
+                } else {
+                    alert(data.Message)
+                }
+            })
+        })
+    }
+    //产品线新增
+    function ClickAddLine() {
+        var row = $('#grid').datagrid('getSelected');
+        if (!row) {
+            alert("请先选择经销商！");
+            return;
+        }
+        $('#LineTable').datagrid("clearSelections");
+        $('#AddorUpdateLineWindow').dialog({ title: "新增产品线" });
+        $('#AddorUpdateLineWindow').dialog('open');
+    }
+    //删除产品线
+    function ClickDelLine() {
+        var row = $('#ProLineTable').datagrid('getSelected');
+        if (!row) {
+            alert("您还没有选择产品线，请选择！");
+            return;
+        }
+        $.messager.confirm('提示', '是否删除选中数据?', function (data) {
+            if (!data) {
+                return;
+            }
+            $.post("@Url.Action("DeleteDistributorProductLineAuthority", "Distributor")", {
+                DistributorProductLineID: row.DistributorProductLineID
+            }, function (data) {
+                if (data.SubmitResult) {
+                    $('#ProLineTable').datagrid("clearSelections");
+                    DistributorAuthorityProductLine(row.DistributorID)
+                    $('#RegionTable').datagrid("clearSelections");
+                    $('#RegionTable').datagrid('loadData', { total: 0, rows: [] });
+                    $('#AddorUpdateLineWindow').dialog('close');
+                } else {
+                    alert(data.Message);
+                }
+            })
+        })
+    }
+    //区域新增
+    function ClickAddRegion() {
+        var row = $('#ProLineTable').datagrid('getSelected');
+        if (!row) {
+            alert("请先选择产品线！");
+            return;
+        }
+        $('#Departtree').treegrid("clearSelections");
+        $('#RegionTree').treegrid("clearSelections");
+        $('#RegionTree').treegrid('loadData', { total: 0, rows: [] });
+        $('#AddorUpdateRegionWindow').dialog({ title: "新增区域" });
+        $('#AddorUpdateRegionWindow').dialog('open');
+    }
+    //删除区域
+    function ClickDelRegion() {
+        var row = $('#RegionTable').datagrid('getSelected');
+        if (!row) {
+            alert("您还没有选择区域，请选择！");
+            return;
+        }
+        $.messager.confirm('提示', '是否删除选中数据?', function (data) {
+            if (!data) {
+                return;
+            }
+            var rowproline = $('#ProLineTable').datagrid('getSelected');
+            var rowdep = $('#grid').datagrid('getSelected');
+            $.post("@Url.Action("DeleteDistributorProductLineRegionAuthority", "Distributor")", {
+                DistributorRegionID: row.DistributorRegionID
+            }, function (data) {
+                if (data.SubmitResult) {
+                    $('#RegionTable').datagrid("clearSelections");
+                    DistributorAuthorityRegion(rowproline.DistributorProductLineID)
+                } else {
+                    alert(data.Message)
+                }
+            })
+        })
+    }
+    //付款条款保存
+    function SavePay() {
+        if ($("#AddorUpdatePay").form('validate')) {
+            var row = $('#grid').datagrid('getSelected');
+
+            var id = new Array();
+            var rows = $('#OrderPay').datagrid('getSelections');
+            if (rows && rows.length > 0) {
+                for (i = 0; i < rows.length; i++)//循环选中的行
+                {
+                    id.push(rows[i].PayID);
+                }
+            } else {
+                alert("请选择要授权的付款条款！");
+                return;
+            }
+            $.post('@Url.Action("DistributorPayAuthority", "Distributor")', {
+                DistributorID: row.DistributorID,
+                PayID: id,
+            }, function success(data) {
+                if (data.SubmitResult) {
+                    $('#PayTable').datagrid("clearSelections");
+                    DistributorAuthorityPay(row.DistributorID)
+                    $('#AddorUpdatePayWindow').dialog('close');
+                }
+                else {
+                    alert(data.Message);;
+                }
+            }, "json");
+        }
+    }
+    //运输保存
+    function SaveTrans() {
+        if ($("#AddorUpdateTrans").form('validate')) {
+            var row = $('#grid').datagrid('getSelected');
+            $.post('@Url.Action("DistributorTransportAuthority", "Distributor")', {
+                DistributorID: row.DistributorID,
+                TransportID: $("#OrderTrans").combobox("getValue"),
+            }, function success(data) {
+                if (data.SubmitResult) {
+                    $('#TransTable').datagrid("clearSelections");
+                    DistributorAuthorityTransport(row.DistributorID)
+                    $('#AddorUpdateTransWindow').dialog('close');
+                }
+                else {
+                    alert(data.Message);;
+                }
+            }, "json");
+        }
+    }
+    //产品线保存
+    function SaveLine() {
+        var rowpro = $('#LineTable').datagrid("getSelected");
+        if (!rowpro) {
+            alert("您还没有选择产品线，请选择！");
+            return;
+        }
+        var row = $('#grid').datagrid('getSelected');
+        $.post('@Url.Action("DistributorProductLineAuthority", "Distributor")', {
+            DistributorID: row.DistributorID,
+            ProductLineID: rowpro.ProductLineID,
+        }, function success(data) {
+            if (data.SubmitResult) {
+                $('#ProLineTable').datagrid("clearSelections");
+                DistributorAuthorityProductLine(row.DistributorID)
+                $('#RegionTable').datagrid("clearSelections");
+                $('#RegionTable').datagrid('loadData', { total: 0, rows: [] });
+                $('#AddorUpdateLineWindow').dialog('close');
+            } else {
+                alert(data.Message);;
+            }
+        }, "json");
+    }
+    //区域保存
+    function SaveRegion() {
+        var rowr = $('#RegionTree').treegrid("getSelected");
+        if (!rowr) {
+            alert("您还没有选择区域，请选择！");
+            return;
+        }
+        var arrChk = "";
+        var ck = $("input[name='ckname']")
+        ck.each(function () {
+            if (this.checked) {
+                arrChk += this.value + '|';
+            }
+        });
+        if (arrChk == "") {
+            alert("请勾选省份！");
+            return;
+        }
+        var row = $('#ProLineTable').datagrid('getSelected');
+        var rowproline = $('#ProLineTable').datagrid('getSelected');
+        $.post('@Url.Action("DistributorProductLineRegionAuthority", "Distributor")', {
+            DistributorProductLineID: row.DistributorProductLineID,
+            AuthorityRegion: arrChk,
+        }, function success(data) {
+            if (data.SubmitResult) {
+                $('#RegionTable').datagrid("clearSelections");
+                DistributorAuthorityRegion(rowproline.DistributorProductLineID)
+                $('#AddorUpdateRegionWindow').dialog('close');
+            } else {
+                alert(data.Message);;
+            }
+        }, "json");
+    }
+    function ClickUpOrderGoods(isOrderGoods) {
+        var row = $('#grid').datagrid('getSelected');
+        if (!row) {
+            alert("请先选择经销商！");
+            return;
+        }
+        $.messager.confirm('提示', '是否更改订货权限?', function (data) {
+            if (!data) {
+                return;
+            }
+            $.post("@Url.Action("UpdataDistributorAuthority", "Distributor")", {
+                DistributorID: row.DistributorID,
+                IsOrderGoods: isOrderGoods
+            }, function (data) {
+                if (data.SubmitResult) {
+                    $.post("@Url.Action("GetOneDistributorAuthority", "Distributor")", {
+                        DistributorID: row.DistributorID
+                    }, function (data) {
+                        if (data.SubmitResult) {
+                            if (data.Object.IsOrderGoods == true) {
+                                $("#OrderGoodsNO").prop("checked", false);
+                                $("#OrderGoodsYES").prop("checked", true);
+                            } else if (data.Object.IsOrderGoods == false) {
+                                $("#OrderGoodsYES").prop("checked", false);
+                                $("#OrderGoodsNO").prop("checked", true);
+                            } else {
+                                $("#OrderGoodsYES").prop("checked", false);
+                                $("#OrderGoodsNO").prop("checked", false);
+                            }
+                            $('#PayTable').datagrid("clearSelections");
+                            $('#TransTable').datagrid("clearSelections");
+                            $('#ProLineTable').datagrid("clearSelections");
+                            DistributorAuthorityPay(row.DistributorID)
+                            DistributorAuthorityTransport(row.DistributorID)
+                            DistributorAuthorityProductLine(row.DistributorID)
+                            $('#RegionTable').datagrid("clearSelections");
+                            $('#RegionTable').datagrid('loadData', { total: 0, rows: [] });
+                            alert("更改成功")
+                        }
+                    })
+                }
+            })
+        });
+    }
+    // 经销商授权付款条款
+    function DistributorAuthorityPay(distributorid) {
+        $('#PayTable').datagrid({
+            url: "@Url.Action("GetDistributorAuthorityPay", "Distributor")",
+            queryParams: { DistributorID: distributorid }
+        });
+    }
+    // 经销商授权运输方式
+    function DistributorAuthorityTransport(distributorid) {
+        $('#TransTable').datagrid({
+            url: "@Url.Action("GetDistributorAuthorityTransport", "Distributor")",
+            queryParams: { DistributorID: distributorid }
+        });
+    }
+    // 经销商授权产品线
+    function DistributorAuthorityProductLine(distributorid) {
+        $('#ProLineTable').datagrid({
+            url: "@Url.Action("GetDistributorAuthorityProductLine", "Distributor")",
+            queryParams: { DistributorID: distributorid }
+        });
+    }
+    // 经销商授权产品线区域
+    function DistributorAuthorityRegion(distributorproductid) {
+        $('#RegionTable').datagrid({
+            url: "@Url.Action("GetDistributorAuthorityRegion", "Distributor")",
+            queryParams: { DistributorProductID: distributorproductid }
+        });
+    }
+    // 导出
+    function ClickExport() {
+        $.post("@Url.Action("ExportDistributorAuthority", "Distributor")", {
+            SearchText: $("#serchText").searchbox('getValue')
+        }, function (data) {
+            if (data) {
+                window.location.href = "/Distributor/DownloadDistributorAuthority?filename=" + data;
+            } else {
+                alert("导出失败！");
+            }
+        })
+    }
+    // 导入
+    function ClickImport() {;
+        $('#DistributorAuthorityFile').filebox("clear");
+        $('#ImportDistributorAuthority').dialog('open');
+    }
+    function Pay() {
+        $('#OrderPay').datagrid('reload');
+    }
+    function Transport() {
+        $('#OrderTrans').combobox({
+            url: '@Url.Action("GetTransportList", "BaseInfo")',
+            valueField: 'TransportID',
+            textField: 'TransportName',
+            editable: false,
+            onLoadSuccess: function (data) {
+                return;
+            }
+        });
+    }
+    //获取json传来的时间格式化为YYYY-MM-DD
+    function jsonDateFormat(jsonDate) {
+        var date = new Date(parseInt(jsonDate.replace("/Date(", "").replace(")/", ""), 10));
+        var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+        var day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+        return date.getFullYear() + "-" + month + "-" + day;
+    }
+</script>
+<div class="easyui-layout" style="height:100%;">
+    <div region="north" style="height:94px">
+        @Html.Partial("_Partialtool")
+    </div>
+        <div region="center">
+            <div class="easyui-layout" style="height:100%">
+                <div region="center" style="height:40%;">
+                    <table id="grid" fit="true"></table>
+                </div>
+                <div region="south" style="height:60%;">
+                    @*选项卡修改*@
+                    <div id="table" class="easyui-tabs" style="height:100%;">
+                        <div title="基础授权">
+                            <div class="easyui-layout" style="height:100%;">
+                                <div region="north" style="height:60px;">
+                                    <div id="AuthorityDiv" class="easyui-panel" title="订货授权"
+                                         style="width:100%;height:100%;overflow:hidden;padding-top:10px;" data-options="fit:true,border:true">
+                                        <div style="text-align:left;">
+                                            <span class="cl100">订货权限：</span>
+                                            <input type="radio" class="OrderGoods" id="OrderGoodsYES" name="Order" value="true" onclick="ClickUpOrderGoods(true)" />是
+                                            <input type="radio" class="OrderGoods" id="OrderGoodsNO" name="Order" value="false" onclick="ClickUpOrderGoods(false)" />否
+                                        </div>
+                                    </div>
+                                </div>
+                                <div region="center">
+                                    <div class="easyui-layout" style="height:100%;">
+                                        <div region="west" style="width:50%;">
+                                            <div id="" class="easyui-panel" title="付款条款"
+                                                 style="height:100%;padding:3px;background:#fafafa;overflow:hidden;border-right:1px solid #CCC;">
+                                                <div id="PayPage" style="height:100%;">
+                                                    <div class="easyui-layout" style="height:100%;">
+                                                        <div region="north" style="height:35px;padding-bottom:3px;">
+                                                            <a href="#" class="easyui-linkbutton btnAuthority" id="btnAddPay" onclick="ClickAddPay()">新增</a>
+                                                            <a href="#" class="easyui-linkbutton btnAuthority" id="btnDelPay" onclick="ClickDelPay()">删除</a>
+                                                        </div>
+                                                        <div region="center" style="height:100%;">
+                                                            <table id="PayTable" fit="true"></table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div region="center">
+                                            <div id="" class="easyui-panel" title="运输方式"
+                                                 style="height:100%;padding:3px;background:#fafafa;overflow:hidden;">
+                                                <div id="TransPage" style="height:100%;">
+                                                    <div class="easyui-layout" style="height:100%;">
+                                                        <div region="north" style="height:35px;padding-top:3px;">
+                                                            <a href="#" class="easyui-linkbutton btnAuthority" id="btnAddTrans" onclick="ClickAddTrans()">新增</a>
+                                                            <a href="#" class="easyui-linkbutton btnAuthority" id="btnDelTrans" onclick="ClickDelTrans()">删除</a>
+                                                        </div>
+                                                        <div region="center" style="height:100%;">
+                                                            <table id="TransTable" fit="true"></table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div title="产品线授权">
+                            <div class="easyui-layout" style="height:100%;">
+                                <div region="west" style="width:50%;">
+                                    <div class="easyui-panel" title="产品线"
+                                         style="height:100%;padding:3px;background:#fafafa;overflow:hidden;border-right:1px solid #CCC;">
+                                        <div class="easyui-layout" style="height:100%;">
+                                            <div region="north" style="height:35px;padding-top:3px;">
+                                                <p>
+                                                    <a href="#" class="easyui-linkbutton btnAuthority" id="btnAddLine" onclick="ClickAddLine()">新增</a>
+                                                    <a href="#" class="easyui-linkbutton btnAuthority" id="btnDelLine" onclick="ClickDelLine()">删除</a>
+                                                </p>
+                                            </div>
+                                            <div region="center">
+                                                <table id="ProLineTable" fit="true"></table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div region="center">
+                                    <div class="easyui-panel" title="区域"
+                                         style="height:100%;padding:3px;background:#fafafa;overflow:hidden;">
+                                        <div class="easyui-layout" style="height:100%;">
+                                            <div region="north" style="height:35px;padding-top:3px;">
+                                                <p>
+                                                    <a href="#" class="easyui-linkbutton btnAuthority" id="btnAddRegion" onclick="ClickAddRegion()">新增</a>
+                                                    <a href="#" class="easyui-linkbutton btnAuthority" id="btnDelRegion" onclick="ClickDelRegion()">删除</a>
+                                                </p>
+                                            </div>
+                                            <div region="center">
+                                                <table id="RegionTable" fit="true"></table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+@*付款条款新增*@
+<div id="AddorUpdatePayWindow">
+
+    <form id="AddorUpdatePay">
+        <input id="TransportID" hidden="hidden" />
+        <input id="AddUp" hidden="hidden" />
+        <p>
+            <span class="cl100">付款条款：</span>
+            <div class="DivPage">
+                <table id="OrderPay"></table>
+            </div>
+        </p>
+    </form>
+
+</div>
+
+@*运输新增*@
+<div id="AddorUpdateTransWindow">
+    <div class="AddContent">
+        <form id="AddorUpdateTrans">
+            <input id="TransportID" hidden="hidden" />
+            <input id="AddUp" hidden="hidden" />
+            <p>
+                <span class="cl100">运输方式：</span>
+                <select id="OrderTrans" class="easyui-combobox txt200" style="width:200px;" editable="false" required missingmessage="运输方式必须选择！"></select>
+            </p>
+        </form>
+    </div>
+</div>
+
+@*产品线新增*@
+<div id="AddorUpdateLineWindow">
+
+    <div id="pageline" class="DivPage">
+        <table id="LineTable" style="width:600px;height:350px;"></table>
+    </div>
+</div>
+@*区域新增*@
+<div id="AddorUpdateRegionWindow">
+    <div style="display:inline-block;border-right:1px solid #CCC">
+        <table id="Departtree"></table>
+    </div>
+    <div style="display:inline-block">
+        <table id="RegionTree"></table>
+    </div>
+
+</div>
+@*导入*@
+<div id="ImportDistributorAuthority">
+    <div class="AddContent">
+        <form id="DistributorAuthorityFileform" method="post" enctype="multipart/form-data">
+            <p>
+                <input id="DistributorAuthorityFile" class="easyui-filebox txt410" style="width:410px;" name="DistributorAuthorityFile" data-options="prompt:'导入经销商授权信息文件',accept:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel' ,buttonText:'选择导入文件'">
+            </p>
+            <br />
+            <p>
+                <a href="~/TempLate/IMP_DistributorAuthority.xlsx">下载经销商授权信息导入模板</a>
+            </p>
+        </form>
+    </div>
+</div>
+
+
+
+
+

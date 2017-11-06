@@ -1,0 +1,146 @@
+﻿@{
+    Layout = null;
+    ViewBag.SearchOption = "prompt:'按反馈人、经销商模糊搜索',searcher:doSearch";
+    ViewBag.SearchCombination = "<select class='txt180' id='SearchModel' panelHeight='auto'  buttonText='系统'></select>";
+}
+
+<script type="text/javascript">
+    $(function () {
+        InitSearchModel();
+        $('#grid').datagrid({
+            width: function () { return document.body.clientWidth * 0.9 },
+            nowrap: true,
+            autoRowHeight: true,
+            striped: true,
+            collapsible: false,
+            pagination: true,
+            pageSize: 10,
+            pageList: [10, 20, 30],
+            rownumbers: true,
+            sortOrder: 'desc',
+            remoteSort: false,
+            singleSelect: true,
+            idField: 'FeedbackStatID',
+            queryParams: {},
+            animate: true,
+            columns: [[
+                 { title: 'FeedbackStatID', field: 'FeedbackStatID', hidden: true, width: 1, halign: 'center', align: 'center' },
+                 { title: '状态', field: 'FeedbackStausStr', width: 80, halign: 'center', align: 'center' },
+                 {
+                     title: '附件', field: 'DownLoadFeedback', width: 50, halign: 'center', align: 'center', formatter: function (value, row, index) {
+                         if (value == true) {
+                            return "<a href='#' onclick='DownLoad(" + index + ")'>下载</a>";
+                         }
+                     }
+                 },
+                 {
+                     title: '反馈日期', field: 'FeedbackDate', width: 180, halign: 'center', align: 'center', formatter: function (value, row, index) {
+                         if (value != null) {
+                             return jsonDateHMSFormat(value);
+                         }
+                     }
+                 },
+                 { title: '反馈人', field: 'FullName', width: 150, halign: 'center', align: 'center' },
+                 { title: '反馈系统', field: 'FeedbackSystem', width: 200, halign: 'center', align: 'center' },
+                 { title: '反馈模块', field: 'FeedbackModel', width: 200, halign: 'center', align: 'center' },
+                 { title: '反馈内容', field: 'FeedbackContent', width: 300, halign: 'center', align: 'left' },
+                 { title: '经销商', field: 'UserDistributorstr', width: 250, halign: 'center', align: 'left' },
+                 { title: '部门', field: 'DepartName', width: 150, halign: 'center', align: 'left' },
+                 { title: '反馈人手机', field: 'PhoneNumber', width: 150, halign: 'center', align: 'center' },
+                 { title: '反馈人邮箱', field: 'Email', width: 250, halign: 'center', align: 'center' },
+            ]]
+        });
+    })
+    function doSearch(value) {
+        $('#grid').datagrid('reload', { SearchText: value, FeedbackSystem: $('#SearchModel').combobox('getValue') == "请选择" ? null : $('#SearchModel').combobox('getValue') });
+    }
+    //修改
+    function ClickModify() {
+        var row = $("#grid").datagrid("getSelected");
+        if (row == null) {
+            alert("您还没有选择反馈信息，请选择！");
+            return;
+        }
+        if (row.FeedbackStausStr == "已处理") {
+            alert("当前状态不可修改");
+            return;
+        }
+        $.post(
+            '@Url.Action("UpdateFeedback", "System")',
+            {
+                FeedbackStatID: row.FeedbackStatID,
+            },
+            function success(data, textStatus, jqXHR) {
+                if (!data.SubmitResult) {
+                    alert(data.Message);
+                }
+                else {
+                    alert("问题已解决");
+                    $('#grid').datagrid('reload');
+                }
+            }, "json");
+    }
+    // 导出
+    function ClickExport() {
+        $.post("@Url.Action("ExportFeedback", "System")", {
+            SearchText:$("#serchText").searchbox('getValue'),
+            FeedbackSystem: $('#SearchModel').combobox('getValue') == "请选择" ? null : $('#SearchModel').combobox('getValue')
+        }, function (data) {
+            if (data) {
+                window.location.href = "/System/DownloadFeedback?filename=" + data;
+            } else {
+                alert("导出失败！");
+            }
+        })
+    }
+    function InitSearchModel() {
+        $('#SearchModel').combobox({
+            url: '@Url.Action("GetSearchModule", "BaseInfo")',
+            queryParams: {},
+            valueField: 'StructureName',
+            textField: 'StructureName',
+            editable: false,
+            value: "请选择",
+            onSelect: function (row) {
+                $("#serchText").searchbox('setValue', null);
+                $('#grid').datagrid({ url: '@Url.Action("GetFeedbackList", "System")', queryParams: { FeedbackSystem: row.StructureName == "请选择" ? null : row.StructureName } });
+            }
+
+        })
+    }
+    //获取json传来的时间格式化为YYYY-MM-DD HH:mm:ss
+    function jsonDateHMSFormat(jsonDate) {
+        var date = new Date(parseInt(jsonDate.replace("/Date(", "").replace(")/", ""), 10));
+        var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+        var day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+        var h = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+        var m = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+        var s = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+        return date.getFullYear() + "-" + month + "-" + day + " " + h + ":" + m + ":" + s;
+    }
+    function DownLoad(index) {
+        var row = $('#grid').datagrid('getData').rows[index];
+        $("#grid").datagrid("unselectRow", index);
+        $.post("@Url.Action("ExistFeedbackAttachment", "System")", {
+            AttachFileName: row.AttachFileName
+        }, function (data) {
+            if (data) {
+                window.location.href = "/System/DownloadFeedbackAttachment?AttachFileName="+row.AttachFileName+"&AttachFileSrcName="+row.AttachFileSrcName+"&AttachFileExtentionName="+row.AttachFileExtentionName;
+            } else {
+                alert("附件不存在！");
+            }
+        })
+    }
+</script>
+
+<div class="easyui-layout" style="height:100%;">
+    <div region="north" style="height:94px">
+        @Html.Partial("_Partialtool")
+    </div>
+    <div region="center" class="DivPage">
+        <div id="BodyContentDiv">
+            <table id="grid" fit="true"></table>
+        </div>
+    </div>
+</div>
+

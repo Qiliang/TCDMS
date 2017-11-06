@@ -1,0 +1,378 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link href="~/Content/EasyUI/themes/default/easyui.css" rel="stylesheet" />
+    <link href="~/Content/CSS/LoginStyle.css" rel="stylesheet" />
+    <link href="~/Content/CSS/CommonS.css" rel="stylesheet" />
+    <script src="~/Content/EasyUI/jquery.min.js"></script>
+    <script src="~/Content/EasyUI/jquery.easyui.min.js"></script>
+    <script src="~/Content/JS/EasyUIExtentions.js"></script>
+    <script src="~/Content/EasyUI/locale/easyui-lang-zh_CN.js"></script>
+    <title>携手网平台登录</title>
+    <script type="text/javascript" charset="utf-8">
+        window.history.forward(-1);
+        //自定义验证
+        $.extend($.fn.validatebox.defaults.rules, {
+            phone: {
+                validator: function (value) {
+                    var rex = /^1[3-8]+\d{9}$/;
+                    if (rex.test(value)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+
+                },
+                message: '请输入正确的手机格式'
+            }
+        });
+        $(function () {
+            $('#Authority').datagrid({
+                nowrap: true,
+                autoRowHeight: true,
+                striped: true,
+                collapsible: false,
+                rownumbers: true,
+                sortName: '',
+                sortOrder: 'desc',
+                remoteSort: false,
+                singleSelect: false,
+                idField: 'ID',
+                columns: [[
+                     { title: '权限申请', field: 'IsChecked', checkbox: true },
+                     { title: 'ID', field: 'ID', hidden: true, width: 1, halign: 'center', align: 'center' },
+                     { title: '模块', field: 'LevelOneDes', width: 150, halign: 'center', align: 'center' },
+                     { title: '功能', field: 'LevelTWODes', width: 150, halign: 'center', align: 'center' },
+                     { title: '功能描述', field: 'Description', width: 200, halign: 'center', align: 'center' }
+                ]]
+            });
+            $("#btnLogin").bind("click", function () {
+                if ($("#InputDiv").form('validate')) {
+                    $.post('@Url.Action("Login", "Home")',
+                                    {
+                                        PhoneNumber: $("#txtPhoneNumber").val(),
+                                        DynamicPassword: $("#txtPassword").val(),
+                                        ValidateCode: $("#txtValidateCode").val()
+                                    },
+                                    function (data, txtStatus, jqXHR) {
+                                        if (!data.SubmitResult) {
+                                            alert(data.Message);
+                                            //再执行一次验证码刷新的事件
+                                            $("#valiCode").trigger("click");
+                                        }
+                                        else {
+                                            //成功登录跳转页面
+                                            window.location.href = "@Url.Action("Main", "Home")";
+                                        }
+                                    }, 'json');
+                }
+            });
+
+            $("#btnDynPwd").bind("click", function () {
+                if ($("#InputDiv").form('validate')) {
+                    showtimer();
+                    //发送短信
+                    $.post('@Url.Action("SendMobileMessage", "Home")',
+                       {
+                           PhoneNumber: $("#txtPhoneNumber").val(),
+                           ValidateCode: $("#txtValidateCode").val()
+                       },
+                       function (data, txtStatus, jqXHR) {
+                           if (!data.SubmitResult) {
+                               clearInterval(intervalid);
+                               if (data.Message == "1") {
+                                   $('#NoUserMessageWindow').dialog('open');
+                               } else {
+                                   alert(data.Message);
+                               }
+                               counter = 3000;
+                               obj.val('获取验证码');
+                               obj.removeAttr('disabled');
+                               $("#valiCode").trigger("click");
+                           }
+                           else {
+                               //alert("密码将发送至您的手机，请注意查收！");
+                           }
+                       }, 'json');
+                }
+            });
+            //登陆回车提交事件
+            $("#regioncenterDiv").keydown(function () {
+                if (event.keyCode == "13") {//keyCode=13是回车键
+                    $("#btnLogin").click();
+                }
+            });
+            //申请回车提交事件
+            $("#ApplyModelWindow").keydown(function () {
+                if (event.keyCode == "13") {//keyCode=13是回车键
+                    SaveApply();
+                }
+            });
+            //验证码
+            $("#valiCode").bind("click", function () {
+                this.src = "/Home/GetValidateCode?time=" + (new Date()).getTime();
+            });
+            $("#txtValidateCodeF5").bind("click", function () {
+                valiCode.src = "/Home/GetValidateCode?time=" + (new Date()).getTime();
+            });
+
+            $('#ApplyModelWindow').dialog({
+                title: "新用户申请",
+                width: 650,
+                height: 500,
+                top: 50,
+                modal: true,
+                closed: true,
+                maximizable: false,
+                minimizable: false,
+                collapsible: false,
+                resizable: false,
+                inline: true,
+            });
+            $('#NoUserMessageWindow').dialog({
+                title: "提示",
+                width: 600,
+                height: 120,
+                modal: true,
+                closed: true,
+                inline: true,
+            });
+
+            $("#chkbkm").bind("click", function () {
+                var sel = "1"; // 1经销商 0贝克曼
+                if ($("#chkbkm").is(":checked")) {
+                    $("#DistriName").textbox({ disabled: true });
+                    $("#DistriName").textbox('setValue', null);
+                    sel = "0";
+                } else {
+                    $("#DistriName").textbox({ disabled: false });
+                }
+                $('#Authority').datagrid("clearChecked");
+                $('#Authority').datagrid({ url: '@Url.Action("GetAuthorityInfo", "Home")', queryParams: { types: sel }, });
+            });
+        })
+        var counter;
+        var intervalid;
+        var obj;
+        function showtimer() {
+            obj = $('#btnDynPwd');
+            obj.attr('disabled', "true");
+            counter = 3000;
+            intervalid = setInterval("timer()", 100);
+        }
+
+        function timer() {
+            if (counter-- == 3000) {
+                obj.val(300);
+            }
+
+            if (counter % 10 == 0) {
+                obj.val(counter / 10);
+            }
+
+            if (counter == 0) {
+                clearInterval(intervalid);
+                counter = 3000;
+                obj.val('获取验证码');
+                obj.removeAttr('disabled');
+            }
+        }
+        //新用户申请
+        function NewApplyInfo() {
+            $('#Authority').datagrid({ url: '@Url.Action("GetAuthorityInfo", "Home")', queryParams: { types: "1" } });
+            $('#Authority').datagrid('clearSelections');
+            $("#chkbkm").attr('checked', false);
+            $("#DistriName").combobox({ disabled: false });
+            $("#Name").textbox("setValue", "");
+            $("#Phone").textbox("setValue", "");
+            $("#email").textbox("setValue", "");
+            $('#ApplyModelWindow').dialog({ title: "新用户申请" });
+            $('#ApplyModelWindow').dialog('open');
+        }
+
+        function SaveApply() {
+            var checkrowlist = $('#Authority').datagrid("getChecked");
+            if (checkrowlist.length == 0) {
+                alert("请勾选权限");
+                return;
+            }
+            for (var i = 0; i < checkrowlist.length; i++) {
+                checkrowlist[i].IsChecked = true;
+            }
+            var ppdata = $('#Authority').datagrid("getData");
+            if ($("#ApplyModelWindow").form('validate')) {
+                $.post("@Url.Action("Apply", "Home")", {
+                    UserApplyName: $("#Name").val(),
+                    DistributorIDList: $("#DistriName").val(),
+                    DistributorNamestr: $("#DistriName").combobox("getText"),
+                    UserApplyTelNumber: $("#Phone").val(),
+                    UserApplyEmail: $("#email").val(),
+                    UserApplyType: $("#chkbkm").is(":checked") ? 1 : 2,
+                    ApplyAuth: ppdata.rows
+                }, function (data) {
+                    if (data.SubmitResult) {
+                        $('#ApplyModelWindow').dialog('close')
+                    }
+
+                    alert(data.Message);
+                });
+            }
+        }
+        @*首页回车登陆功能*@
+        function EnterLogin() {
+            if (event.keyCode == 13)
+                $("#btnLogin").click();
+        }
+        @**@
+        function NoUserMessageWindow() {
+            $('#NoUserMessageWindow').dialog('close')
+            NewApplyInfo();
+        }
+
+        @*给手机号小图标bind点击事件*@
+        function ChangeColor() {
+            $("#PhoneYes").show();
+        };
+        function upper() {
+            $("#PhoneYes").hide();
+        };
+        @*给验证码小图标bind点击事件*@
+        function ChangeColorVal() {
+            $("#AC0Yes").show();
+        };
+        function upperVal() {
+            $("#AC0Yes").hide();
+        };
+        @*给密码小图标bind点击事件*@
+        function ChangeColorPw() {
+            $("#PWYes").show();
+        };
+        function upperPw() {
+            $("#PWYes").hide();
+        };
+    </script>
+
+</head>
+<body class="easyui-layout" style="height:100%;width:100%;border:none;">
+
+    <div region="north" style="height:12%;width:100%;border:none;">
+        <div class="west">
+            <img src="~/Content/Image/Login/Login_logo.png" style="float:left;position:absolute;height:90%;width:11%;border:none;margin-left:3%;" />
+        </div>
+        <div region="center">
+            <div id="titleDiv">
+                <p style="color:#2830be;">
+                    <span id="XSWPT">携手网平台</span><br />
+                    <span>https://www.beckmancoulterdealer.com.cn/</span>
+                </p>
+            </div>
+        </div>
+    </div>
+    <div region="center" id="regioncenterDiv" style="height:80%;width:100%;border:none;">
+        <div region="center">
+            <div id="bodyDiv">
+                <img src="~/Content/Image/Login/Login_bj02.jpg" style="border:none;width:100%;height:auto" />
+            </div>
+        </div>
+        <div region="south">
+            <div id="moveDiv" style=" height:100%;width:100%;border:none;">
+                <div id="dlDiv">
+                    <img src="~/Content/Image/LoginNew/Login-Frame.png" />
+                </div>
+                <div id="icon">
+                    <img src="~/Content/Image/LoginNew/login_No_0.png" id="PhoneNO" style="display:normal;height:36px;" />
+                </div>
+                <div id="icon2">
+                    <img src="~/Content/Image/LoginNew/login_No_selected.png" id="PhoneYes" style="display:none;height:36px;" />
+                </div>
+                <div id="icon3">
+                    <img src="~/Content/Image/LoginNew/login_AC_0.png" id="AC0" style="display:normal;height:34px;" />
+                </div>
+                <div id="icon4">
+                    <img src="~/Content/Image/LoginNew/login_AC_selected.png" id="AC0Yes" style="display:none;height:34px;" />
+                </div>
+                <div id="icon5">
+                    <img src="~/Content/Image/LoginNew/login_PW_0.png" id="PW0" style=" display:normal;height:34px;" />
+                </div>
+                <div id="icon6">
+                    <img src="~/Content/Image/LoginNew/login_PW_selected.png" id="PWYes" style="display:none;height:34px;" />
+                </div>
+                <div id="InputDiv">
+                    <p style="font-size:27px;color:#000000;margin-left:62px;margin-top:-20px;">用户登录</p>
+                    <p>
+                        <span></span>
+                        <input type="text" id="txtPhoneNumber" onfocus="ChangeColor()" onblur="upper()" class="easyui-validatebox" data-options="validType:'phone'" placeholder="输入手机号" style="border-radius: 5px;" />
+                    </p>
+                    <p>
+                        <span></span>
+                        <input id="txtValidateCode" placeholder="图形码" onfocus="ChangeColorVal()" onblur="upperVal()" style="border-radius: 5px;width:90px;" /><img id="valiCode" src="/Home/GetValidateCode" alt="验证码" />
+                        <img src="~/Content/Image/LoginNew/login_BR_pressed.png" id="txtValidateCodeF5" />
+                    </p>
+                    <p><span></span><input id="txtPassword" onfocus="ChangeColorPw()" onblur="upperPw()" type="text" placeholder="输入验证码" style="border-radius: 5px;" /><input type="button" id="btnDynPwd" value="获取验证码" /></p>
+                    <p>
+                        <button type="button" id="btnLogin" name="btnLogin">登录</button>
+                    </p>
+                    @*<p><label id="NewApply" onclick="NewApplyInfo();">新用户申请</label></p>*@<p><label id="NewApply" onclick="NewApplyInfo();"></label></p><p><label id="NewApply" onclick="NewApplyInfo();"></label></p><p><label id="NewApply" onclick="NewApplyInfo();"></label></p>
+                </div>
+                <div id="PromptDiv">
+                    <p>
+                        <span id="RedDiv">推荐使用IE11、Chrome浏览器</span><br />
+                        <span id="tsDiv">
+                            为了方便您使用，建议登录后不要关闭携手网，<br />
+                            这样可以避免您反复登录
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div region="south" style="border:none; height:9%">
+        <img src="~/Content/Image/LoginNew/Login-logo-tc.png" style="float:left;position:absolute;height:90%;width:15%;border:none;" />
+        <div style="top:30%;position:relative;">
+            <p id="southfont">技术支持：TCSOFT 13661487706 （Jane） 021-51580506（客服） QQ：800189029 邮箱：tcsoftsupport@tcsoft.net.cn</p>
+        </div>
+    </div>
+    @*新用户申请对话框*@
+    <div id="ApplyModelWindow" class="easyui-dialog">
+        <p>
+            <span class="cl60">姓名：</span><input class="easyui-textbox txt100" id="Name" type="text" required missingmessage="姓名必须填写" /><span class="MustRequre">*</span>
+            <span class="cl60">经销商：</span><input class="easyui-distributortbox txt200" id="DistriName" type="text" required missingmessage="经销商必须填写" /><span class="MustRequre">*</span>
+            <input type="checkbox" name="chkbkm" id="chkbkm" value="" style="margin-left:10px;" />贝克曼
+        </p>
+        <p>
+            <span class="cl60">手机号：</span><input class="easyui-textbox txt100" id="Phone" type="text" data-options="validType:'phone'" required missingmessage="手机号必须填写" /><span class="MustRequre">*</span>
+            <span class="cl60">邮箱：</span><input class="easyui-textbox txt150" validtype="Email" id="email" type="text" data-options="validType:'email'" required missingmessage="邮箱必须填写" /><span class="MustRequre">*</span>
+        </p>
+        <div id="bkmDiv" style="margin-left:8px;">
+            <table id="Authority" style="width:620px;height:350px;"></table>
+            <p> <label style="color:red;margin-left:30px;">请在需要申请的功能前打“√”。</label></p>
+        </div>
+        <div class="operat1">
+            <p>
+                <a href="#" class="easyui-linkbutton" onclick="SaveApply()">申请</a>
+                <a href="#" class="easyui-linkbutton" onclick="javascript:$('#ApplyModelWindow').dialog('close');">取消</a>
+            </p>
+        </div>
+    </div>
+    @**@
+    <div id="NoUserMessageWindow" class="easyui-dialog">
+        <div class="AddContent">
+            @{
+                var Message = TCSOFT.DMS.WebMain.Common.WebConfiger.NoUserMessage;
+                var Messagestr = Message.Replace("申请新用户", "<a>申请新用户</a>");
+                <a style='color:#2830be;' onclick='NoUserMessageWindow()'></a>
+                <a style='color:#2830be;' onclick='NoUserMessageWindow()'></a>
+                <a style='color:#2830be;' onclick='NoUserMessageWindow()'></a>@Html.Raw(Messagestr);
+            }
+        </div>
+    </div>
+</body>
+</html>

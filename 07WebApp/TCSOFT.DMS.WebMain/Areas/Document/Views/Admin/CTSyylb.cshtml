@@ -1,0 +1,256 @@
+﻿@{
+    Layout = null;
+}
+
+<div class="easyui-layout" style="height:100%;">
+    <div region="north" style="height:94px">
+        <link href="~/Content/Document/CSS/_Partialtool.css" rel="stylesheet" />
+        <div id="BodyContentTool">
+            <div id="btnButton">
+                <div class="comboelse" style="padding:5px 5px 5px 0;">
+                    <input class='easyui-datebox txt350' id='EffectiveTtime' editable='false' buttonText='发布日期起'/>
+                    <input class='easyui-datebox txt350' id='EffectiveTtime1' editable='false' buttonText='发布日期止'/>
+                    <input class='easyui-datebox txt350' id='EffectiveTtime2' editable='false' buttonText='更新日期起'/>
+                    <input class='easyui-datebox txt350' id='EffectiveTtime3' editable='false' buttonText='更新日期止'/>
+                </div>
+                <ul>
+                    <li><input id="serchText" class="easyui-searchbox search" style="height:32px;width:500px;"
+                               data-options="prompt:'支持标题、发布人、标签模糊查询',searcher:function(){}"/></li>
+                    <li><a href="#" class="easyui-linkbutton" id="btnTagAdd" onclick="editTagDialog();">标签</a></li>
+                    <li><a href="#" class="easyui-linkbutton" id="btnAdd" onclick="add();">添加</a></li>
+                    <li><a href="#" class="easyui-linkbutton" id="btnModify" onclick="add();">修改</a></li>
+                    <li><a href="#" class="easyui-linkbutton" id="btnDel" onclick="del();">删除</a></li>
+                    <li><a href="#" class="easyui-linkbutton" id="btnShow" onclick="showDoloadDialog()">查看</a></li>
+                    <li><a href="#" class="easyui-linkbutton" id="btnExport" onclick="">导出</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div region="west" style="width:200px;border-right:1px solid #CCC; overflow:hidden;">
+        <ul class="easyui-tree"
+            data-options="url:'admin/LSSyylb_tree_data.json',method:'get',animate:true,fit:true"></ul>
+    </div>
+
+    <div region="center">
+        <div id="BodyContentDiv">
+            <table class="easyui-datagrid"
+                   data-options="
+                    iconCls: 'icon-view',
+                    width: function () { return document.body.clientWidth * 0.9 },
+                    nowrap: true,
+                    autoRowHeight: true,
+                    striped: true,
+                    collapsible: false,
+                    pagination: true,
+                    pageSize: 10,
+                    pageList: [10, 20, 30],
+                    rownumbers: true,
+                    sortOrder: 'desc',
+                    remoteSort: false,
+                    singleSelect: false,
+                    queryParams: {},
+                    animate: true,
+                    url:'admin/LSSyylb_data.json',
+                    method:'get',
+                    idField:'id',
+                    fit:true">
+                <thead>
+                <tr>
+                    <th data-options="field:'id1',checkbox:true"></th>
+                    <th data-options="field:'id',width:80,align:'center',formatter:formatterAttachment">附件</th>
+                    <th data-options="field:'attachment_size',width:120,align:'center'">附件大小(M)</th>
+                    <th data-options="field:'title',width:250,align:'center'">标题</th>
+                    <th data-options="field:'validity_date',width:100,align:'center'">有效期</th>
+                    <th data-options="field:'release_person',width:100,align:'center'">发布人</th>
+                    <th data-options="field:'tag_name',width:100,align:'center'">标签</th>
+                    <th data-options="field:'release_time',width:160,align:'center'">发布日期</th>
+                    <th data-options="field:'update_time',width:160,align:'center'">更新日期</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<div class="easyui-dialog" id="showDoloadDialog" title="查看" data-options="width: 'auto',
+            height: 'auto',
+            top: 20,
+            modal: true,
+            closed: true,
+            inline: true">
+    <table class="easyui-datagrid" style="width:800px;height:600px"
+           data-options="striped:true,collapsible:true,url:'admin/LSSyylb_download_data.json',method:'get',pagination:true,pageSize: 10,pageList: [10, 20, 30],rowStyler:rowStyler,idField:'id',singleSelect:true,toolbar:'#showTT'">
+        <thead>
+        <tr>
+            <th data-options="field:'dealer_name',width:'50%',align:'center'">经销商</th>
+            <th data-options="field:'download_time',width:'50%',align:'center'">下载时间</th>
+        </tr>
+        </thead>
+    </table>
+    <div id="showTT">
+        <table>
+            <tr>
+                <td>发布人：</td>
+                <td>张三</td>
+                <td width="20px"></td>
+                <td>有效期：</td>
+                <td>2017-09-08 17:16:48</td>
+                <td width="20px"></td>
+                <td>标题：</td>
+                <td>标题111111</td>
+                <td><a href="#" class="easyui-linkbutton" id="btnExport1" onclick="">下载</a></td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div class="easyui-dialog" id="tagDialog" title="添加标签" style="padding:10px;"
+     data-options="width: 'auto',
+            height: 'auto',
+            top: 20,
+            modal: true,
+            closed: true,
+            inline: true,
+            buttons: [{
+                    text:'增加同级标签',
+                    handler:addTag
+                },{
+                    text:'增加子标签',
+                    handler:addTag
+                },{
+                    text:'编辑名称',
+                    handler:editTag
+                },{
+                    text:'删除标签',
+                    handler:del
+                }]">
+    <div class="easyui-panel" style="width:400px;height:400px;padding:20px 60px">
+        <ul class="easyui-tree" data-options="url:'admin/LSSyylb_tree_data.json',method:'get',animate:true"></ul>
+    </div>
+</div>
+
+
+<div class="easyui-dialog" id="addDialog" title="添加" data-options="width: 'auto',
+            height: 'auto',
+            top: 20,
+            modal: true,
+            closed: true,
+            inline: true,
+             buttons:[{
+				text:'确定',
+				handler:function(){}
+			},{
+				text:'取消',
+				handler:function(){$('#addDialog').dialog('close');}
+			}]">
+    <div class="AddContent">
+        <form id="ff1" method="post">
+            <p>
+                <span class="cl100">标题：</span>
+                <input class="easyui-textbox txt200" style="width:200px;" data-options="required:true"/>
+            </p>
+            <p>
+                <span class="cl100">标签：</span>
+                <input class="easyui-combotree txt200"
+                       data-options="url:'admin/LSSyylb_tree_data.json',method:'get',required:true"
+            </p>
+            <p>
+                <span class="cl100">生效期：</span>
+                <input class="easyui-datetimebox txt200" style="width:200px;" data-options="required:true"/>
+            </p>
+            <p>
+                <span class="cl100">有效期：</span>
+                <input class="easyui-datetimebox txt200" style="width:200px;" data-options="required:true"/>
+            </p>
+            <p>
+                <span class="cl100">附件：</span>
+                <input class="easyui-filebox txt200" style="width:200px;" data-options="required:true"/>
+            </p>
+            <p>
+                <div id="p" class="easyui-progressbar" style="width:190px;"></div>
+            </p>
+            <p>
+                <span class="cl100">邮件通知：</span>
+                <div>
+                    <input type="radio" name="a">&nbsp;经销商&nbsp;&nbsp;<input type="radio" name="a">&nbsp;经销商&BCCE
+                </div>
+            </p>
+        </form>
+    </div>
+</div>
+<div class="easyui-dialog" id="downloadDialog" title="下载附件" style="padding:10px" data-options="height: 'auto',
+            top: 20,
+            modal: true,
+            closed: true,
+            inline: true,
+            buttons:[{
+				text:'下载',
+				handler:gotoDownload
+			}]">
+    <div class="easyui-panel" style="width:400px;padding:20px 60px">
+        <div style="margin-bottom:10px">
+            <input type="checkbox" name="downloadUrl"/>&nbsp;&nbsp;附件1
+        </div>
+        <div style="margin-bottom:10px">
+            <input type="checkbox" name="downloadUrl"/>&nbsp;&nbsp;附件2
+        </div>
+    </div>
+</div>
+
+<script>
+    function rowStyler(index, row) {
+        if (row.readState == "0") {
+            return 'font-weight:bold;';
+        }
+    }
+    function formatterCollection(value, row, index) {
+        if (value) {
+            return "<a href='javascript:void(0);'>" + (row.collection_state == "0" ? "未收藏" : "已收藏") + "</a>"
+        }
+    }
+    function formatterAttachment(value, row, index) {
+        return "<a href='javascript:void(0);' onclick='downloadAttachment();'>下载</a>"
+    }
+    function downloadAttachment() {
+        $("#downloadDialog").dialog('open');
+    }
+    function gotoDownload() {
+
+    }
+
+    function updateFile() {
+        document.getElementById("fileInput").click();
+    }
+    function add() {
+        $("#addDialog").dialog('open');
+    }
+    function del() {
+        $.messager.confirm('删除', '是否确认删除?', function (r) {
+            if (r) {
+                alert('删除成功！');
+            }
+        });
+    }
+    function editTagDialog() {
+        $("#tagDialog").dialog('open');
+    }
+    function addTag() {
+        $.messager.prompt('添加标签', '请输入标签名称', function (r) {
+            if (r) {
+                alert('添加成功！');
+            }
+        });
+    }
+    function editTag() {
+        $.messager.prompt('添加标签', '请输入标签名称', function (r) {
+            if (r) {
+                alert('修改成功！');
+            }
+        });
+    }
+    function showDoloadDialog() {
+        $("#showDoloadDialog").dialog('open');
+    }
+
+</script>

@@ -1,0 +1,324 @@
+﻿body, h1, h2, h3, h4, h5, h6, hr, p, blockquote, dl, dt, dd, ul, ol, li, pre, form, fieldset, legend, button, input, textarea, th, td {
+    margin: 0px;
+    padding: 0px;
+}
+
+body, button, input, select, textarea {
+    font: 12px/1.5 Microsoft YaHei,arial,sans-serif;
+}
+
+#searcharea {
+    width: 100%;
+    height: 40px;
+}
+
+#details {
+    width: 100%;
+    height: auto;
+}
+
+.lb80 {
+    display: block;
+    width: 80px;
+    height: 20px;
+    text-align: right;
+    float: left;
+}
+
+.txt60 {
+    width: 60px;
+    height: 20px;
+}
+.txt100 {
+    width: 100px;
+    height: 20px;
+}
+
+.txt150 {
+    width: 150px;
+    height: 20px;
+}
+
+.txt200 {
+    width: 200px;
+    height: 20px;
+}
+/*新增的宽度*/
+.txt250 {
+    width: 250px;
+    height: 20px;
+}
+
+.txt300 {
+    width: 300px;
+    height: 20px;
+}
+
+.txt350 {
+    width: 350px;
+    height: 20px;
+}
+
+.AddContent {
+    position: relative;
+    top: 10px;
+}
+
+    .AddContent p {
+        padding-bottom: 10px;
+    }
+
+.operat {
+    position:absolute;
+    right:0;
+    bottom:0;
+    padding:10px;
+}
+
+.txtara370 {
+    height: 40px;
+    width: 370px;
+}
+
+.btn15 {
+    position: relative;
+    text-align: right;
+    top: 10px;
+    padding: 10px 10px 5px;
+    background-color: #0094ff;
+}
+
+.operat1 {
+    position: relative;
+    text-align: right;
+    top: 30px;
+    padding: 5px;
+    background-color: #0094ff;
+}
+
+.btn10 {
+    position: relative;
+    padding: 10px;
+}
+/*系统管理*/
+#UserModelWindow,#StructuresModelWindow,#RoleModelWindow,#RoleAuthorityModelWindow,
+#AllUserModelWindow,#AssignRoleWindow,#AddModelWindow,#GoodsModelWindow,#HardWareModelWindow{
+    margin:0px auto;
+    background-color: #eefefe;
+}
+/*弹出框居中底色样式*/
+#RemoveEmailWindow,#OpenUpdatePwds,
+#AddDetailsModelWindow,#SeeDetailsModelWindow, #AddDayAccountWindow,
+#ReasonWindow, #WorkItemWindow,
+#ReasonModelWindow,#DepartmentModelWindow{
+    margin:0px auto;
+    background-color: #eefefe;
+}
+/*报销管理界面弹出框（审核失败/查看原因）*/
+#Reason2, #Reason1, #Reason{
+    height: 195px;
+    width: 380px;
+    margin: 20px;
+    resize: none;
+}
+/*首页按钮*/
+.btnnorth {
+    float: right;
+    height: 30px;
+    width:100%;
+    background: linear-gradient(to bottom, #c9dfe6 0, #9cb9e0 90%);
+}
+.btnPanel {
+    float: left;
+}
+.btnTitle {
+     position: relative;
+    top: 10px;
+}
+    .btnTitle div {
+         padding-left: 20px;
+          padding-bottom: 10px;
+    }
+/*portal门户组件（default使用）*/
+#P-Panel .portal {
+    padding: 0;
+    margin: 0;
+    border: 1px solid #99BBE8;
+    overflow: auto;
+}
+
+#P-Panel .portal-noborder {
+    border: 0;
+}
+
+#P-Panel .portal-panel {
+    margin-bottom: 10px;
+}
+
+#P-Panel .portal-column-td {
+    vertical-align: top;
+}
+
+#P-Panel .portal-column {
+    padding: 10px 0 10px 10px;
+    overflow: hidden;
+}
+
+#P-Panel .portal-column-left {
+    padding-left: 10px;
+}
+
+#P-Panel .portal-column-right {
+    padding-right: 10px;
+}
+
+#P-Panel .portal-proxy {
+    background-color: #0e2d5f;
+    opacity: 0.6;
+    filter: alpha(opacity=60);
+}
+
+#P-Panel .portal-spacer {
+    border: 3px dashed #eee;
+    margin-bottom: 10px;
+}
+
+.reloadsPanel {
+    padding: 10px;
+}
+
+#choose {
+    margin-left: 10px;
+    margin-top: 10px;
+    width: 265px;
+    height: 30px;
+    background: linear-gradient(to bottom, #c9dfe6 0, #9cb9e0 90%);
+}
+
+#treeremone {
+    margin-left: 10px;
+}
+/*两级手风琴*/
+* {
+	margin: 0;
+	padding: 0;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+ul {
+	list-style-type: none;
+}
+
+a {
+	color: #b63b4d;
+	text-decoration: none;
+}
+
+/* =======================
+ * Contenedor Principal
+ ===========================*/
+ .accordion {
+ 	width: auto;
+ 	max-width: 180px;
+ 	margin: 0px auto 0px;
+ 	background: #FFF;
+
+ }
+.hoverColor ul li:hover {
+    background:#acdafb;
+}
+.accordion .link {
+	cursor: pointer;
+	display: block;
+	padding: 10px 10px 10px 42px;
+	color: #4D4D4D;
+	font-size: 14px;
+	font-weight: 700;
+	border-bottom: 1px solid #CCC;
+	position: relative;
+	-webkit-transition: all 0.4s ease;
+	-o-transition: all 0.4s ease;
+	transition: all 0.4s ease;
+}
+
+.accordion li:last-child .link {
+	border-bottom: 0;
+}
+
+.accordion li i {
+	position: absolute;
+	top: 16px;
+	left: 12px;
+	font-size: 18px;
+	color: #595959;
+	-webkit-transition: all 0.4s ease;
+	-o-transition: all 0.4s ease;
+	transition: all 0.4s ease;
+}
+.accordion li.open .link {
+	color: #b63b4d;
+}
+
+.accordion li.open i {
+	color: #b63b4d;
+}
+
+/*矢量图标*
+ * Submenu
+ -----------------------------*/
+ .submenu {
+ 	display: none;
+ 	background: #444359;
+ 	font-size: 12px;
+ }
+
+ .submenu li {
+ 	border-bottom: 1px solid #4b4a5e;
+ }
+
+ .submenu a {
+ 	display: block;
+ 	text-decoration: none;
+ 	color: #d9d9d9;
+ 	padding: 12px;
+ 	padding-left: 42px;
+ 	-webkit-transition: all 0.25s ease;
+ 	-o-transition: all 0.25s ease;
+ 	transition: all 0.25s ease;
+ }
+
+ .submenu a:hover {
+ 	background: #b63b4d;
+ 	color: #FFF;
+ }
+
+/*我的信息-基本信息*/
+.MyInfoContent {
+    position: relative;
+    margin-left:30px;
+    margin-top:20px;
+    width:90%;
+}
+    .MyInfoContent p {
+        padding-bottom: 15px;
+    }
+.Btnsave {
+ clear:both;
+padding-left:610px;
+padding-top:1px;
+}
+.bottomCount {
+    bottom:15px;width:268px;
+   position:absolute;  
+  bottom:0;  
+  padding:10px 0;  
+}
+.colorBor {
+  border: 1px solid #95B8E7;
+  background-color: #fff;
+    padding: 3px;
+  -moz-border-radius: 5px 5px 5px 5px;
+  -webkit-border-radius: 5px 5px 5px 5px;
+  border-radius: 5px 5px 5px 5px;
+}

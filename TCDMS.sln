@@ -1,0 +1,417 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01Document", "01Document", "{02F79524-B1F0-4346-A667-6727620F1AB2}"
+	ProjectSection(SolutionItems) = preProject
+		01Document\TCDMSPD.pdm = 01Document\TCDMSPD.pdm
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02Common", "02Common", "{343EACBE-5B89-44E0-A044-75B3AF77DED4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "03DTO", "03DTO", "{CCD1636B-C518-41A7-9E7D-B48157A136E2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "04Entities", "04Entities", "{A608FC91-1826-43BE-BBC7-BF0684625459}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "05Services", "05Services", "{C7CFDA16-7C58-4664-8BB3-E04BAD68F460}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "06WebAPI", "06WebAPI", "{DC539F18-3553-4BB6-969F-2115E9981F3F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "07WebApp", "07WebApp", "{F15EF552-47DF-432B-A05A-B60E644929F2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCSOFT.DMS.Common", "02Common\TCSOFT.DMS.Common\TCSOFT.DMS.Common.csproj", "{933A188C-C018-4BB6-9480-041F353619BC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCSOFT.DMS.MasterData.DTO", "03DTO\TCSOFT.DMS.MasterData.DTO\TCSOFT.DMS.MasterData.DTO.csproj", "{C055BAFE-86E7-4203-9175-F9458F8C80C2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCSOFT.DMS.MasterData.Entities", "04Entities\TCSOFT.DMS.MasterData.Entities\TCSOFT.DMS.MasterData.Entities.csproj", "{A2065FD5-8B45-4414-AF18-D8239D7EC172}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCSOFT.DMS.MasterData.IServices", "05Services\TCSOFT.DMS.MasterData.IServices\TCSOFT.DMS.MasterData.IServices.csproj", "{2234289B-3028-4C58-8578-1D1F05566748}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCSOFT.DMS.MasterData.Services", "05Services\TCSOFT.DMS.MasterData.Services\TCSOFT.DMS.MasterData.Services.csproj", "{DD794910-8BEF-429E-8B47-253EDD2A81FF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCSOFT.DMS.WebMain", "07WebApp\TCSOFT.DMS.WebMain\TCSOFT.DMS.WebMain.csproj", "{3620805E-CB7B-47E1-BF3B-032B45183A61}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCSOFT.DMS.Common.Tests", "02Common\TCSOFT.DMS.Common.Tests\TCSOFT.DMS.Common.Tests.csproj", "{C85E2BB7-3A3F-4C5A-93BD-F7A7E7D27E0F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCSOFT.DMS.MasterData.Services.Tests", "05Services\TCSOFT.DMS.MasterData.Services.Tests\TCSOFT.DMS.MasterData.Services.Tests.csproj", "{DEAE0602-D2FA-41BB-8BE3-344829ECE857}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCSOFT.DMS.MasterDataAPI.Tests", "06WebAPI\TCSOFT.DMS.MasterDataAPI.Tests\TCSOFT.DMS.MasterDataAPI.Tests.csproj", "{0C67B662-3FE0-4CAC-8790-71B94DDA7D89}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "需求文档", "需求文档", "{637D6509-84A5-46DB-BF75-524A7DD1FD2F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "主数据V2.3", "主数据V2.3", "{8E063375-177E-4EBA-B041-90839E944D5F}"
+	ProjectSection(SolutionItems) = preProject
+		01Document\需求文档\主数据V2.3\携手网2.0需求说明文档-基础数据V2.3.docx = 01Document\需求文档\主数据V2.3\携手网2.0需求说明文档-基础数据V2.3.docx
+		01Document\需求文档\主数据V2.3\附件1.xlsx = 01Document\需求文档\主数据V2.3\附件1.xlsx
+		01Document\需求文档\主数据V2.3\附件2.png = 01Document\需求文档\主数据V2.3\附件2.png
+		01Document\需求文档\主数据V2.3\附件3.png = 01Document\需求文档\主数据V2.3\附件3.png
+		01Document\需求文档\主数据V2.3\附件4.png = 01Document\需求文档\主数据V2.3\附件4.png
+		01Document\需求文档\主数据V2.3\附件5.png = 01Document\需求文档\主数据V2.3\附件5.png
+		01Document\需求文档\主数据V2.3\附件6.png = 01Document\需求文档\主数据V2.3\附件6.png
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "数据库脚本", "数据库脚本", "{BEBB240B-0F69-4676-BAFD-F9DF2AD78DE3}"
+	ProjectSection(SolutionItems) = preProject
+		01Document\数据库脚本\TCDMS_MasterDataInit.sql = 01Document\数据库脚本\TCDMS_MasterDataInit.sql
+		01Document\数据库脚本\创建TCDMS_MasterData脚本.sql = 01Document\数据库脚本\创建TCDMS_MasterData脚本.sql
+		01Document\数据库脚本\创建TCDMS_UserApply脚本.sql = 01Document\数据库脚本\创建TCDMS_UserApply脚本.sql
+		01Document\数据库脚本\地区字典数据初始化.sql = 01Document\数据库脚本\地区字典数据初始化.sql
+		01Document\数据库脚本\日志触发器.sql = 01Document\数据库脚本\日志触发器.sql
+		01Document\数据库脚本\经销商更名存储过程.sql = 01Document\数据库脚本\经销商更名存储过程.sql
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "开发文档", "开发文档", "{455E3289-A8EB-4327-9FD4-19CC33B6F3A8}"
+	ProjectSection(SolutionItems) = preProject
+		01Document\开发文档\开发作业指导.xlsx = 01Document\开发文档\开发作业指导.xlsx
+		01Document\开发文档\系统结构信息.xlsx = 01Document\开发文档\系统结构信息.xlsx
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCSOFT.DMS.MasterDataAPI", "06WebAPI\TCSOFT.DMS.MasterDataAPI\TCSOFT.DMS.MasterDataAPI.csproj", "{48B8A78A-4AB2-40A8-94A2-15747428A5AA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{31179625-F39D-4461-85BF-06C6DB8112AB}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "主数据V2.4", "主数据V2.4", "{CAB574F6-84FC-4059-807C-C31F3FF25055}"
+	ProjectSection(SolutionItems) = preProject
+		01Document\需求文档\主数据V2.4\携手网2.0需求说明文档-基础数据V2.4.docx = 01Document\需求文档\主数据V2.4\携手网2.0需求说明文档-基础数据V2.4.docx
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Master Data导入导出模板", "Master Data导入导出模板", "{BF40C4B5-A814-442E-86BE-B8003DBF5A39}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "导出模板", "导出模板", "{BF1CE7F2-3300-4D4F-9A57-D1502EBB6857}"
+	ProjectSection(SolutionItems) = preProject
+		01Document\开发文档\Master Data导入导出模板\导出模板\产品小类导出模板.xlsx = 01Document\开发文档\Master Data导入导出模板\导出模板\产品小类导出模板.xlsx
+		01Document\开发文档\Master Data导入导出模板\导出模板\付款条款导出模板.xlsx = 01Document\开发文档\Master Data导入导出模板\导出模板\付款条款导出模板.xlsx
+		01Document\开发文档\Master Data导入导出模板\导出模板\仪器型号导出模板.xlsx = 01Document\开发文档\Master Data导入导出模板\导出模板\仪器型号导出模板.xlsx
+		01Document\开发文档\Master Data导入导出模板\导出模板\关账日导出模板.xlsx = 01Document\开发文档\Master Data导入导出模板\导出模板\关账日导出模板.xlsx
+		01Document\开发文档\Master Data导入导出模板\导出模板\反馈信息导出模板.xlsx = 01Document\开发文档\Master Data导入导出模板\导出模板\反馈信息导出模板.xlsx
+		01Document\开发文档\Master Data导入导出模板\导出模板\客户信息导出模板.xlsx = 01Document\开发文档\Master Data导入导出模板\导出模板\客户信息导出模板.xlsx
+		01Document\开发文档\Master Data导入导出模板\导出模板\汇率导出模板.xlsx = 01Document\开发文档\Master Data导入导出模板\导出模板\汇率导出模板.xlsx
+		01Document\开发文档\Master Data导入导出模板\导出模板\用户管理导出模板.xlsx = 01Document\开发文档\Master Data导入导出模板\导出模板\用户管理导出模板.xlsx
+		01Document\开发文档\Master Data导入导出模板\导出模板\用户统计导出模板.xlsx = 01Document\开发文档\Master Data导入导出模板\导出模板\用户统计导出模板.xlsx
+		01Document\开发文档\Master Data导入导出模板\导出模板\短信统计导出模板.xlsx = 01Document\开发文档\Master Data导入导出模板\导出模板\短信统计导出模板.xlsx
+		01Document\开发文档\Master Data导入导出模板\导出模板\经销商公告授权导出模板.xlsx = 01Document\开发文档\Master Data导入导出模板\导出模板\经销商公告授权导出模板.xlsx
+		01Document\开发文档\Master Data导入导出模板\导出模板\经销商导出模板.xlsx = 01Document\开发文档\Master Data导入导出模板\导出模板\经销商导出模板.xlsx
+		01Document\开发文档\Master Data导入导出模板\导出模板\经销商授权导出模板.xlsx = 01Document\开发文档\Master Data导入导出模板\导出模板\经销商授权导出模板.xlsx
+		01Document\开发文档\Master Data导入导出模板\导出模板\维修产品价格导出模板.xlsx = 01Document\开发文档\Master Data导入导出模板\导出模板\维修产品价格导出模板.xlsx
+		01Document\开发文档\Master Data导入导出模板\导出模板\维修产品导出模板.xlsx = 01Document\开发文档\Master Data导入导出模板\导出模板\维修产品导出模板.xlsx
+		01Document\开发文档\Master Data导入导出模板\导出模板\角色管理导出模板.xlsx = 01Document\开发文档\Master Data导入导出模板\导出模板\角色管理导出模板.xlsx
+		01Document\开发文档\Master Data导入导出模板\导出模板\试剂产品价格导出模板.xlsx = 01Document\开发文档\Master Data导入导出模板\导出模板\试剂产品价格导出模板.xlsx
+		01Document\开发文档\Master Data导入导出模板\导出模板\试剂产品导出模板.xlsx = 01Document\开发文档\Master Data导入导出模板\导出模板\试剂产品导出模板.xlsx
+		01Document\开发文档\Master Data导入导出模板\导出模板\试剂产品特价导出模板.xlsx = 01Document\开发文档\Master Data导入导出模板\导出模板\试剂产品特价导出模板.xlsx
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "导入模板", "导入模板", "{FD5435B1-E5EC-487A-9FDA-E7949F3B326C}"
+	ProjectSection(SolutionItems) = preProject
+		01Document\开发文档\Master Data导入导出模板\导入模板\产品小类导入模板.xlsx = 01Document\开发文档\Master Data导入导出模板\导入模板\产品小类导入模板.xlsx
+		01Document\开发文档\Master Data导入导出模板\导入模板\仪器型号导入模板.xlsx = 01Document\开发文档\Master Data导入导出模板\导入模板\仪器型号导入模板.xlsx
+		01Document\开发文档\Master Data导入导出模板\导入模板\关账日导入模板.xlsx = 01Document\开发文档\Master Data导入导出模板\导入模板\关账日导入模板.xlsx
+		01Document\开发文档\Master Data导入导出模板\导入模板\客户信息导入模板.xlsx = 01Document\开发文档\Master Data导入导出模板\导入模板\客户信息导入模板.xlsx
+		01Document\开发文档\Master Data导入导出模板\导入模板\用户管理导入模板.xlsx = 01Document\开发文档\Master Data导入导出模板\导入模板\用户管理导入模板.xlsx
+		01Document\开发文档\Master Data导入导出模板\导入模板\经销商公告授权导入模板.xlsx = 01Document\开发文档\Master Data导入导出模板\导入模板\经销商公告授权导入模板.xlsx
+		01Document\开发文档\Master Data导入导出模板\导入模板\经销商导入模板.xlsx = 01Document\开发文档\Master Data导入导出模板\导入模板\经销商导入模板.xlsx
+		01Document\开发文档\Master Data导入导出模板\导入模板\经销商授权导入模板.xlsx = 01Document\开发文档\Master Data导入导出模板\导入模板\经销商授权导入模板.xlsx
+		01Document\开发文档\Master Data导入导出模板\导入模板\维修产品导入模板.xlsx = 01Document\开发文档\Master Data导入导出模板\导入模板\维修产品导入模板.xlsx
+		01Document\开发文档\Master Data导入导出模板\导入模板\维修价格导入模板.xlsx = 01Document\开发文档\Master Data导入导出模板\导入模板\维修价格导入模板.xlsx
+		01Document\开发文档\Master Data导入导出模板\导入模板\试剂产品导入模板.xlsx = 01Document\开发文档\Master Data导入导出模板\导入模板\试剂产品导入模板.xlsx
+		01Document\开发文档\Master Data导入导出模板\导入模板\试剂价格导入模板.xlsx = 01Document\开发文档\Master Data导入导出模板\导入模板\试剂价格导入模板.xlsx
+		01Document\开发文档\Master Data导入导出模板\导入模板\试剂特价导入模板.xlsx = 01Document\开发文档\Master Data导入导出模板\导入模板\试剂特价导入模板.xlsx
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "导入导出 要求", "导入导出 要求", "{C4E11A80-164D-4D6F-8462-65D92B9A9CE0}"
+	ProjectSection(SolutionItems) = preProject
+		01Document\开发文档\导入导出 要求\导入导出模块list.xlsx = 01Document\开发文档\导入导出 要求\导入导出模块list.xlsx
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "导入导出文件整理", "导入导出文件整理", "{E7515E02-14E1-47B1-B51C-600BC3B3B986}"
+	ProjectSection(SolutionItems) = preProject
+		01Document\开发文档\导入导出 要求\导入导出文件整理\IMP_AccountDate.xlsx = 01Document\开发文档\导入导出 要求\导入导出文件整理\IMP_AccountDate.xlsx
+		01Document\开发文档\导入导出 要求\导入导出文件整理\IMP_CustomerInfo.xlsx = 01Document\开发文档\导入导出 要求\导入导出文件整理\IMP_CustomerInfo.xlsx
+		01Document\开发文档\导入导出 要求\导入导出文件整理\IMP_Distributor.xlsx = 01Document\开发文档\导入导出 要求\导入导出文件整理\IMP_Distributor.xlsx
+		01Document\开发文档\导入导出 要求\导入导出文件整理\IMP_DistributorADAuthority.xlsx = 01Document\开发文档\导入导出 要求\导入导出文件整理\IMP_DistributorADAuthority.xlsx
+		01Document\开发文档\导入导出 要求\导入导出文件整理\IMP_DistributorAuthority.xlsx = 01Document\开发文档\导入导出 要求\导入导出文件整理\IMP_DistributorAuthority.xlsx
+		01Document\开发文档\导入导出 要求\导入导出文件整理\IMP_InstrumentModel.xlsx = 01Document\开发文档\导入导出 要求\导入导出文件整理\IMP_InstrumentModel.xlsx
+		01Document\开发文档\导入导出 要求\导入导出文件整理\IMP_ProductSmallClass.xlsx = 01Document\开发文档\导入导出 要求\导入导出文件整理\IMP_ProductSmallClass.xlsx
+		01Document\开发文档\导入导出 要求\导入导出文件整理\IMP_ProductSpecial.xlsx = 01Document\开发文档\导入导出 要求\导入导出文件整理\IMP_ProductSpecial.xlsx
+		01Document\开发文档\导入导出 要求\导入导出文件整理\IMP_ReagentPrice.xlsx = 01Document\开发文档\导入导出 要求\导入导出文件整理\IMP_ReagentPrice.xlsx
+		01Document\开发文档\导入导出 要求\导入导出文件整理\IMP_ReagentProduct.xlsx = 01Document\开发文档\导入导出 要求\导入导出文件整理\IMP_ReagentProduct.xlsx
+		01Document\开发文档\导入导出 要求\导入导出文件整理\IMP_RepairPrice.xlsx = 01Document\开发文档\导入导出 要求\导入导出文件整理\IMP_RepairPrice.xlsx
+		01Document\开发文档\导入导出 要求\导入导出文件整理\IMP_RepairProduct.xlsx = 01Document\开发文档\导入导出 要求\导入导出文件整理\IMP_RepairProduct.xlsx
+		01Document\开发文档\导入导出 要求\导入导出文件整理\IMP_User.xlsx = 01Document\开发文档\导入导出 要求\导入导出文件整理\IMP_User.xlsx
+		01Document\开发文档\导入导出 要求\导入导出文件整理\产品小类20170717120117.xlsx = 01Document\开发文档\导入导出 要求\导入导出文件整理\产品小类20170717120117.xlsx
+		01Document\开发文档\导入导出 要求\导入导出文件整理\付款条款20170717115643.xlsx = 01Document\开发文档\导入导出 要求\导入导出文件整理\付款条款20170717115643.xlsx
+		01Document\开发文档\导入导出 要求\导入导出文件整理\仪器型号20170717120025.xlsx = 01Document\开发文档\导入导出 要求\导入导出文件整理\仪器型号20170717120025.xlsx
+		01Document\开发文档\导入导出 要求\导入导出文件整理\关账日20170717115844.xlsx = 01Document\开发文档\导入导出 要求\导入导出文件整理\关账日20170717115844.xlsx
+		01Document\开发文档\导入导出 要求\导入导出文件整理\反馈信息20170717132657.xlsx = 01Document\开发文档\导入导出 要求\导入导出文件整理\反馈信息20170717132657.xlsx
+		01Document\开发文档\导入导出 要求\导入导出文件整理\客户信息20170717132147.xlsx = 01Document\开发文档\导入导出 要求\导入导出文件整理\客户信息20170717132147.xlsx
+		01Document\开发文档\导入导出 要求\导入导出文件整理\汇率信息20170717115209.xlsx = 01Document\开发文档\导入导出 要求\导入导出文件整理\汇率信息20170717115209.xlsx
+		01Document\开发文档\导入导出 要求\导入导出文件整理\用户信息20170717132324.xlsx = 01Document\开发文档\导入导出 要求\导入导出文件整理\用户信息20170717132324.xlsx
+		01Document\开发文档\导入导出 要求\导入导出文件整理\用户统计20170717132621.xlsx = 01Document\开发文档\导入导出 要求\导入导出文件整理\用户统计20170717132621.xlsx
+		01Document\开发文档\导入导出 要求\导入导出文件整理\短信统计20170717132451.xlsx = 01Document\开发文档\导入导出 要求\导入导出文件整理\短信统计20170717132451.xlsx
+		01Document\开发文档\导入导出 要求\导入导出文件整理\经销商信息20170717131756.xlsx = 01Document\开发文档\导入导出 要求\导入导出文件整理\经销商信息20170717131756.xlsx
+		01Document\开发文档\导入导出 要求\导入导出文件整理\经销商公告授权20170717132014.xlsx = 01Document\开发文档\导入导出 要求\导入导出文件整理\经销商公告授权20170717132014.xlsx
+		01Document\开发文档\导入导出 要求\导入导出文件整理\经销商授权20170717131921.xlsx = 01Document\开发文档\导入导出 要求\导入导出文件整理\经销商授权20170717131921.xlsx
+		01Document\开发文档\导入导出 要求\导入导出文件整理\维修产品20170717120512.xlsx = 01Document\开发文档\导入导出 要求\导入导出文件整理\维修产品20170717120512.xlsx
+		01Document\开发文档\导入导出 要求\导入导出文件整理\维修产品价格20170717131637.xlsx = 01Document\开发文档\导入导出 要求\导入导出文件整理\维修产品价格20170717131637.xlsx
+		01Document\开发文档\导入导出 要求\导入导出文件整理\角色管理20170717132406.xlsx = 01Document\开发文档\导入导出 要求\导入导出文件整理\角色管理20170717132406.xlsx
+		01Document\开发文档\导入导出 要求\导入导出文件整理\试剂产品20170717120417.xlsx = 01Document\开发文档\导入导出 要求\导入导出文件整理\试剂产品20170717120417.xlsx
+		01Document\开发文档\导入导出 要求\导入导出文件整理\试剂产品价格20170717130649.xlsx = 01Document\开发文档\导入导出 要求\导入导出文件整理\试剂产品价格20170717130649.xlsx
+		01Document\开发文档\导入导出 要求\导入导出文件整理\试剂产品特价20170717131317.xlsx = 01Document\开发文档\导入导出 要求\导入导出文件整理\试剂产品特价20170717131317.xlsx
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCSOFT.DMS.UserApply.DTO", "03DTO\TCSOFT.DMS.User.DTO\TCSOFT.DMS.UserApply.DTO.csproj", "{512DE9DB-D8EA-4B5B-9C4D-8620F39384A4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCSOFT.DMS.UserApply.Entities", "04Entities\TCSOFT.DMS.UserApply.Entities\TCSOFT.DMS.UserApply.Entities.csproj", "{14BCAD79-51EE-475E-BFF9-4F700B6C436D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCSOFT.DMS.UserApply.IServices", "05Services\TCSOFT.DMS.User.IServices\TCSOFT.DMS.UserApply.IServices.csproj", "{E86C5AC0-6522-4FC4-9865-723305E22E34}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCSOFT.DMS.UserApply.Services", "05Services\TCSOFT.DMS.User.Services\TCSOFT.DMS.UserApply.Services.csproj", "{8AFFC5E1-F788-4E16-A86C-D126EDCD781D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCSOFT.DMS.UserApply.Services.Tests", "05Services\TCSOFT.DMS.User.Services.Tests\TCSOFT.DMS.UserApply.Services.Tests.csproj", "{509A5D79-3F4C-49ED-90F3-2CFF2EEB4E4C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCSOFT.DMS.UserApplyAPI", "06WebAPI\TCSOFT.DMS.UserAPI\TCSOFT.DMS.UserApplyAPI.csproj", "{8348F974-6AF5-4A4B-9F29-CBCF2A35E2E4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCSOFT.DMS.UserApplyAPI.Tests", "06WebAPI\TCSOFT.DMS.UserAPI.Tests\TCSOFT.DMS.UserApplyAPI.Tests.csproj", "{356D107B-CDBE-4962-99B1-37C581F734C3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCSOFT.DMS.Fcpa.IServices", "05Services\TCSOFT.DMS.Fcpa.IServices\TCSOFT.DMS.Fcpa.IServices.csproj", "{BCB1698C-F17F-43A1-A400-A11C135DD975}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCSOFT.DMS.Fcpa.Services", "05Services\TCSOFT.DMS.Fcpa.Services\TCSOFT.DMS.Fcpa.Services.csproj", "{81FF8E82-0CB6-4AE0-8DC0-0CB054618CA9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCSOFT.DMS.Fcpa.DTO", "03DTO\TCSOFT.DMS.Fcpa.DTO\TCSOFT.DMS.Fcpa.DTO.csproj", "{F07FD1BA-A70C-41EE-8472-E0CD85ED21C8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCSOFT.DMS.FpcaAPI", "06WebAPI\TCSOFT.DMS.FpcaAPI\TCSOFT.DMS.FpcaAPI.csproj", "{DF943800-1F3F-462C-9E71-55E8B2740747}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCSOFT.DMS.Document.DTO", "03DTO\TCSOFT.DMS.Document.DTO\TCSOFT.DMS.Document.DTO.csproj", "{F37572F3-8987-4DE1-B86A-DD0BDAD061B7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCSOFT.DMS.Document.Entities", "04Entities\TCSOFT.DMS.Document.Entities\TCSOFT.DMS.Document.Entities.csproj", "{823D6BD4-1588-4CB9-9B03-87D457333D7A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCSOFT.DMS.Document.IServices", "05Services\TCSOFT.DMS.Document.IServices\TCSOFT.DMS.Document.IServices.csproj", "{334FBDBA-05C8-4FAB-B2DF-B45E82B468E9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCSOFT.DMS.Document.Services", "05Services\TCSOFT.DMS.Document.Services\TCSOFT.DMS.Document.Services.csproj", "{2A7D735F-693A-4022-9FE7-A726569D5470}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCSOFT.DMS.DocumentAPI", "06WebAPI\TCSOFT.DMS.DocumentAPI\TCSOFT.DMS.DocumentAPI.csproj", "{DB02B517-6C71-464C-8C1A-6C358E5178E4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCSOFT.DMS.Fcpa.Entities", "04Entities\TCSOFT.DMS.Fcpa.Entities\TCSOFT.DMS.Fcpa.Entities.csproj", "{D734A99C-9176-484C-9E44-956A3D4C2B49}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Publish|Any CPU = Publish|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{933A188C-C018-4BB6-9480-041F353619BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{933A188C-C018-4BB6-9480-041F353619BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{933A188C-C018-4BB6-9480-041F353619BC}.Publish|Any CPU.ActiveCfg = LocalPublish|Any CPU
+		{933A188C-C018-4BB6-9480-041F353619BC}.Publish|Any CPU.Build.0 = LocalPublish|Any CPU
+		{933A188C-C018-4BB6-9480-041F353619BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{933A188C-C018-4BB6-9480-041F353619BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C055BAFE-86E7-4203-9175-F9458F8C80C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C055BAFE-86E7-4203-9175-F9458F8C80C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C055BAFE-86E7-4203-9175-F9458F8C80C2}.Publish|Any CPU.ActiveCfg = LocalPublish|Any CPU
+		{C055BAFE-86E7-4203-9175-F9458F8C80C2}.Publish|Any CPU.Build.0 = LocalPublish|Any CPU
+		{C055BAFE-86E7-4203-9175-F9458F8C80C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C055BAFE-86E7-4203-9175-F9458F8C80C2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2065FD5-8B45-4414-AF18-D8239D7EC172}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2065FD5-8B45-4414-AF18-D8239D7EC172}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2065FD5-8B45-4414-AF18-D8239D7EC172}.Publish|Any CPU.ActiveCfg = LocalPublish|Any CPU
+		{A2065FD5-8B45-4414-AF18-D8239D7EC172}.Publish|Any CPU.Build.0 = LocalPublish|Any CPU
+		{A2065FD5-8B45-4414-AF18-D8239D7EC172}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2065FD5-8B45-4414-AF18-D8239D7EC172}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2234289B-3028-4C58-8578-1D1F05566748}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2234289B-3028-4C58-8578-1D1F05566748}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2234289B-3028-4C58-8578-1D1F05566748}.Publish|Any CPU.ActiveCfg = LocalPublish|Any CPU
+		{2234289B-3028-4C58-8578-1D1F05566748}.Publish|Any CPU.Build.0 = LocalPublish|Any CPU
+		{2234289B-3028-4C58-8578-1D1F05566748}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2234289B-3028-4C58-8578-1D1F05566748}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD794910-8BEF-429E-8B47-253EDD2A81FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD794910-8BEF-429E-8B47-253EDD2A81FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD794910-8BEF-429E-8B47-253EDD2A81FF}.Publish|Any CPU.ActiveCfg = LocalPublish|Any CPU
+		{DD794910-8BEF-429E-8B47-253EDD2A81FF}.Publish|Any CPU.Build.0 = LocalPublish|Any CPU
+		{DD794910-8BEF-429E-8B47-253EDD2A81FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD794910-8BEF-429E-8B47-253EDD2A81FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3620805E-CB7B-47E1-BF3B-032B45183A61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3620805E-CB7B-47E1-BF3B-032B45183A61}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3620805E-CB7B-47E1-BF3B-032B45183A61}.Publish|Any CPU.ActiveCfg = LocalPublish|Any CPU
+		{3620805E-CB7B-47E1-BF3B-032B45183A61}.Publish|Any CPU.Build.0 = LocalPublish|Any CPU
+		{3620805E-CB7B-47E1-BF3B-032B45183A61}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3620805E-CB7B-47E1-BF3B-032B45183A61}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C85E2BB7-3A3F-4C5A-93BD-F7A7E7D27E0F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C85E2BB7-3A3F-4C5A-93BD-F7A7E7D27E0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C85E2BB7-3A3F-4C5A-93BD-F7A7E7D27E0F}.Publish|Any CPU.ActiveCfg = LocalPublish|Any CPU
+		{C85E2BB7-3A3F-4C5A-93BD-F7A7E7D27E0F}.Publish|Any CPU.Build.0 = LocalPublish|Any CPU
+		{C85E2BB7-3A3F-4C5A-93BD-F7A7E7D27E0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C85E2BB7-3A3F-4C5A-93BD-F7A7E7D27E0F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DEAE0602-D2FA-41BB-8BE3-344829ECE857}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DEAE0602-D2FA-41BB-8BE3-344829ECE857}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DEAE0602-D2FA-41BB-8BE3-344829ECE857}.Publish|Any CPU.ActiveCfg = LocalPublish|Any CPU
+		{DEAE0602-D2FA-41BB-8BE3-344829ECE857}.Publish|Any CPU.Build.0 = LocalPublish|Any CPU
+		{DEAE0602-D2FA-41BB-8BE3-344829ECE857}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DEAE0602-D2FA-41BB-8BE3-344829ECE857}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C67B662-3FE0-4CAC-8790-71B94DDA7D89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C67B662-3FE0-4CAC-8790-71B94DDA7D89}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C67B662-3FE0-4CAC-8790-71B94DDA7D89}.Publish|Any CPU.ActiveCfg = LocalPublish|Any CPU
+		{0C67B662-3FE0-4CAC-8790-71B94DDA7D89}.Publish|Any CPU.Build.0 = LocalPublish|Any CPU
+		{0C67B662-3FE0-4CAC-8790-71B94DDA7D89}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C67B662-3FE0-4CAC-8790-71B94DDA7D89}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48B8A78A-4AB2-40A8-94A2-15747428A5AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48B8A78A-4AB2-40A8-94A2-15747428A5AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48B8A78A-4AB2-40A8-94A2-15747428A5AA}.Publish|Any CPU.ActiveCfg = LocalPublish|Any CPU
+		{48B8A78A-4AB2-40A8-94A2-15747428A5AA}.Publish|Any CPU.Build.0 = LocalPublish|Any CPU
+		{48B8A78A-4AB2-40A8-94A2-15747428A5AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48B8A78A-4AB2-40A8-94A2-15747428A5AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{512DE9DB-D8EA-4B5B-9C4D-8620F39384A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{512DE9DB-D8EA-4B5B-9C4D-8620F39384A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{512DE9DB-D8EA-4B5B-9C4D-8620F39384A4}.Publish|Any CPU.ActiveCfg = Release|Any CPU
+		{512DE9DB-D8EA-4B5B-9C4D-8620F39384A4}.Publish|Any CPU.Build.0 = Release|Any CPU
+		{512DE9DB-D8EA-4B5B-9C4D-8620F39384A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{512DE9DB-D8EA-4B5B-9C4D-8620F39384A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14BCAD79-51EE-475E-BFF9-4F700B6C436D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14BCAD79-51EE-475E-BFF9-4F700B6C436D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14BCAD79-51EE-475E-BFF9-4F700B6C436D}.Publish|Any CPU.ActiveCfg = Release|Any CPU
+		{14BCAD79-51EE-475E-BFF9-4F700B6C436D}.Publish|Any CPU.Build.0 = Release|Any CPU
+		{14BCAD79-51EE-475E-BFF9-4F700B6C436D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14BCAD79-51EE-475E-BFF9-4F700B6C436D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E86C5AC0-6522-4FC4-9865-723305E22E34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E86C5AC0-6522-4FC4-9865-723305E22E34}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E86C5AC0-6522-4FC4-9865-723305E22E34}.Publish|Any CPU.ActiveCfg = Release|Any CPU
+		{E86C5AC0-6522-4FC4-9865-723305E22E34}.Publish|Any CPU.Build.0 = Release|Any CPU
+		{E86C5AC0-6522-4FC4-9865-723305E22E34}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E86C5AC0-6522-4FC4-9865-723305E22E34}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8AFFC5E1-F788-4E16-A86C-D126EDCD781D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8AFFC5E1-F788-4E16-A86C-D126EDCD781D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8AFFC5E1-F788-4E16-A86C-D126EDCD781D}.Publish|Any CPU.ActiveCfg = Release|Any CPU
+		{8AFFC5E1-F788-4E16-A86C-D126EDCD781D}.Publish|Any CPU.Build.0 = Release|Any CPU
+		{8AFFC5E1-F788-4E16-A86C-D126EDCD781D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8AFFC5E1-F788-4E16-A86C-D126EDCD781D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{509A5D79-3F4C-49ED-90F3-2CFF2EEB4E4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{509A5D79-3F4C-49ED-90F3-2CFF2EEB4E4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{509A5D79-3F4C-49ED-90F3-2CFF2EEB4E4C}.Publish|Any CPU.ActiveCfg = Release|Any CPU
+		{509A5D79-3F4C-49ED-90F3-2CFF2EEB4E4C}.Publish|Any CPU.Build.0 = Release|Any CPU
+		{509A5D79-3F4C-49ED-90F3-2CFF2EEB4E4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{509A5D79-3F4C-49ED-90F3-2CFF2EEB4E4C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8348F974-6AF5-4A4B-9F29-CBCF2A35E2E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8348F974-6AF5-4A4B-9F29-CBCF2A35E2E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8348F974-6AF5-4A4B-9F29-CBCF2A35E2E4}.Publish|Any CPU.ActiveCfg = Release|Any CPU
+		{8348F974-6AF5-4A4B-9F29-CBCF2A35E2E4}.Publish|Any CPU.Build.0 = Release|Any CPU
+		{8348F974-6AF5-4A4B-9F29-CBCF2A35E2E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8348F974-6AF5-4A4B-9F29-CBCF2A35E2E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{356D107B-CDBE-4962-99B1-37C581F734C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{356D107B-CDBE-4962-99B1-37C581F734C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{356D107B-CDBE-4962-99B1-37C581F734C3}.Publish|Any CPU.ActiveCfg = Release|Any CPU
+		{356D107B-CDBE-4962-99B1-37C581F734C3}.Publish|Any CPU.Build.0 = Release|Any CPU
+		{356D107B-CDBE-4962-99B1-37C581F734C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{356D107B-CDBE-4962-99B1-37C581F734C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BCB1698C-F17F-43A1-A400-A11C135DD975}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BCB1698C-F17F-43A1-A400-A11C135DD975}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BCB1698C-F17F-43A1-A400-A11C135DD975}.Publish|Any CPU.ActiveCfg = Release|Any CPU
+		{BCB1698C-F17F-43A1-A400-A11C135DD975}.Publish|Any CPU.Build.0 = Release|Any CPU
+		{BCB1698C-F17F-43A1-A400-A11C135DD975}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BCB1698C-F17F-43A1-A400-A11C135DD975}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81FF8E82-0CB6-4AE0-8DC0-0CB054618CA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81FF8E82-0CB6-4AE0-8DC0-0CB054618CA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81FF8E82-0CB6-4AE0-8DC0-0CB054618CA9}.Publish|Any CPU.ActiveCfg = Release|Any CPU
+		{81FF8E82-0CB6-4AE0-8DC0-0CB054618CA9}.Publish|Any CPU.Build.0 = Release|Any CPU
+		{81FF8E82-0CB6-4AE0-8DC0-0CB054618CA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81FF8E82-0CB6-4AE0-8DC0-0CB054618CA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F07FD1BA-A70C-41EE-8472-E0CD85ED21C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F07FD1BA-A70C-41EE-8472-E0CD85ED21C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F07FD1BA-A70C-41EE-8472-E0CD85ED21C8}.Publish|Any CPU.ActiveCfg = Release|Any CPU
+		{F07FD1BA-A70C-41EE-8472-E0CD85ED21C8}.Publish|Any CPU.Build.0 = Release|Any CPU
+		{F07FD1BA-A70C-41EE-8472-E0CD85ED21C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F07FD1BA-A70C-41EE-8472-E0CD85ED21C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF943800-1F3F-462C-9E71-55E8B2740747}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF943800-1F3F-462C-9E71-55E8B2740747}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF943800-1F3F-462C-9E71-55E8B2740747}.Publish|Any CPU.ActiveCfg = Release|Any CPU
+		{DF943800-1F3F-462C-9E71-55E8B2740747}.Publish|Any CPU.Build.0 = Release|Any CPU
+		{DF943800-1F3F-462C-9E71-55E8B2740747}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF943800-1F3F-462C-9E71-55E8B2740747}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F37572F3-8987-4DE1-B86A-DD0BDAD061B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F37572F3-8987-4DE1-B86A-DD0BDAD061B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F37572F3-8987-4DE1-B86A-DD0BDAD061B7}.Publish|Any CPU.ActiveCfg = Release|Any CPU
+		{F37572F3-8987-4DE1-B86A-DD0BDAD061B7}.Publish|Any CPU.Build.0 = Release|Any CPU
+		{F37572F3-8987-4DE1-B86A-DD0BDAD061B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F37572F3-8987-4DE1-B86A-DD0BDAD061B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{823D6BD4-1588-4CB9-9B03-87D457333D7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{823D6BD4-1588-4CB9-9B03-87D457333D7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{823D6BD4-1588-4CB9-9B03-87D457333D7A}.Publish|Any CPU.ActiveCfg = Release|Any CPU
+		{823D6BD4-1588-4CB9-9B03-87D457333D7A}.Publish|Any CPU.Build.0 = Release|Any CPU
+		{823D6BD4-1588-4CB9-9B03-87D457333D7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{823D6BD4-1588-4CB9-9B03-87D457333D7A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{334FBDBA-05C8-4FAB-B2DF-B45E82B468E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{334FBDBA-05C8-4FAB-B2DF-B45E82B468E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{334FBDBA-05C8-4FAB-B2DF-B45E82B468E9}.Publish|Any CPU.ActiveCfg = Release|Any CPU
+		{334FBDBA-05C8-4FAB-B2DF-B45E82B468E9}.Publish|Any CPU.Build.0 = Release|Any CPU
+		{334FBDBA-05C8-4FAB-B2DF-B45E82B468E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{334FBDBA-05C8-4FAB-B2DF-B45E82B468E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A7D735F-693A-4022-9FE7-A726569D5470}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A7D735F-693A-4022-9FE7-A726569D5470}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A7D735F-693A-4022-9FE7-A726569D5470}.Publish|Any CPU.ActiveCfg = Release|Any CPU
+		{2A7D735F-693A-4022-9FE7-A726569D5470}.Publish|Any CPU.Build.0 = Release|Any CPU
+		{2A7D735F-693A-4022-9FE7-A726569D5470}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A7D735F-693A-4022-9FE7-A726569D5470}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB02B517-6C71-464C-8C1A-6C358E5178E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB02B517-6C71-464C-8C1A-6C358E5178E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB02B517-6C71-464C-8C1A-6C358E5178E4}.Publish|Any CPU.ActiveCfg = Release|Any CPU
+		{DB02B517-6C71-464C-8C1A-6C358E5178E4}.Publish|Any CPU.Build.0 = Release|Any CPU
+		{DB02B517-6C71-464C-8C1A-6C358E5178E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB02B517-6C71-464C-8C1A-6C358E5178E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D734A99C-9176-484C-9E44-956A3D4C2B49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D734A99C-9176-484C-9E44-956A3D4C2B49}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D734A99C-9176-484C-9E44-956A3D4C2B49}.Publish|Any CPU.ActiveCfg = Release|Any CPU
+		{D734A99C-9176-484C-9E44-956A3D4C2B49}.Publish|Any CPU.Build.0 = Release|Any CPU
+		{D734A99C-9176-484C-9E44-956A3D4C2B49}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D734A99C-9176-484C-9E44-956A3D4C2B49}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{933A188C-C018-4BB6-9480-041F353619BC} = {343EACBE-5B89-44E0-A044-75B3AF77DED4}
+		{C055BAFE-86E7-4203-9175-F9458F8C80C2} = {CCD1636B-C518-41A7-9E7D-B48157A136E2}
+		{A2065FD5-8B45-4414-AF18-D8239D7EC172} = {A608FC91-1826-43BE-BBC7-BF0684625459}
+		{2234289B-3028-4C58-8578-1D1F05566748} = {C7CFDA16-7C58-4664-8BB3-E04BAD68F460}
+		{DD794910-8BEF-429E-8B47-253EDD2A81FF} = {C7CFDA16-7C58-4664-8BB3-E04BAD68F460}
+		{3620805E-CB7B-47E1-BF3B-032B45183A61} = {F15EF552-47DF-432B-A05A-B60E644929F2}
+		{C85E2BB7-3A3F-4C5A-93BD-F7A7E7D27E0F} = {343EACBE-5B89-44E0-A044-75B3AF77DED4}
+		{DEAE0602-D2FA-41BB-8BE3-344829ECE857} = {C7CFDA16-7C58-4664-8BB3-E04BAD68F460}
+		{0C67B662-3FE0-4CAC-8790-71B94DDA7D89} = {DC539F18-3553-4BB6-969F-2115E9981F3F}
+		{637D6509-84A5-46DB-BF75-524A7DD1FD2F} = {02F79524-B1F0-4346-A667-6727620F1AB2}
+		{8E063375-177E-4EBA-B041-90839E944D5F} = {637D6509-84A5-46DB-BF75-524A7DD1FD2F}
+		{BEBB240B-0F69-4676-BAFD-F9DF2AD78DE3} = {02F79524-B1F0-4346-A667-6727620F1AB2}
+		{455E3289-A8EB-4327-9FD4-19CC33B6F3A8} = {02F79524-B1F0-4346-A667-6727620F1AB2}
+		{48B8A78A-4AB2-40A8-94A2-15747428A5AA} = {DC539F18-3553-4BB6-969F-2115E9981F3F}
+		{CAB574F6-84FC-4059-807C-C31F3FF25055} = {637D6509-84A5-46DB-BF75-524A7DD1FD2F}
+		{BF40C4B5-A814-442E-86BE-B8003DBF5A39} = {455E3289-A8EB-4327-9FD4-19CC33B6F3A8}
+		{BF1CE7F2-3300-4D4F-9A57-D1502EBB6857} = {BF40C4B5-A814-442E-86BE-B8003DBF5A39}
+		{FD5435B1-E5EC-487A-9FDA-E7949F3B326C} = {BF40C4B5-A814-442E-86BE-B8003DBF5A39}
+		{C4E11A80-164D-4D6F-8462-65D92B9A9CE0} = {455E3289-A8EB-4327-9FD4-19CC33B6F3A8}
+		{E7515E02-14E1-47B1-B51C-600BC3B3B986} = {C4E11A80-164D-4D6F-8462-65D92B9A9CE0}
+		{512DE9DB-D8EA-4B5B-9C4D-8620F39384A4} = {CCD1636B-C518-41A7-9E7D-B48157A136E2}
+		{14BCAD79-51EE-475E-BFF9-4F700B6C436D} = {A608FC91-1826-43BE-BBC7-BF0684625459}
+		{E86C5AC0-6522-4FC4-9865-723305E22E34} = {C7CFDA16-7C58-4664-8BB3-E04BAD68F460}
+		{8AFFC5E1-F788-4E16-A86C-D126EDCD781D} = {C7CFDA16-7C58-4664-8BB3-E04BAD68F460}
+		{509A5D79-3F4C-49ED-90F3-2CFF2EEB4E4C} = {C7CFDA16-7C58-4664-8BB3-E04BAD68F460}
+		{8348F974-6AF5-4A4B-9F29-CBCF2A35E2E4} = {DC539F18-3553-4BB6-969F-2115E9981F3F}
+		{356D107B-CDBE-4962-99B1-37C581F734C3} = {DC539F18-3553-4BB6-969F-2115E9981F3F}
+		{BCB1698C-F17F-43A1-A400-A11C135DD975} = {C7CFDA16-7C58-4664-8BB3-E04BAD68F460}
+		{81FF8E82-0CB6-4AE0-8DC0-0CB054618CA9} = {C7CFDA16-7C58-4664-8BB3-E04BAD68F460}
+		{F07FD1BA-A70C-41EE-8472-E0CD85ED21C8} = {CCD1636B-C518-41A7-9E7D-B48157A136E2}
+		{DF943800-1F3F-462C-9E71-55E8B2740747} = {DC539F18-3553-4BB6-969F-2115E9981F3F}
+		{F37572F3-8987-4DE1-B86A-DD0BDAD061B7} = {CCD1636B-C518-41A7-9E7D-B48157A136E2}
+		{823D6BD4-1588-4CB9-9B03-87D457333D7A} = {A608FC91-1826-43BE-BBC7-BF0684625459}
+		{334FBDBA-05C8-4FAB-B2DF-B45E82B468E9} = {C7CFDA16-7C58-4664-8BB3-E04BAD68F460}
+		{2A7D735F-693A-4022-9FE7-A726569D5470} = {C7CFDA16-7C58-4664-8BB3-E04BAD68F460}
+		{DB02B517-6C71-464C-8C1A-6C358E5178E4} = {DC539F18-3553-4BB6-969F-2115E9981F3F}
+		{D734A99C-9176-484C-9E44-956A3D4C2B49} = {A608FC91-1826-43BE-BBC7-BF0684625459}
+	EndGlobalSection
+	GlobalSection(SubversionScc) = preSolution
+		Svn-Managed = True
+		Manager = AnkhSVN - Subversion Support for Visual Studio
+	EndGlobalSection
+EndGlobal

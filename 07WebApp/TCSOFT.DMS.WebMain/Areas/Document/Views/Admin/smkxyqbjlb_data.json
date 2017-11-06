@@ -1,0 +1,12 @@
+{"total":10,"rows":[
+	{"id":"1","dollar_offer":"100","product_desc":"产品描述1","goods_num":"货号1","validity_date":"2017/10/01","release_person":"张三","release_time":"2017/09/01 00:00:00","update_time":"2017/09/01 00:00:00"},
+	{"id":"2","dollar_offer":"200","product_desc":"产品描述2","goods_num":"货号2","validity_date":"2017/10/01","release_person":"张三","release_time":"2017/09/01 00:00:00","update_time":"2017/09/01 00:00:00"},
+	{"id":"3","dollar_offer":"300","product_desc":"产品描述3","goods_num":"货号3","validity_date":"2017/10/01","release_person":"张三","release_time":"2017/09/01 00:00:00","update_time":"2017/09/01 00:00:00"},
+	{"id":"4","dollar_offer":"100","product_desc":"产品描述4","goods_num":"货号1","validity_date":"2017/10/01","release_person":"张三","release_time":"2017/09/01 00:00:00","update_time":"2017/09/01 00:00:00"},
+	{"id":"5","dollar_offer":"20","product_desc":"产品描述5","goods_num":"货号2","validity_date":"2017/10/01","release_person":"张三","release_time":"2017/09/01 00:00:00","update_time":"2017/09/01 00:00:00"},
+	{"id":"6","dollar_offer":"120","product_desc":"产品描述6","goods_num":"货号3","validity_date":"2017/10/01","release_person":"张三","release_time":"2017/09/01 00:00:00","update_time":"2017/09/01 00:00:00"},
+	{"id":"7","dollar_offer":"130","product_desc":"产品描述7","goods_num":"货号1","validity_date":"2017/10/01","release_person":"张三","release_time":"2017/09/01 00:00:00","update_time":"2017/09/01 00:00:00"},
+	{"id":"8","dollar_offer":"140","product_desc":"产品描述8","goods_num":"货号2","validity_date":"2017/10/01","release_person":"张三","release_time":"2017/09/01 00:00:00","update_time":"2017/09/01 00:00:00"},
+	{"id":"9","dollar_offer":"150","product_desc":"产品描述9","goods_num":"货号3","validity_date":"2017/10/01","release_person":"张三","release_time":"2017/09/01 00:00:00","update_time":"2017/09/01 00:00:00"},
+	{"id":"10","dollar_offer":"160","product_desc":"产品描述10","goods_num":"货号1","validity_date":"2017/10/01","release_person":"张三","release_time":"2017/09/01 00:00:00","update_time":"2017/09/01 00:00:00"}
+]}

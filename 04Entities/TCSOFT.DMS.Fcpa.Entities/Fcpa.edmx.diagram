@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="24cf8669129d4a86a21e340fc33d77d7" Name="Diagram1" ZoomLevel="87">
+        <EntityTypeShape EntityType="TCDMS_PCPAModel.fcpa_AlarmInfo" Width="1.5" PointX="3" PointY="2.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCDMS_PCPAModel.fcpa_CredentialInfo" Width="1.5" PointX="8" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCDMS_PCPAModel.fcpa_DistributorInfo" Width="1.5" PointX="5.75" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCDMS_PCPAModel.fcpa_UserInfo" Width="1.5" PointX="0.75" PointY="1.125" IsExpanded="true" />
+        <AssociationConnector Association="TCDMS_PCPAModel.FK_FCPA_ALA_REFERENCE_FCPA_USE" ManuallyRouted="false" />
+        <AssociationConnector Association="TCDMS_PCPAModel.FK_FCPA_CRE_REFERENCE_FCPA_DIS" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

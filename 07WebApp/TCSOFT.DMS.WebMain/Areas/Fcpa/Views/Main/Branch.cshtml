@@ -1,0 +1,132 @@
+﻿
+@{
+    Layout = null;
+}
+
+<div class="easyui-layout" style="height:100%;">
+    <div region="north" style="height:64px">
+        <link href="~/Content/Fpca/CSS/_Partialtool.css" rel="stylesheet" />
+        <div id="BodyContentTool" style="height: 64px;">
+            <div id="btnButton">
+                <ul>
+                    <li>
+                        <input id="serchText" class="easyui-searchbox search" style="height:32px;width:500px;"
+                               data-options="prompt:'支持经销商名模糊查询',searcher:function(){}" />
+                    </li>
+                    <li><a href="#" class="easyui-linkbutton" id="btnFind">搜索</a></li>
+                    <li><a href="#" class="easyui-linkbutton" id="btnExport">导出</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div region="center">
+        <div id="BodyContentDiv">
+            <table id="branchGrid" class="easyui-datagrid"
+                   data-options="
+                   iconCls: 'icon-view' ,
+                   width: function () { return document.body.clientWidth * 0.9 },
+                   nowrap: true,
+                   autoRowHeight: true,
+                   striped: true,
+                   collapsible: false,
+                   pagination: true,
+                   pageSize: 20,
+                   pageList: [10, 20, 30, 40, 50],
+                   rownumbers: true,
+                   sortOrder: 'desc' ,
+                   remoteSort: false,
+                   singleSelect: true,
+                   queryParams: {},
+                   animate: true,
+                   method:'POST',
+                   idField:'ID',
+                   fit:true">
+                <thead>
+                    <tr>
+                        <th data-options="field:'ID',checkbox:true"></th>
+                        <th data-options="field:'DistributorName',width:360,align:'left',sortable:true">经销商</th>
+                        <th data-options="field:'OrgMap',width:120,align:'center',sortable:true,formatter:formatterOrgAttachment">组织架构图</th>
+                        <th data-options="field:'Trains',width:120,align:'center',sortable:true,formatter:formatterTrainsAttachment">培训人员名单</th>
+                        <th data-options="field:'Status',width:80,align:'center',sortable:true">状态</th>
+                        <th data-options="field:'OrgMapUpdateTime',width:150,align:'center',sortable:true,formatter:function(v){return v ? v.substr(0,10): ''}">组织架构图更新日期</th>
+                        <th data-options="field:'TrainsUpdateTime',width:150,align:'center',sortable:true,formatter:function(v){return v ? v.substr(0,10): ''}">培训人员名单更新日期</th>
+                        <th data-options="field:'ValidNum',width:150,align:'center',sortable:true,formatter:function(v){return v ? v : 0}">实际证书有效期内人员人数</th>
+                        <th data-options="field:'ShouldNum',width:150,align:'center',sortable:true,formatter:function(v){return v ? v : 0}">应参与培训人员人数</th>
+                        <th data-options="field:'Rate',width:100,align:'center'">完成率(%)</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+    $(function(){
+        $('#branchGrid').datagrid({
+            url: '@Url.Action("Query", "OrgMap")'
+        });
+        $('#btnFind').click(function(){
+            var searchText = $("#serchText").textbox('getText');
+            $('#branchGrid').datagrid('load',{
+                "DistributorName":searchText
+            });
+        });
+        $('#btnExport').click(function () {
+            $('<div/>').dialog({
+                title:'导出',
+                collapsible:false,
+                minimizable:false,
+                maximizable:false,
+                resizable:false,
+                id : 'dialogExport',
+                width : 400,
+                height : 200,
+                closed : false,
+                cache: false,
+                href: '../Dialog/Export',              
+                modal:true,
+                buttons:[{
+                    text:'确定',
+                    iconCls:'icon-ok',
+                    handler:function(){
+                        var options = $('#branchGrid').datagrid('options');
+                        var extJson = $('#ext-form').toJSON();
+                        var params = '?token=' + window.token;
+                        if (extJson.current == 'true') {
+                            params += '&' + $.param(options.queryParams);
+                        }
+                        window.location.href = '@Url.Action("Export", "OrgMap")' + params;
+                        $('#dialogExport').dialog('destroy');
+                    }
+                },{
+                    text:'取消',
+                    handler:function(){
+                        $('#dialogExport').dialog('destroy');
+                    }
+                }]
+            });
+        });
+    });
+    function rowStyler(index,row){
+        if(row.readState=="0"){
+            return 'font-weight:bold;';
+        }
+    }
+    function formatterOrgAttachment(value,row,index){
+        if (value) {
+            var href = '@Url.Action("DownloadOrg", "OrgMap")?id=' + value
+            return '<a target="_blank" href="' + href + '">下载</a>';     
+        }
+        else{
+            return "";
+        }
+    }
+    function formatterTrainsAttachment(value,row,index){
+        if (value) {
+            var href = '@Url.Action("DownloadTrains", "OrgMap")?id=' + value
+            return '<a target="_blank" href="' + href + '">下载</a>';         
+        }
+        else{
+            return "";
+        }
+    }
+</script>

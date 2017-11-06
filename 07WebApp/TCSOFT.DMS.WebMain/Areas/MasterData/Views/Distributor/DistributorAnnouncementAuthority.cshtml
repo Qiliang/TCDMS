@@ -1,0 +1,264 @@
+﻿@{
+    Layout = null;
+    ViewBag.SearchOption = "prompt:'支持按经销商名称模糊查询',searcher:doSearch";
+}
+
+<script type="text/javascript">
+    $(function () {
+        $('#grid').datagrid({
+            url: '@Url.Action("GetDistributorAnnounceAuthorityList", "Distributor")',
+            iconCls: 'icon-view',
+            width: function () { return document.body.clientWidth * 0.9 },
+            nowrap: true,
+            autoRowHeight: true,
+            striped: true,
+            collapsible: false,
+            pagination: true,
+            pageSize: 10,
+            pageList: [10, 20, 30],
+            rownumbers: true,
+            sortOrder: 'desc',
+            remoteSort: false,
+            singleSelect: true,
+            idField: 'DistributorID',
+            queryParams: {},
+            animate: true,
+            columns: [[
+            { title: 'ID', field: 'DistributorID', hidden: true, width: 1, halign: 'center', align: 'center' },
+            { title: '经销商名称', field: 'DistributorName', width: 380, halign: 'center', align: 'left' },
+            { title: '经销商类别', field: 'DistributorTypeName', width: 200, halign: 'center', align: 'left' },
+            { title: '经销商服务类型', field: 'DistributorServiceTypeName', width: 200, halign: 'center', align: 'left' },
+            { title: '注册省份', field: 'RegionName', width: 130, halign: 'center', align: 'center' },
+            { title: '产品线', field: 'ProductLineNames', width: 380, halign: 'center', align: 'left' },
+            ]]
+        });
+        $('#ProductLineID').datagrid({
+            url: '@Url.Action("GetProductLineDis", "Distributor")',
+            width: 750,
+            height: 160,
+            nowrap: true,
+            autoRowHeight: true,
+            striped: true,
+            collapsible: false,
+            pagination: true,
+            pageSize: 1000,
+            pageList: [1000],
+            rownumbers: true,
+            sortOrder: 'desc',
+            remoteSort: false,
+            singleSelect: false,
+            idField: 'ProductLineID',
+            animate: true,
+            columns: [[
+                 { title: '', field: 'IsChecked', checkbox: true },
+                 { title: 'ProductLineID', field: 'ProductLineID', hidden: true, width: 1, halign: 'center', align: 'center' },
+                 { title: '产品线名称', field: 'ProductLineName', width: 280, halign: 'center', align: 'left' },
+                 { title: '产品线缩写', field: 'ProductLineNameAB', width: 200, halign: 'center', align: 'center' },
+                 { title: '部门', field: 'DepartName', width: 200, halign: 'center', align: 'center' }
+            ]],
+            onLoadSuccess: function (data) {
+                if (data) {
+                    $.each(data.rows, function (index, item) {
+                        if (item.Ischeck) {
+                            $('#ProductLineID').datagrid('checkRow', index);
+                        }
+                    });
+                }
+            }
+        });
+        //新增/修改
+        $('#AddorUpdateWindow').dialog({
+            width: 'auto',
+            height: 'auto',
+            top: 50,
+            title: "授权",
+            modal: true,
+            closed: true,
+            inline: true,
+            buttons: [{
+                text: '确定',
+                handler: function () {
+                    Save();
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    $('#AddorUpdateWindow').dialog('close');
+                }
+            }]
+        });
+
+        $('#ImportDistributorADAuthority').dialog({
+            width: 'auto',
+            height: 'auto',
+            top: 30,
+            modal: true,
+            closed: true,
+            inline: true,
+            buttons: [{
+                text: '确定',
+                handler: function () {
+                    if ($('#DistributorADAuthorityFile').filebox("getValue") == "")
+                    { alert('请选择导入文件！') }
+                    else
+                    {
+                        $('#DistributorADAuthorityFileform').submit();
+                    }
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    $('#ImportDistributorADAuthority').dialog('close');
+                }
+            }],
+            title: "导入经销商公告授权"
+        });
+
+        $('#DistributorADAuthorityFileform').ajaxForm({
+            url: '@Url.Action("ImportDistributorADAuthority", "Distributor")',
+            dataType: 'json',
+            beforeSend: function () {
+            },
+            success: function () {
+            },
+            complete: function (data) {
+
+                if (!data.responseJSON) {
+                    alert("导入成功！");
+                    $('#ImportDistributorADAuthority').dialog('close');
+                    $('#grid').datagrid('reload', { SearchText: null });
+                }
+                else {
+                    if (data.responseJSON == "导入失败") {
+                        alert("导入失败！");
+                    }
+                    else {
+                        alert("导入失败，即将下载错误文件！");
+                        window.location.href = "/Distributor/DownloadDistributorADAuthority?filename=" + data.responseJSON;
+                    }
+                }
+            }
+        });
+    })
+
+    function ClickAuthority() {
+        var row = $('#grid').datagrid('getSelected');
+        if (!row) {
+            alert("请选择经销商！");
+            return;
+        }
+        InitProductLine(row.ProductLineIDList);
+
+        $("#serchText").searchbox('setValue', null);
+        $('#Distributorid').val(row.DistributorID);
+        $('#DistributorName').textbox('setValue', row.DistributorName);
+        $('#ProductLineID').datagrid('clearSelections');
+        $('#AddorUpdateWindow').dialog('open');
+    }
+
+    // 导入
+    function ClickImport() {
+        $("#serchText").searchbox('setValue', null);
+        $('#DistributorADAuthorityFile').filebox("clear");
+        $('#ImportDistributorADAuthority').dialog('open');
+    }
+    // 导出
+    function ClickExport() {
+        $.post("@Url.Action("ExportDistributorADAuthority", "Distributor")", {
+            SearchText: $("#serchText").searchbox('getValue')
+        }, function (data) {
+            if (data) {
+                window.location.href = "/Distributor/DownloadDistributorADAuthority?filename=" + data;
+            } else {
+                alert("导出失败！");
+            }
+        })
+    }
+    function doSearch(value) {
+        $('#grid').datagrid('reload', { SearchText: value });
+    }
+    function InitProductLine(plineid) {
+        $('#ProductLineID').datagrid('reload', { plineID: plineid });
+    }
+    function Save() {
+        if ($("#AddorUpdate").form('validate')) {
+            var id = new Array();
+            var row = $('#ProductLineID').datagrid('getSelections');
+            if (row && row.length > 0) {
+                for (i = 0; i < row.length; i++)//循环选中的行
+                {
+                    id.push(row[i].ProductLineID);
+                }
+            } else {
+                alert("请选择要授权的产品线！");
+                return;
+            }
+            $.post(
+             '@Url.Action("AddDistributorAnnounceAuthority", "Distributor")',
+             {
+                 DistributorID: $('#Distributorid').val(),
+                 DistributorName: $('#DistributorName').textbox("getValue"),
+                 ProductLineIDList: id,
+             },
+             function success(data, textStatus, jqXHR) {
+                 if (!data.SubmitResult) {
+                     alert(data.Message);
+                 }
+                 else {
+                     $('#AddorUpdateWindow').dialog('close');
+                     $('#grid').datagrid('clearSelections');
+                     $('#grid').datagrid('reload', { SearchText: $("#serchText").searchbox('getValue') });
+                 }
+             }, "json");
+        }
+    }
+</script>
+<div class="easyui-layout" style="height:100%;">
+    <div region="north" style="height:94px">
+        @Html.Partial("_Partialtool")
+    </div>
+    <div region="center">
+        <div id="BodyContentDiv">
+            <table id="grid" style="width:100%;height:100%;"></table>
+        </div>
+    </div>
+</div>
+
+
+@*修改*@
+<div id="AddorUpdateWindow" class="easyui-dialog">
+    <div class="AddContent">
+        <form id="AddorUpdate">
+            <p>
+                <span class="cl100">经销商名称：</span>
+                <input id="Distributorid" type="text" hidden="hidden" />
+                <input class="easyui-textbox txt200" style="width:200px;" id="DistributorName" type="text" disabled="disabled" />
+            </p>
+        </form>
+    </div>
+    <p>
+        <span class="cl100">产品线：</span>
+        <div class="DivPage">
+            <table id="ProductLineID"></table>
+        </div>
+    </p>
+</div>
+
+
+
+<div id="ImportDistributorADAuthority">
+    <div class="AddContent">
+        <form id="DistributorADAuthorityFileform" method="post" enctype="multipart/form-data">
+            <p>
+                <input id="DistributorADAuthorityFile" class="easyui-filebox txt410" style="width:410px;" name="DistributorADAuthorityFile" data-options="prompt:'导入经销商公告授权文件',accept:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel' ,buttonText:'选择导入文件'">
+            </p>
+            <br />
+            <p>
+                <a href="~/TempLate/IMP_DistributorADAuthority.xlsx">下载经销商公告授权导入模板</a>
+            </p>
+        </form>
+    </div>
+</div>
+
+
+

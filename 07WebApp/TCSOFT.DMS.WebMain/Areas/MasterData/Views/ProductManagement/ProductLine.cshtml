@@ -1,0 +1,254 @@
+﻿@{
+    Layout = null;
+    ViewBag.SearchOption = "prompt:'支持产品线，缩写，部门模糊查询',searcher:doSearch";
+}
+
+<script type="text/javascript">
+    $(function () {
+        InitDepart();
+        $('#DepartmentName').combotree({
+            lines: true,
+            multiple: false
+        });
+        $('#grid').datagrid({
+            url: '@Url.Action("GetProductLine", "ProductManagement")',
+            iconCls: 'icon-view',
+            width: function () { return document.body.clientWidth * 0.9 },
+            nowrap: true,
+            autoRowHeight: true,
+            striped: true,
+            collapsible: false,
+            pagination: true,
+            pageSize: 1000,
+            pageList: [1000],
+            rownumbers: true,
+            sortOrder: 'desc',
+            remoteSort: false,
+            singleSelect: true,
+            idField: 'ProductLineID',
+            queryParams: {},
+            animate: true,
+            columns: [[
+                 { title: 'ID', field: 'ProductLineID', hidden: true, width: 1, halign: 'center', align: 'center' },
+                 { title: '状态', field: 'Status', width: 50, halign: 'center', align: 'center' },
+                 { title: '', field: 'IsActive', hidden: true, halign: 'center', align: 'center' },
+                 { title: '产品线名称', field: 'ProductLineName', width: 380, halign: 'center', align: 'left' },
+                 { title: '缩写', field: 'ProductLineNameAB', width: 200, halign: 'center', align: 'center' },
+                 { title: '部门', field: 'DepartName', width: 200, halign: 'center', align: 'left' }
+            ]],
+        });
+        //新增/修改
+        $('#AddorUpdateWindow').dialog({
+            width: 'auto',
+            height: 'auto',
+            top: 20,
+            modal: true,
+            closed: true,
+            inline: true,
+            buttons: [{
+                text: '确定',
+                handler: function () {
+                    Save();
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    $('#AddorUpdateWindow').dialog('close');
+                }
+            }],
+            onOpen: function () {
+                
+            },
+            onClose: function () {
+                
+            }
+        });
+    })
+    function doSearch(value) {
+        $('#grid').datagrid('reload', { SearchText: value });
+    }
+    function ClickAdd() {
+        $("#serchText").searchbox('setValue', null);
+
+        $('#ProductLineName').textbox('setValue', null);
+        $('#ProductLineShortName').textbox('setValue', null);
+        $('#DepartmentName').combotree('setValue', null);
+        $('#AddID').val('');
+        $('#AddUp').val(1);
+
+        $('#InstrumentTypeID').val('');
+        $('#ProductTypeID').val('');
+        $('#IsActive').val('');
+        $('#AddorUpdateWindow').dialog({ title: "新增产品线" });
+        $('#AddorUpdateWindow').dialog('open');
+    }
+    function ClickModify() {
+        var row = $("#grid").datagrid("getSelected");
+        if (row == null) {
+            alert("您还没有选择产品线信息，请选择！");
+            return;
+        }
+        $.post('@Url.Action("GetOneProductLine", "ProductManagement")',
+                      { id: row.ProductLineID },
+                          function (data, textStatus, jqXHR) {
+                              if (data.SubmitResult) {
+                                  $('#AddUp').val(2);
+                                  $('#AddID').val(data.Object.ProductLineID);
+                                  $('#ProductLineName').textbox('setValue', data.Object.ProductLineName);
+                                  $('#ProductLineShortName').textbox('setValue', data.Object.ProductLineNameAB);
+                                  $('#DepartmentName').combotree('setValue', data.Object.DepartID);
+                                  $('#InstrumentTypeID').val(data.Object.InstrumentTypeID);
+                                  $('#ProductTypeID').val(data.Object.ProductTypeID);
+                                  $('#IsActive').val(data.Object.IsActive);
+                                  $('#AddorUpdateWindow').dialog({ title: "修改产品线" });
+                                  $('#AddorUpdateWindow').dialog('open');
+                              }
+                              else {
+                                  alert(data.Message);
+                                  return;
+                              }
+                          }, "json");
+
+    }
+    function ClickDel() {
+        var row = $("#grid").datagrid("getSelected");
+        if (row == null) {
+            alert("您还没有选择产品线信息，请选择！");
+            return;
+        }
+        $.messager.confirm('提示', '是否删除选中数据?', function (data) {
+            if (!data) {
+                return;
+            }
+
+            $.post(
+            '@Url.Action("DeleteProductLine", "ProductManagement")',
+            {
+                ProductLineID: row.ProductLineID
+            },
+            function success(data, textStatus, jqXHR) {
+                if (!data.SubmitResult) {
+                    alert(data.Message);
+                }
+                else {
+                    alert("删除成功！");
+                    $('#grid').datagrid('clearSelections');
+                    $('#grid').datagrid('reload', { SearchText: $("#serchText").searchbox('getValue') });
+                }
+            }, "json");
+        });
+    }
+    function Save() {
+        if ($("#AddorUpdate").form('validate')) {
+            if ($('#AddUp').val() == 1) {
+                $.post(
+                 '@Url.Action("AddProductLine", "ProductManagement")',
+                 {
+                     ProductLineName: $('#ProductLineName').textbox('getValue'),
+                     ProductLineNameAB: $('#ProductLineShortName').textbox('getValue'),
+                     DepartID: $('#DepartmentName').combotree('getValue'),
+                     InstrumentTypeID: $('#InstrumentTypeID').val(),
+                     ProductTypeID: $('#ProductTypeID').val(),
+                     IsActive: $('#IsActive').val(),
+                 },
+                 function success(data, textStatus, jqXHR) {
+                     if (!data.SubmitResult) {
+                         alert(data.Message);
+                     }
+                     else {
+                         $('#AddorUpdateWindow').dialog('close');
+                         $('#grid').datagrid('clearSelections');
+                         $('#grid').datagrid('reload', { SearchText: $("#serchText").searchbox('getValue') });
+                     }
+                 }, "json");
+            }
+            else {
+                $.post(
+                  '@Url.Action("UpdateProductLine", "ProductManagement")',
+                  {
+                      ProductLineID: $('#AddID').val(),
+                      ProductLineName: $('#ProductLineName').textbox('getValue'),
+                      ProductLineNameAB: $('#ProductLineShortName').textbox('getValue'),
+                      DepartID: $('#DepartmentName').combotree('getValue'),
+                      InstrumentTypeID: $('#InstrumentTypeID').val(),
+                      ProductTypeID: $('#ProductTypeID').val(),
+                      IsActive: $('#IsActive').val(),
+                  },
+                  function success(data, textStatus, jqXHR) {
+                      if (!data.SubmitResult) {
+                          alert(data.Message);
+                      }
+                      else {
+                          $('#AddorUpdateWindow').dialog('close');
+                          $('#grid').datagrid('reload', { SearchText: $("#serchText").searchbox('getValue') });
+                      }
+                  }, "json");
+            }
+        }
+    }
+    function ClickActived() {
+        var row = $("#grid").datagrid("getSelected");
+        if (row == null) {
+            alert("您还没有选择产品线信息，请选择！");
+            return;
+        }
+        $.post(
+            '@Url.Action("ChangeStatusProductLine", "ProductManagement")',
+            {
+                ProductLineID: row.ProductLineID,
+                IsActive: row.IsActive
+            },
+            function success(data, textStatus, jqXHR) {
+                if (!data.SubmitResult) {
+                    alert(data.Message);
+                }
+                else {
+                    $('#grid').datagrid('reload', { SearchText: $("#serchText").searchbox('getValue') });
+                }
+            }, "json");
+    }
+
+    function InitDepart() {
+        $.post("@Url.Action("GetDepartmentTree", "UserAuthority")", {}, function (data) {
+            $('#DepartmentName').combotree('loadData', data);
+        })
+    }
+</script>
+
+<div class="easyui-layout" style="height:100%;">
+    <div region="north" style="height:94px">
+        @Html.Partial("_Partialtool")
+    </div>
+    <div region="center">
+        <div id="BodyContentDiv" class="DivPage">
+            <table id="grid" style="width:100%;height:100%;"></table>
+        </div>
+    </div>
+</div>
+
+@*仪器型号新增/修改*@
+<div id="AddorUpdateWindow">
+    <div class="AddContent">
+        <input id="AddID" hidden="hidden" />
+        <input id="AddUp" hidden="hidden" />
+
+        <input id="InstrumentTypeID" hidden="hidden" />
+        <input id="ProductTypeID" hidden="hidden" />
+        <input id="IsActive" hidden="hidden" />
+        <form id="AddorUpdate">
+            <p>
+                <span class="cl100">产品线名称：</span>
+                <input class="easyui-textbox txt150" style="width:150px;" id="ProductLineName" required missingmessage="产品线必须填写！" />
+            </p>
+            <p>
+                <span class="cl100">产品线缩写：</span>
+                <input class="easyui-textbox txt150" style="width:150px;" id="ProductLineShortName" required missingmessage="产品线缩写必须填写！" />
+            </p>
+            <p>
+                <span class="cl100">部门：</span>
+                <select class="easyui-tree txt150" style="width:150px;" id="DepartmentName" editable="false" required missingmessage="所属部门必须填写！"></select>
+            </p>
+        </form>
+    </div>
+</div>
+       

@@ -1,0 +1,767 @@
+﻿@{
+    Layout = "~/Areas/User/Views/Shared/_LayoutDetails.cshtml"; ;
+}
+
+<script type="text/javascript">
+    $.extend($.fn.validatebox.defaults.rules, {
+        phone: {
+            validator: function (value) {
+                var rex = /^1[3-8]+\d{9}$/;
+                if (rex.test(value)) {
+                    return true;
+                } else {
+                    return false;
+                }
+
+            },
+            message: '请输入正确的手机格式'
+        }
+    });
+    $(function () {
+        $('#file1').filebox({
+            buttonText: '选择文件',
+            buttonAlign: 'right'
+        })
+
+        $('#grid').datagrid({
+            url: '@Url.Action("GetUserBatcApply", "User")',
+            iconCls: 'icon-view',
+            width: function () { return document.body.clientWidth * 0.9 },
+            nowrap: true,
+            autoRowHeight: true,
+            striped: true,
+            collapsible: false,
+            pagination: true,
+            pageSize: 10,
+            pageList: [10, 20, 30],
+            rownumbers: true,
+            sortOrder: 'desc',
+            remoteSort: false,
+            singleSelect: true,
+            idField: 'BatchID',
+            queryParams: {},
+            animate: true,
+            columns: [[
+                { title: 'BatchID', field: 'BatchID', hidden: true, width: 1, halign: 'center', align: 'center' },
+                {
+                    title: '审核状态', field: 'AuditStatusstr', width: 80, halign: 'center', align: 'center', formatter: function (value, row, index) {
+                        if (value == "已保存" || value == "审核失败") {
+                            return '<a href="#" class="easyui-linkbutton" id="AuditStatusstr" onclick="SavedUp(\'' + row.BatchID + '\',' + row.Status + ',\'' + row.BatchName + '\')">' + value + '</a>';
+                        } else {
+                            return value
+                        }
+                    }
+                },
+                { title: '批次名称', field: 'BatchName', width: 150, halign: 'center', align: 'left' },
+                { title: '申请人邮箱', field: 'ApplyUserEamil', width: 200, halign: 'center', align: 'left' },
+                { title: '申请人手机号', field: 'ApplyUserPhone', width: 200, halign: 'center', align: 'center' },
+                { title: '申请时间', field: 'ApplyTimestr', width: 100, halign: 'center', align: 'center' },
+                {
+                    title: '详细', field: 'Status', width: 200, halign: 'center', align: 'center', formatter: function (value, row, index) {
+                        if (value == 1) {
+                            return '<a href="#" class="easyui-linkbutton" id="DetailedBatch" onclick="Detailed(\'' + row.BatchID + '\',\'' + row.BatchName + '\')">详细</a>';
+                        }
+                    }
+                },
+            ]]
+        });
+
+        $('#Authority').datagrid({
+            nowrap: true,
+            autoRowHeight: true,
+            striped: true,
+            collapsible: false,
+            rownumbers: true,
+            sortName: '',
+            sortOrder: 'desc',
+            remoteSort: false,
+            singleSelect: false,
+            idField: 'ID',
+            columns: [[
+                 { title: '权限申请', field: 'IsChecked', checkbox: true },
+                 { title: 'ID', field: 'ID', hidden: true, width: 1, halign: 'center', align: 'center' },
+                 { title: '一级模块', field: 'LevelOneDes', width: 150, halign: 'center', align: 'center' },
+                 { title: '二级模块', field: 'LevelTWODes', width: 150, halign: 'center', align: 'center' },
+                 { title: '三级功能', field: 'LevelThreeDes', width: 150, halign: 'center', align: 'center' },
+                 { title: '功能描述', field: 'Description', width: 200, halign: 'center', align: 'center' }
+            ]],
+            onLoadSuccess: function (data) {
+                $('#Authority').datagrid("clearSelections")
+                if (data) {
+
+                    $.each(data.rows, function (index, item) {
+                        if (item.IsChecked) {
+                            $('#Authority').datagrid('checkRow', index);
+                        }
+                    });
+                }
+            },
+        });
+        $('#Authority1').datagrid({
+            nowrap: true,
+            autoRowHeight: true,
+            striped: true,
+            collapsible: false,
+            rownumbers: true,
+            sortName: '',
+            sortOrder: 'desc',
+            remoteSort: false,
+            singleSelect: false,
+            idField: 'ID',
+            columns: [[
+                 { title: '权限申请', field: 'IsChecked', checkbox: true },
+                 { title: 'ID', field: 'ID', hidden: true, width: 1, halign: 'center', align: 'center' },
+                 { title: '一级模块', field: 'LevelOneDes', width: 150, halign: 'center', align: 'center' },
+                 { title: '二级模块', field: 'LevelTWODes', width: 150, halign: 'center', align: 'center' },
+                 { title: '三级功能', field: 'LevelThreeDes', width: 150, halign: 'center', align: 'center' },
+                 { title: '功能描述', field: 'Description', width: 200, halign: 'center', align: 'center' }
+            ]],
+            onLoadSuccess: function (data) {
+                $('#Authority1').datagrid("clearSelections")
+                if (data) {
+                    $.each(data.rows, function (index, item) {
+                        if (item.IsChecked) {
+                            $('#Authority1').datagrid('checkRow', index);
+                        }
+                    });
+                }
+            },
+        });
+        $('#Batchgrid').datagrid({
+            rownumbers: true,
+            singleSelect:true,
+            iconCls: 'icon-view',
+            width: function () { return document.body.clientWidth * 0.9 },
+            nowrap: true,
+            autoRowHeight: true,
+            striped: true,
+            collapsible: false,
+            pagination: true,
+            pageSize: 1000,
+            pageList: [1000],
+            sortOrder: 'desc',
+            remoteSort: false,
+            singleSelect: true,
+            idField: '',
+            queryParams: {},
+            animate: true,
+            columns: [[
+            { title: 'ID', field: 'UserApplyID', hidden: true, width: 1, halign: 'center', align: 'center' },
+            { title: '用户名称', field: 'UserApplyName', width: 150, halign: 'center', align: 'left' },
+            { title: '邮箱', field: 'UserApplyEmail', width: 200, halign: 'center', align: 'left' },
+            { title: '手机号', field: 'UserApplyTelNumber', width: 200, halign: 'center', align: 'center' },
+            { title: '状态', field: 'AuditStatusstr', width: 120, halign: 'center', align: 'center' }
+            ]],
+        });
+        $('#RoleNames').combobox({
+            url: '@Url.Action("GetRoleList", "User")',
+            valueField: 'RoleID',
+            textField: 'RoleName',
+            editable: false,
+            queryParams: {},
+            onSelect: function (row) {
+                $('#Authority').datagrid({ url: "@Url.Action("GetRoleAuthorityInfo", "User")", queryParams: { roleid: row.RoleID } });
+            },
+        });
+        $('#RoleNames1').combobox({
+            url: '@Url.Action("GetRoleList", "User")',
+            valueField: 'RoleID',
+            textField: 'RoleName',
+            editable: false,
+            queryParams: {},
+            onSelect: function (row) {
+                $('#Authority1').datagrid({ url: "@Url.Action("GetRoleAuthorityInfo", "User")", queryParams: { roleid: row.RoleID } });
+            },
+        });
+        $('#AddOneWindow').dialog({
+            width: 'auto',
+            height: 'auto',
+            top: 50,
+            modal: true,
+            pageSize: 1000,
+            pageList: [1000],
+            closed: true,
+            maximizable: false,
+            minimizable: false,
+            collapsible: false,
+            resizable: false,
+            inline: true,
+            buttons: [{
+                text: '保存',
+                id: "Save",
+                handler: function () {
+                    SaveInfo();
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    $('#AddOneWindow').dialog('close');
+                }
+            }],
+        });
+        //修改一个用户的信息
+        $('#UpdateOneWindow').dialog({
+            width: 'auto',
+            height: 'auto',
+            top: 50,
+            modal: true,
+            pageSize: 1000,
+            pageList: [1000],
+            closed: true,
+            maximizable: false,
+            minimizable: false,
+            collapsible: false,
+            resizable: false,
+            inline: true,
+            buttons: [{
+                text: '保存',
+                id: "Save",
+                handler: function () {
+                    UpdateSaveInfo();
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    $('#UpdateOneWindow').dialog('close');
+                }
+            }],
+        });
+        $('#AddBatchWindow').dialog({
+            width: 'auto',
+            height: 'auto',
+            top: 10,
+            modal: true,
+            closed: true,
+            maximizable: false,
+            minimizable: false,
+            collapsible: false,
+            resizable: false,
+            inline: true,
+            buttons: [{
+                text: '保存',
+                id: 'saveMore',
+                handler: function () {
+                    BatchSaveInfo();
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    $('#AddBatchWindow').dialog('close');
+                }
+            }],
+        });
+        //上传附件
+        $('#UploadWindow').dialog({
+            title: "上传附件",
+            width: 'auto',
+            height: 'auto',
+            top: 50,
+            modal: true,
+            closed: true,
+            inline: true,
+            buttons: [{
+                text: '确定',
+                handler: function () {
+                    Upload();
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    $('#UploadWindow').dialog('close');
+                }
+            }],
+        });
+        //上传附件
+        $('#form0').ajaxForm({
+            dataType: 'json',
+            beforeSend: function () {
+            },
+            success: function () {
+            },
+            complete: function (data) {
+                if (data.responseJSON.SubmitResult) {
+                    $('#BatchIDFile').val(data.responseJSON.Object);
+                    alert("上传成功！");
+                    $('#UploadWindow').dialog('close');
+                } else {
+                    alert("上传失败！");
+                }
+            }
+        });
+        //导入用户信息
+        $('#ImportUser').dialog({
+            width: 'auto',
+            height: 'auto',
+            top: 100,
+            modal: true,
+            closed: true,
+            inline: true,
+            title: "导入用户信息",
+            buttons: [{
+                text: '确定',
+                handler: function () {
+                    if ($("#UserFile1").filebox("getValue") != "" && $("#UserFile2").filebox("getValue") != "") {
+                        $('#UserFileform').submit();
+                    } else {
+                        alert("请上传2个文件！")
+                    }
+
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    $('#ImportUser').dialog('close');
+                    $("#UserFile1").filebox("clear");
+                    $("#UserFile2").filebox("clear");
+                }
+            }],
+            onOpen: function () {
+
+            },
+            onClose: function () {
+
+            }
+        });
+
+        $('#UserFileform').ajaxForm({
+            url: '@Url.Action("User_InfoFile", "User")',
+            dataType: 'json',
+            beforeSend: function () {
+            },
+            success: function () {
+            },
+            complete: function (data) {
+                if (!data.responseJSON) {
+                    alert("导入成功！")
+                    $('#ImportUser').dialog('close');
+                    $("#UserFile1").filebox("clear");
+                    $("#UserFile2").filebox("clear");
+                    $('#grid').datagrid('reload');
+                }
+                else {
+                    if (data.responseJSON == "导入失败") {
+                        alert("导入失败！");
+                    }
+                    else {
+                        alert("导入失败，即将下载错误文件！");
+                        window.location.href = "/User/User/DownloadUserApply?filename=" + data.responseJSON;
+                    }
+                }
+            }
+        });
+    });
+    //用户申请
+    function NewUserInfo() {
+        $('#Authority').datagrid({ url: "@Url.Action("GetAuthorityInfo", "User")", queryParams: {} });
+        $('#Authority').datagrid('clearSelections');
+        $("#Name").textbox("setValue", null);
+        $("#Phone").textbox("setValue", null);
+        $("#email").textbox("setValue", null);
+        $("#OneorBatch").val(0);
+        $("#BachID").val(null);
+        $("#RoleNames").combobox("setValue", null);
+        $('#AddOneWindow').dialog({ title: "新用户申请" });
+        $('#AddOneWindow').dialog('open');
+    }
+
+    //批量申请
+    function NewBatchInfo() {
+        $("#OneorBatch").val(1);
+        $("#BatchIDFile").val(null)
+        $('#BatchName').textbox("setValue", null),
+        $('#BatchName').textbox({ disabled: false });
+        $('#NewUserBatch').linkbutton({ disabled: false });
+        $('#DelUser').linkbutton({ disabled: false });
+        $('#Up').linkbutton({ disabled: false });
+        $('#UpUser').linkbutton({ disabled: false });
+        $('#Batchgrid').datagrid('loadData', { total: 0, rows: [] });
+        $('#AddBatchWindow').dialog({ title: "批量用户申请" });
+        $('#AddBatchWindow').dialog('open');
+    }
+
+    //批量申请 申请用户
+    function BatchOneUserInfo() {
+        $('#Authority').datagrid({ url: "@Url.Action("GetAuthorityInfo", "User")", queryParams: {} });
+        $('#Authority').datagrid('clearSelections');
+        $("#Name").textbox("setValue", null);
+        $("#Phone").textbox("setValue", null);
+        $("#email").textbox("setValue", null);
+        $("#RoleNames").combobox("setValue", null);
+        $('#AddOneWindow').dialog({ title: "新用户申请" });
+        $('#AddOneWindow').dialog('open');
+    }
+    //申请用户修改
+    function UpdateSaveInfo ()
+    {
+        var checkrowlist = $('#Authority1').datagrid("getChecked");
+        if (checkrowlist.length == 0) {
+            alert("请勾选权限");
+            return;
+        }
+        var rowlist = $('#Authority1').datagrid("getData");
+        for (var i = 0; i < rowlist.rows.length; i++) {
+            rowlist.rows[i].IsChecked = false;
+        }
+
+        for (var i = 0; i < checkrowlist.length; i++) {
+            checkrowlist[i].IsChecked = true;
+        }
+        var ppdata = $('#Authority1').datagrid("getData");
+        if ($("#UpdateOneWindow").form('validate')) {
+            //选中行的行号
+            var rowindex = $('#Batchgrid').datagrid("getRowIndex", $('#Batchgrid').datagrid("getSelected"));
+            $('#Batchgrid').datagrid("updateRow", {
+                index: rowindex,
+                row:{
+                    UserApplyName: $("#Name1").val(),
+                    UserApplyTelNumber: $("#Phone1").val(),
+                    UserApplyEmail: $("#email1").val(),
+                    ApplyAuth: ppdata.rows,   
+                    BatchID:null
+                }
+            });
+            $("#Name1").textbox("setValue", "");
+            $("#Phone1").textbox("setValue", "");
+            $("#email1").textbox("setValue", "");
+        }
+        $('#UpdateOneWindow').dialog('close');
+    }
+    //申请用户保存
+    function SaveInfo() {
+        var checkrowlist = $('#Authority').datagrid("getChecked");
+        if (checkrowlist.length == 0) {
+            alert("请勾选权限");
+            return;
+        }
+        for (var i = 0; i < checkrowlist.length; i++) {
+            checkrowlist[i].IsChecked = true;
+        }
+        var ppdata = $('#Authority').datagrid("getData");
+        if ($("#OneorBatch").val() == 0) {
+            if ($("#AddOneWindow").form('validate')) {
+                //点击保存之后禁用按钮。
+                $('#Save').linkbutton({ disabled: true });
+                $.post("@Url.Action("UserApply", "User")", {
+                    BatchID: $('#BachID').val(),
+                    UserApplyName: $("#Name").val(),
+                    UserApplyTelNumber: $("#Phone").val(),
+                    UserApplyEmail: $("#email").val(),
+                    ApplyAuth: ppdata.rows
+                }, function (data) {
+                    if (data.SubmitResult) {
+                        $('#AddOneWindow').dialog('close');
+                        $('#grid').datagrid('reload');
+                        $('#Save').linkbutton({ disabled: false });
+                    } else {
+                        $('#Save').linkbutton({ disabled: false });
+                        alert(data.Message);
+
+                    }
+                });
+            }
+        } else if ($("#OneorBatch").val() == 1) {
+            if ($("#AddOneWindow").form('validate')) {
+                $('#Batchgrid').datagrid("appendRow", {
+                    UserApplyName: $("#Name").val(),
+                    UserApplyTelNumber: $("#Phone").val(),
+                    UserApplyEmail: $("#email").val(),
+                    ApplyAuth: ppdata.rows
+                });
+                $("#Name").textbox("setValue", "");
+                $("#Phone").textbox("setValue", "");
+                $("#email").textbox("setValue", "");
+            }
+        }
+    }
+
+        //批量申请用户 保存
+        function BatchSaveInfo() {
+            if ($("#AddBatchWindow").form('validate')) {
+                $('#saveMore').linkbutton({ disabled: true });
+                var ppdata = $('#Batchgrid').datagrid("getData");
+                $.post("@Url.Action("BachApply", "User")", {
+                    BatchName: $('#BatchName').textbox("getValue"),
+                    AttachBachID: $("#BatchIDFile").val(),
+                    model: ppdata.rows
+                }, function (data) {
+                    if (data.SubmitResult) {
+                        $('#AddBatchWindow').dialog('close');
+                        $('#saveMore').linkbutton({ disabled: false });
+                        $('#grid').datagrid('reload');
+                    } else {
+                        $('#saveMore').linkbutton({ disabled: false });
+                        alert(data.Message);
+                    }
+                })
+            }
+        }
+        //已保存/审核失败 修改
+        function SavedUp(Bid, Status, name) {
+
+            if (Status == 1) {
+                $.post("@Url.Action("GetOneBachUserApply", "User")", {
+                    BatchID: Bid,
+                }, function (data) {
+                    if (data.SubmitResult) {
+                        $("#OneorBatch").val(1);
+                        $("#BatchIDFile").val(Bid)
+                        $('#BatchName').textbox("setValue", name);
+                        $('#BatchName').textbox({ disabled: true });
+                        $('#NewUserBatch').linkbutton({ disabled: false });
+                        $('#DelUser').linkbutton({ disabled: false });
+                        $('#Up').linkbutton({ disabled: false });
+                        $('#UpUser').linkbutton({ disabled: false });
+                        $('#Batchgrid').datagrid({ data: data.Object });
+                        $('#AddBatchWindow').dialog({ title: "修改用户申请" });
+                        $('#AddBatchWindow').dialog('open');
+                    } else {
+                        alert(data.Message);
+                    }
+                })
+            } else if (Status == 2) {
+                $.post("@Url.Action("GetOneUserApply", "User")", {
+                    BatchID: Bid,
+                }, function (data) {
+                    if (data.SubmitResult) {
+                        $("#OneorBatch").val(0);
+                        $("#BachID").val(Bid);
+                        $("#Name").textbox("setValue", data.Object.UserApplyName);
+                        $("#Phone").textbox("setValue", data.Object.UserApplyTelNumber);
+                        $("#email").textbox("setValue", data.Object.UserApplyEmail);
+                        $("#RoleNames").combobox("setValue", null);
+                        $('#Authority').datagrid({ url: "@Url.Action("GetUserApplyAuthorityInfo", "User")", queryParams: { BatchID: Bid } });
+                        $('#AddOneWindow').dialog({ title: "修改用户申请" });
+                        $('#AddOneWindow').dialog('open');
+                    } else {
+                        alert(data.Message)
+                    }
+                })
+            }
+        }
+        //删除用户
+        function DeletUserInfo() {
+            var row = $('#Batchgrid').datagrid('getSelected');
+            if (row) {
+                var rowIndex = $('#Batchgrid').datagrid('getRowIndex', row);
+                $('#Batchgrid').datagrid('deleteRow', rowIndex);
+            }
+        }
+        //申请用户
+        function ApplyUser() {
+            var row = $('#grid').datagrid('getSelected');
+            if (!row) {
+                alert("请先选择要申请的用户或用户批次！");
+                return;
+            }
+            if (row.AuditStatusstr != "已保存") {
+                alert("只有已保存的信息才可申请！");
+                return;
+            }
+            $.messager.confirm('提示', '是否申请选中数据?', function (data) {
+                if (!data) {
+                    return;
+                }
+                $.post("@Url.Action("Apply", "User")", {
+                    BatchID: row.BatchID,
+                }, function (data) {
+                    if (data.SubmitResult) {
+                        $('#grid').datagrid('reload');
+                    } else {
+                        alert(data.Message);
+                    }
+                })
+            })
+        }
+        //申请全部用户
+        function BatchApplyUser() {
+            $.messager.confirm('提示', '是否申请全部数据?', function (data) {
+                if (!data) {
+                    return;
+                }
+                var ppdata = $('#grid').datagrid("getData");
+                $.post("@Url.Action("WholeApply", "User")", {
+                    model: ppdata.rows
+                }, function (data) {
+                    if (data.SubmitResult) {
+                        $('#grid').datagrid('reload');
+                    } else {
+                        alert(data.Message);
+                    }
+                })
+            })
+        }
+        //查询批次详细
+        function Detailed(Bid, name) {
+            $.post("@Url.Action("GetOneBachUserApply", "User")", {
+                BatchID: Bid,
+            }, function (data) {
+                if (data.SubmitResult) {
+                    $("#OneorBatch").val(1);
+                    $("#BatchIDFile").val(Bid)
+                    $('#BatchName').textbox("setValue", name);
+                    $('#BatchName').textbox({ disabled: true });
+                    $('#NewUserBatch').linkbutton({ disabled: true });
+                    $('#DelUser').linkbutton({ disabled: true });
+                    $('#Up').linkbutton({ disabled: true });
+                    $('#UpUser').linkbutton({ disabled: true });
+                    $('#Batchgrid').datagrid({ data: data.Object });
+                    $('#AddBatchWindow').dialog({ title: "批次详细" });
+                    $('#AddBatchWindow').dialog('open');
+                } else {
+                    alert(data.Message);
+                }
+            })
+        }
+        function ClickUpload() {
+            $('#file1').filebox("clear");
+            $('#UploadWindow').dialog('open');
+        }
+        function Upload() {
+            $('#form0').submit();
+        }
+        //导入
+        function ClickImport() {;
+            $('#UserFile').filebox("clear");
+            $('#ImportUser').dialog('open');
+        }
+        //点击某一个批次申请中的一条数据，修改。
+        function UpdateOneUserInfo() {
+            var row = $("#Batchgrid").datagrid("getSelected");
+            if (row == null) {
+                alert("您还没有选择用户，请选择！");
+                return;
+            }
+            else {
+                $("#RoleNames1").combobox("setValue", null);
+                if (row.BatchID != null) {
+                    $('#Authority1').datagrid('clearSelections');
+                    $('#Authority1').datagrid({ url: "@Url.Action("GetUserAuthList", "User")", queryParams: { ApplyUserAuthority: row.ApplyUserAuthority } });
+                    $("#Name1").textbox("setValue", row.UserApplyName);
+                    $("#Phone1").textbox("setValue", row.UserApplyTelNumber);
+                    $("#email1").textbox("setValue", row.UserApplyEmail);
+                    $('#UpdateOneWindow').dialog({ title: "修改用户申请" });
+                    $('#UpdateOneWindow').dialog('open');
+                }
+                else {
+                    $('#Authority1').datagrid('clearSelections');
+                    $("#Name1").textbox("setValue", row.UserApplyName);
+                    $("#Phone1").textbox("setValue", row.UserApplyTelNumber);
+                    $("#email1").textbox("setValue", row.UserApplyEmail);
+                    $('#Authority1').datagrid('loadData', row.ApplyAuth);
+                    $('#UpdateOneWindow').dialog({ title: "修改用户申请" });
+                    $('#UpdateOneWindow').dialog('open');
+                }
+            }
+        }
+</script>
+
+<div class="easyui-layout" style="height:100%;">
+    <div region="north" class="direcbtn" style="height:94px;">
+        <div class="topContent">
+            @*暂做隐藏其他不变*@
+            @*<a href="#" class="easyui-linkbutton" id="NewOneUser" onclick="NewUserInfo()">新用户申请</a>*@
+            @*将"批量用户申请"更改为"新用户申请"*@
+            <a href="#" class="easyui-linkbutton" id="NewUser" onclick="NewBatchInfo()">新用户申请</a>
+            <a href="#" class="easyui-linkbutton" id="Apply" onclick="ApplyUser()">提交申请</a>
+            <a href="#" class="easyui-linkbutton" id="Apply" onclick="BatchApplyUser()">提交全部申请</a>
+            <a href="#" class="easyui-linkbutton" id="Apply" onclick="ClickImport()">导入</a>
+        </div>
+    </div>
+    <div region="center">
+        <div id="BodyContentDiv">
+            <table id="grid" style="width:100%;height:100%;"></table>
+        </div>
+    </div>
+</div>
+
+
+@*单个新建用户*@
+<div id="AddOneWindow">
+    <div class="AddContent">
+        <input id="BachID" type="text" hidden="hidden">
+        <input id="OneorBatch" type="text" hidden="hidden" />
+        <p>
+            <span class="cl60">姓名：</span>
+            <input class="easyui-textbox txt150" id="Name" type="text" required missingmessage="姓名必须填写" /><span class="MustRequre">*</span>
+            <span class="cl60">手机号：</span>
+            <input class="easyui-textbox txt150" id="Phone" type="text" data-options="validType:'phone'" required missingmessage="手机号必须填写" /><span class="MustRequre">*</span>
+        </p>
+        <p>
+            <span class="cl60">邮箱：</span>
+            <input class="easyui-textbox txt150" validtype="Email" id="email" type="text" data-options="validType:'email'" required missingmessage="邮箱必须填写" /><span class="MustRequre">*</span>
+            <span class="cl60">模板：</span>
+            <select id="RoleNames" class="easyui-combobox txt150" editable="false"></select>
+        </p>
+        <div id="bkmDiv" style="margin-left:8px;">
+            <table id="Authority" style="width:620px;height:350px;"></table>
+            <p> <label style="color:red;margin-left:30px;">请在需要申请的功能前打“√”。</label></p>
+        </div>
+    </div>
+</div>
+
+@*批量新建用户*@
+<div id="AddBatchWindow">
+    <div class="AddContent">
+        <form id="formbatch">
+            <div style="margin-bottom:10px;">
+                <a href="#" class="easyui-linkbutton" id="NewUserBatch" onclick="BatchOneUserInfo()">新建用户</a>
+                <a href="#" class="easyui-linkbutton" id="DelUser" onclick="DeletUserInfo()">删除</a>
+                <a href="#" class="easyui-linkbutton" id="Up" onclick="ClickUpload()">上传用户名单附件</a>
+                <a href="#" class="easyui-linkbutton" id="UpUser" onclick="UpdateOneUserInfo()">修改</a>
+                <br />
+                <br />
+                <span class="cl100" style="margin-left:-28px;">批次名称</span>
+                <input class="easyui-textbox txt200" id="BatchName" required missingmessage="批次名称必须填写" />
+            </div>
+            <div id="BodyContentDiv" class="DivPage" style="width:700px;height:400px;">
+                <table id="Batchgrid" style="width:100%;height:100%;"></table>
+            </div>
+        </form>
+    </div>
+</div>
+@*上传用户名单*@
+<div id="UploadWindow">
+    @using (Ajax.BeginForm("AddAttachFileList", "User", new AjaxOptions { HttpMethod = "Post" }, new { enctype = "multipart/form-data" }))
+    {
+        <input id="BatchIDFile" name="BatchIDFile" type="text" hidden="hidden" />
+        <div id="ContentArea" class="AddContent">
+            <p><span class="DayAccount">选择上传附件：</span></p>
+            <p>
+                <input class="easyui-filebox txt350" name="file1" id="file1" data-options="prompt:'选择文件...'" />
+            </p>
+        </div>
+    }
+</div>
+@*导入用户信息*@
+<div id="ImportUser">
+    <div class="AddContent">
+        <form id="UserFileform" method="post" enctype="multipart/form-data">
+            <p>
+                <input id="UserFile1" class="easyui-filebox txt410" name="UserLFile" data-options="prompt:'上传用户名单附件',buttonText:'选择导入文件'">
+            </p>
+            <p> <input id="UserFile2" class="easyui-filebox txt410" name="UserLFile" data-options="prompt:'导入用户文件',buttonText:'选择导入文件'"></p>
+            <a href="~/TempLate/IMP_UserApply.xlsx">下载用户申请导入模板</a>
+        </form>
+    </div>
+</div>
+@*单个用户修改*@
+<div id="UpdateOneWindow">
+    <div class="AddContent">
+        <p>
+            <span class="cl60">姓名：</span>
+            <input class="easyui-textbox txt150" id="Name1" type="text" required missingmessage="姓名必须填写" /><span class="MustRequre">*</span>
+            <span class="cl60">手机号：</span>
+            <input class="easyui-textbox txt150" id="Phone1" type="text" data-options="validType:'phone'" required missingmessage="手机号必须填写" /><span class="MustRequre">*</span>
+        </p>
+        <p>
+            <span class="cl60">邮箱：</span>
+            <input class="easyui-textbox txt150" validtype="Email" id="email1" type="text" data-options="validType:'email'" required missingmessage="邮箱必须填写" /><span class="MustRequre">*</span>
+            <span class="cl60">模板：</span>
+            <select id="RoleNames1" class="easyui-combobox txt150" editable="false"></select>
+        </p>
+        <div id="bkmDiv" style="margin-left:8px;">
+            <table id="Authority1" style="width:620px;height:350px;"></table>
+            <p> <label style="color:red;margin-left:30px;">请在需要申请的功能前打“√”。</label></p>
+        </div>
+    </div>
+</div>

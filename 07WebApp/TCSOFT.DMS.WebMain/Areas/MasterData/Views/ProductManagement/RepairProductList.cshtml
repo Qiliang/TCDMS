@@ -1,0 +1,490 @@
+﻿@{
+    Layout = null;
+    ViewBag.SearchOption = "prompt:'支持货号、产品名称、产品类型、产品小类模糊查询',searcher:doSearch";
+    ViewBag.SearchCombination = "<select id='searchproductline' class='txt250' editable='false' panelHeight='auto' buttonText='产品线' ></select>";
+
+}
+
+<script type="text/javascript">
+    $(function () {
+        InitSearchProductLine();
+        InitProductLine();
+        InitProductType();
+        $('#grid').datagrid({
+            iconCls: 'icon-view',
+            width: function () { return document.body.clientWidth * 0.9 },
+            nowrap: true,
+            autoRowHeight: true,
+            striped: true,
+            collapsible: false,
+            pagination: true,
+            pageSize: 10,
+            pageList: [10, 20, 30],
+            rownumbers: true,
+            sortOrder: 'desc',
+            remoteSort: false,
+            singleSelect: true,
+            idField: 'ProductID',
+            queryParams: {},
+            animate: true,
+            columns: [[
+                 { title: 'ID', field: 'ProductID', hidden: true, width: 1, halign: 'center', align: 'center' },
+                 { title: '状态', field: 'IsActivestr', width: 50, halign: 'center', align: 'center' },
+                 { title: '货号', field: 'ArtNo', width: 200, halign: 'center', align: 'left' },
+                 { title: '产品名称', field: 'ProductName', width: 380, halign: 'center', align: 'left' },
+                 { title: '产品类型', field: 'ProductTypeName', width: 140, halign: 'center', align: 'center' },
+                 { title: '产品小类', field: 'ProductSmallTypeName', width: 140, halign: 'center', align: 'center' },
+                 { title: '产品线', field: 'ProductLineName', width: 140, halign: 'center', align: 'left' },
+                 { title: '3C产品', field: 'Is3CStr', width: 100, halign: 'center', align: 'center' },
+                 { title: '中文描述及备注', field: 'RemarkDes', width: 300, halign: 'center', align: 'left' }
+            ]],
+        });
+        //新增/修改
+        $('#AddorUpdateWindow').dialog({
+            width: 'auto',
+            height: 'auto',
+            top: 50,
+            modal: true,
+            closed: true,
+            inline: true,
+            buttons: [{
+                text: '确定',
+                handler: function () {
+                    Save();
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    $('#AddorUpdateWindow').dialog('close');
+                }
+            }],
+            onOpen: function () {
+                
+            },
+            onClose: function () {
+                
+            }
+        });
+        //停用原因
+        $('#StopWindow').dialog({
+            width: 'auto',
+            height: 'auto',
+            top: 100,
+            modal: true,
+            closed: true,
+            inline: true,
+            buttons: [{
+                text: '确定',
+                handler: function () {
+                    StopActived();
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    $('#StopWindow').dialog('close');
+                }
+            }],
+            title: "停用原因",
+            onOpen: function () {
+                
+            },
+            onClose: function () {
+                
+            }
+        });
+        $('#ImportRepairProduct').dialog({
+            width: 'auto',
+            height: 'auto',
+            top: 100,
+            modal: true,
+            closed: true,
+            inline: true,
+            buttons: [{
+                text: '确定',
+                handler: function () {
+                    if ($("#RepairProductFile").filebox("getValue") == "")
+                    { alert("请选择导入文件！") }
+                    else
+                    {
+                        $('#RepairProductFileform').submit();
+                    }
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    $('#ImportRepairProduct').dialog('close');
+                }
+            }],
+            title: "导入维修产品",
+            onOpen: function () {
+                
+            },
+            onClose: function () {
+                
+            }
+        });
+
+        $('#RepairProductFileform').ajaxForm({
+            url: '@Url.Action("ImportRepairProduct", "ProductManagement")',
+            dataType: 'json',
+            beforeSend: function () {
+            },
+            success: function () {
+            },
+            complete: function (data) {
+                if (!data.responseJSON) {
+                    alert("导入成功！")
+                    $('#ImportRepairProduct').dialog('close');
+                    $('#grid').datagrid('reload', { ProductLineID: null, SearchText: null });
+                }
+                else {
+                    if (data.responseJSON == "导入失败") {
+                        alert("导入失败！");
+                    }
+                    else {
+                        alert("导入失败，即将下载错误文件！");
+                        window.location.href = "/ProductManagement/DownloadRepair?filename=" + data.responseJSON;
+                    }
+                }
+            }
+        });
+    })
+    function doSearch(value) {
+        var productline = null;
+        if ($('#searchproductline').combobox("getValue") != "-1") {
+            productline = $('#searchproductline').combobox("getValue");
+        }
+        $('#grid').datagrid('reload', { SearchText: value, ProductLineID: productline });
+
+    }
+    function ClickAdd() {
+        $("#serchText").searchbox('setValue', null);
+        $('#searchproductline').combobox('setValue', '请选择', '-1');
+        $("input[name='3CProduct']").get(0).checked = true;
+        $("#AddUp").val(1);
+        $('#ArtNo').textbox({ 'disabled': false });
+        $('#ArtNo').textbox('setValue', null);
+        $('#ProductName').textbox('setValue', null);
+        $('#ProductTypeName').combobox('setValue', null);
+        $('#ProductLineName').combobox('setValue', null);
+        $('#ProductSmallTypeName').combobox('setValue', null);
+        $('#Describe').textbox('setValue', null);
+        $('#AddorUpdateWindow').dialog({ title: "新增维修产品" });
+        $('#AddorUpdateWindow').dialog('open');
+
+    }
+    function ClickModify() {
+        var row = $("#grid").datagrid("getSelected");
+        if (row == null) {
+            alert("您还没有选择维修产品信息，请选择！");
+            return;
+        }
+
+        $.post('@Url.Action("GetMaintenanceInfo", "ProductManagement")',
+                     { ProductID: row.ProductID },
+                         function (data, textStatus, jqXHR) {
+                             if (data.SubmitResult) {
+                                 data.Object.Is3C == true ? $("input[name='3CProduct']").get(0).checked = true : $("input[name='3CProduct']").get(1).checked = true;
+
+                                 $('#AddUp').val(2);
+                                 $('#ProductID').val(data.Object.ProductID);
+                                 $('#ArtNo').textbox({ 'disabled': true });
+                                 $('#ArtNo').textbox('setValue', data.Object.ArtNo);
+                                 $('#ProductName').textbox('setValue', data.Object.ProductName);
+                                 $('#ProductTypeName').combobox('setValue', data.Object.ProductTypeID);
+                                 $('#ProductLineName').combobox('setValue', data.Object.ProductLineID);
+                                 $('#ProductSmallTypeName').combobox('setValue', data.Object.ProductSmallTypeID);
+                                 $('#Describe').textbox('setValue', data.Object.RemarkDes);
+                                 $('#AddorUpdateWindow').dialog({ title: "修改维修产品" });
+                                 $('#AddorUpdateWindow').dialog('open');
+                             }
+                             else {
+                                 alert(data.Message);
+                                 return;
+                             }
+                         }, "json");
+    }
+    function ClickDel() {
+        var row = $("#grid").datagrid("getSelected");
+        if (row == null) {
+            alert("您还没有选择维修产品信息，请选择！");
+            return;
+        }
+        $.messager.confirm('提示', '是否删除选中数据?', function (data) {
+            if (!data) {
+                return;
+            }
+
+            $.post(
+            '@Url.Action("DeleteMaintenanceInfo", "ProductManagement")',
+            {
+                ProductID: row.ProductID
+            },
+            function success(data, textStatus, jqXHR) {
+                if (!data.SubmitResult) {
+                    alert(data.Message);
+                }
+                else {
+                    alert("删除成功！");
+                    $('#grid').datagrid('clearSelections');
+                    $('#grid').datagrid('reload');
+                }
+            }, "json");
+        });
+    }
+    function Save() {
+        if ($("#AddorUpdate").form('validate')) {
+            if ($('#AddUp').val() == 1) {
+                $.post(
+                 '@Url.Action("AddMaintenanceInfo", "ProductManagement")',
+                 {
+                     ProductTypeID: $('#ProductTypeName').combobox('getValue'),
+                     ProductLineID: $('#ProductLineName').combobox('getValue'),
+                     ProductSmallTypeID: $('#ProductSmallTypeName').combobox('getValue'),
+                     ArtNo: $('#ArtNo').textbox('getValue'),
+                     RemarkDes: $('#Describe').textbox('getValue'),
+                     Is3C: $("input[name='3CProduct']:checked").val(),
+                     ProductName: $('#ProductName').textbox('getValue'),
+
+                 },
+                 function success(data, textStatus, jqXHR) {
+                     if (!data.SubmitResult) {
+                         alert(data.Message);
+                     }
+                     else {
+                         $('#AddorUpdateWindow').dialog('close');
+                         $('#grid').datagrid('clearSelections');
+                         $('#grid').datagrid('reload', { ProductLineID: null, SearchText: null });
+                     }
+                 }, "json");
+            }
+            else {
+                $.post(
+                  '@Url.Action("UpdateMaintenanceInfo", "ProductManagement")',
+                  {
+                      ProductID: $('#ProductID').val(),
+                      ProductTypeID: $('#ProductTypeName').combobox('getValue'),
+                      ProductLineID: $('#ProductLineName').combobox('getValue'),
+                      ProductSmallTypeID: $('#ProductSmallTypeName').combobox('getValue'),
+                      ArtNo: $('#ArtNo').textbox('getValue'),
+                      RemarkDes: $('#Describe').textbox('getValue'),
+                      Is3C: $("input[name='3CProduct']:checked").val(),
+                      ProductName: $('#ProductName').textbox('getValue'),
+                  },
+                  function success(data, textStatus, jqXHR) {
+                      if (!data.SubmitResult) {
+                          alert(data.Message);
+                      }
+                      else {
+                          $('#AddorUpdateWindow').dialog('close');
+                          $('#grid').datagrid('reload');
+                      }
+                  }, "json");
+            }
+        }
+    }
+    function ClickActived() {
+        var row = $("#grid").datagrid("getSelected");
+        if (row == null) {
+            alert("您还没有选择维修产品信息，请选择！");
+            return;
+        }
+        if (row.IsActivestr == "启用") {
+            $('#StopReason').textbox("setValue", null);
+            $('#StopWindow').dialog('open');
+        }
+        else {
+            $.post(
+           '@Url.Action("ChangeStatusMaintenanceInfo", "ProductManagement")',
+           {
+               ProductID: row.ProductID,
+           },
+           function success(data, textStatus, jqXHR) {
+               if (!data.SubmitResult) {
+                   alert(data.Message);
+               }
+               else {
+                   $('#grid').datagrid('reload');
+               }
+           }, "json");
+        }
+
+    }
+    function StopActived() {
+        if ($("#StopForm").form('validate')) {
+            var row = $("#grid").datagrid("getSelected");
+            $.post(
+               '@Url.Action("ChangeStatusMaintenanceInfo", "ProductManagement")',
+               {
+                   ProductID: row.ProductID,
+                   StopReason: $('#StopReason').textbox('getValue')
+               },
+               function success(data, textStatus, jqXHR) {
+                   if (!data.SubmitResult) {
+                       alert(data.Message);
+                   }
+                   else {
+                       $('#StopWindow').dialog('close')
+                       $('#grid').datagrid('reload');
+                   }
+               }, "json");
+
+        }
+    }
+    // 导出
+    function ClickExport() {
+        $.post("@Url.Action("ExportRepair", "ProductManagement")", {
+            SearchText: $("#serchText").searchbox('getValue'),
+            ProductLineID: $('#searchproductline').combobox('getValue') == -1 ? null : $('#searchproductline').combobox('getValue')
+        }, function (data) {
+            if (data) {
+                window.location.href = "/ProductManagement/DownloadRepair?filename=" + data;
+            } else {
+                alert("导出失败！");
+            }
+        })
+    }
+    // 导入
+    function ClickImport() {
+        $("#serchText").searchbox('setValue', null);
+        $('#searchproductline').combobox('setValue', '请选择', '-1');
+        $('#RepairProductFile').filebox("clear");
+        $('#ImportRepairProduct').dialog('open');
+    }
+    function InitProductLine() {
+        $.ajaxSetup({
+            async: false
+        });
+        $('#ProductLineName').combobox({
+            url: '@Url.Action("GetProductLine", "ProductManagement")',
+            valueField: 'ProductLineID',
+            textField: 'ProductLineName',
+            editable: false,
+            onLoadSuccess: function (data) {
+                return;
+            },
+            onSelect: function (record) {
+                $('#ProductSmallTypeName').combobox({
+                    url: '@Url.Action("GetProductSmallType", "ProductManagement")',
+                    valueField: 'ProductSmallTypeID',
+                    textField: 'ProductSmallTypeName',
+                    editable: false,
+                    queryParams: { ProductLineID: record.ProductLineID },
+                    onLoadSuccess: function (data) {
+                    }
+                });
+            }
+        });
+        $.ajaxSetup({
+            async: true
+        });
+    }
+    function InitProductType() {
+        $.ajaxSetup({
+            async: false
+        });
+        $('#ProductTypeName').combobox({
+            url: '@Url.Action("GetProductTypeList", "ProductManagement")',
+            valueField: 'ProductTypeID',
+            textField: 'ProductTypeName',
+            editable: false,
+            onLoadSuccess: function (data) {
+                return;
+            }
+        });
+        $.ajaxSetup({
+            async: true
+        });
+    }
+    function InitSearchProductLine() {
+        $('#searchproductline').combobox({
+            url: '@Url.Action("GetSearchProductLine", "ProductManagement")',
+            queryParams: {},
+            valueField: 'ProductLineID',
+            textField: 'ProductLineName',
+            editable: false,
+            value: -1,
+            onSelect: function (row) {
+                $("#serchText").searchbox('setValue', null);
+                $('#grid').datagrid({ url: '@Url.Action("GetMaintenanceInfoList", "ProductManagement")', queryParams: { ProductLineID: row.ProductLineID == -1 ? null : row.ProductLineID } });
+            }
+
+        })
+    }
+</script>
+
+<div class="easyui-layout" style="height:100%;">
+    <div region="north" style="height:94px">
+        @Html.Partial("_Partialtool")
+    </div>
+    <div region="center">
+        <div id="BodyContentDiv">
+            <table id="grid" fit="true"></table>
+        </div>
+    </div>
+</div>
+@*产品类型新增/修改*@
+<div id="AddorUpdateWindow">
+    <div class="AddContent">
+        <input id="ProductID" hidden="hidden" />
+        <input id="AddUp" hidden="hidden" />
+
+        <form id="AddorUpdate">
+            <p>
+                <span class="cl100">货号：</span>
+                <input class="easyui-textbox txt150" style="width:150px;" id="ArtNo" required missingmessage="货号必须填写！" />
+            </p>
+            <p>
+                <span class="cl100">产品名称：</span>
+                <input class="easyui-textbox txt150" id="ProductName" style="width:275px;" required missingmessage=" 产品名称必须填写！" />
+            </p>
+            <p>
+                <span class="cl100">产品类型：</span>
+                <select class="easyui-combobox txt150" style="width:150px;" id="ProductTypeName" editable="false" required missingmessage="产品类型必须选择！"></select>
+            </p>
+            <p>
+                <span class="cl100">产品线：</span>
+                <select class="easyui-combobox txt150" style="width:150px;" id="ProductLineName" editable="false" required missingmessage="产品线必须选择！"></select>
+            </p>
+            <p>
+                <span class="cl100">产品小类：</span>
+                <select class="easyui-combobox txt150" style="width:150px;" id="ProductSmallTypeName" editable="false" required missingmessage="产品小类必须选择！"></select>
+            </p>
+
+            <p>
+                <span class="cl100">3C产品：</span>
+                <input type="radio" name="3CProduct" value="true" />是
+                <input type="radio" name="3CProduct" value="false" />否
+            </p>
+            <p>
+                <span class="cl100">中文描述及备注：</span>
+                <input class="easyui-textbox txt150" id="Describe" style="width:275px;height:90px;" data-options="multiline:true" />
+            </p>
+        </form>
+    </div>
+</div>
+@*停用原因*@
+<div id="StopWindow">
+    <div class="AddContent">
+        <form id="StopForm">
+            <p>
+                <span class="cl100">原因：</span>
+                <input class="easyui-textbox txt300" data-options="multiline:true" style="height:50px;width:300px;" id="StopReason" required missingmessage="停用原因必须填写！" />
+            </p>
+        </form>
+    </div>
+</div>
+@*导入*@
+<div id="ImportRepairProduct">
+    <div class="AddContent">
+        <form id="RepairProductFileform" method="post" enctype="multipart/form-data">
+            <p>
+                <input id="RepairProductFile" class="easyui-filebox txt410" style="width:410px;" name="RepairProductFile" data-options="prompt:'导入维修产品文件',accept:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel' ,buttonText:'选择导入文件'">
+            </p>
+            <br />
+            <p>
+                <a href="~/TempLate/IMP_RepairProduct.xlsx">下载维修产品导入模板</a>
+            </p>
+        </form>
+    </div>
+</div>

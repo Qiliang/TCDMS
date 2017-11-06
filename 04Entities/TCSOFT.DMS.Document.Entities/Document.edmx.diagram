@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="a113f5838c3c4abbadad5cda5d54246e" Name="Diagram1">
+        <EntityTypeShape EntityType="TCDMS_DocumentModel.Document_Bcce" Width="1.5" PointX="7.75" PointY="6" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCDMS_DocumentModel.Document_BcceAttachment" Width="1.5" PointX="10" PointY="6.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCDMS_DocumentModel.Document_BcceAttachmentDownload" Width="1.5" PointX="12.25" PointY="6.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCDMS_DocumentModel.Document_Cts" Width="1.5" PointX="3" PointY="7.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCDMS_DocumentModel.Document_CtsAttachmentDownload" Width="1.5" PointX="5.25" PointY="7" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCDMS_DocumentModel.Document_CtsFavorite" Width="1.5" PointX="5.25" PointY="9.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCDMS_DocumentModel.Document_CtsTag" Width="1.5" PointX="0.75" PointY="8.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCDMS_DocumentModel.Document_Lss" Width="1.5" PointX="3" PointY="1.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCDMS_DocumentModel.Document_LssAttachmentDownload" Width="1.5" PointX="5.25" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCDMS_DocumentModel.Document_LssFavorite" Width="1.5" PointX="5.25" PointY="3.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCDMS_DocumentModel.Document_LssTag" Width="1.5" PointX="0.75" PointY="2.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCDMS_DocumentModel.Document_Register" Width="1.5" PointX="7.75" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCDMS_DocumentModel.Document_RegisterAttachment" Width="1.5" PointX="10" PointY="1.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCDMS_DocumentModel.Document_RegisterAttachmentDownload" Width="1.5" PointX="12.25" PointY="1.875" IsExpanded="true" />
+        <AssociationConnector Association="TCDMS_DocumentModel.FK_DOCUMENT_REFERENCE_DOUMENT_2" ManuallyRouted="false" />
+        <AssociationConnector Association="TCDMS_DocumentModel.FK_DOCUMENT_REFERENCE_DOCUMENT2" ManuallyRouted="false" />
+        <AssociationConnector Association="TCDMS_DocumentModel.FK_DOCUMENT_REFERENCE_DOCUMENT22" ManuallyRouted="false" />
+        <AssociationConnector Association="TCDMS_DocumentModel.FK_DOCUMENT_REFERENCE_DOCUMENT66" ManuallyRouted="false" />
+        <AssociationConnector Association="TCDMS_DocumentModel.FK_DOUMENT__REFERENCE_DOCUMENT2" ManuallyRouted="false" />
+        <AssociationConnector Association="TCDMS_DocumentModel.FK_DOCUMENT_REFERENCE_DOCUMENT11" ManuallyRouted="false" />
+        <AssociationConnector Association="TCDMS_DocumentModel.FK_DOCUMENT_REFERENCE_DOCUMENT55" ManuallyRouted="false" />
+        <AssociationConnector Association="TCDMS_DocumentModel.FK_DOUMENT__REFERENCE_DOCUMENT12" ManuallyRouted="false" />
+        <AssociationConnector Association="TCDMS_DocumentModel.FK_DOCUMENT_REFERENCE_DOCUMENT1" ManuallyRouted="false" />
+        <AssociationConnector Association="TCDMS_DocumentModel.FK_DOCUMENT_REFERENCE_DOCUMENT12" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

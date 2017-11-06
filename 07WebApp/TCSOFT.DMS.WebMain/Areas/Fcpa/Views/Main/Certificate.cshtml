@@ -1,0 +1,669 @@
+﻿
+@{
+    Layout = null;
+}
+
+<div class="easyui-layout" style="height:100%;">
+    <div region="north" style="height:94px">
+        <link href="~/Content/Fpca/CSS/_Partialtool.css" rel="stylesheet" />
+        <div id="BodyContentTool">
+            <div id="btnButton">
+                <div class="comboelse" style="padding:5px 5px 5px 0;">
+                    <input id='searchForm' class='easyui-combobox txt250' editable='false' buttonText='类型' data-options="
+                           valueField: 'id',
+                           textField: 'label',
+                           data: [{
+                           label: '按状态',
+                           id: '0'
+                           },{
+                           label: '按区域',
+                           id: '1'
+                           }]" />
+                    <input id='searchCondition' class='easyui-combotree txt250' editable='false' buttonText='条件' data-options="multiple:true" />
+                </div>
+                <ul>
+                    <li>
+                        <input id="serchText" class="easyui-searchbox search" style="height:32px;width:300px;"
+                               data-options="prompt:'支持经销商名,姓名模糊查询',searcher:function(){}" />
+                    </li>
+                    <li><a href="#" class="easyui-linkbutton" id="btnFind">搜索</a></li>
+                    <li><a href="#" class="easyui-linkbutton" id="btnSearch">高级查询</a></li>
+                    <li><a href="#" class="easyui-linkbutton" id="btnAdd">添加</a></li>
+                    <li><a href="#" class="easyui-linkbutton" id="btnModify">修改</a></li>
+                    <li><a href="#" class="easyui-linkbutton" id="btnExport">导出</a></li>
+                    <li><a href="#" class="easyui-linkbutton" id="btnFigure">上传组织架构图</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div region="center">
+        <div id="BodyContentDiv">
+            <table id="certGrid" class="easyui-datagrid"
+                   data-options="
+                   iconCls: 'icon-view' ,
+                   width: function () { return document.body.clientWidth * 0.9 },
+                   nowrap: true,
+                   autoRowHeight: true,
+                   striped: true,
+                   collapsible: false,
+                   pagination: true,
+                   pageSize: 20,
+                   pageList: [10, 20, 30, 40, 50],
+                   rownumbers: true,
+                   sortOrder: 'desc' ,
+                   remoteSort: false,
+                   singleSelect: true,
+                   queryParams: {},
+                   animate: true,
+                   method:'POST',
+                   idField:'ID',
+                   fit:true">
+                <thead>
+                    <tr>
+                        <th data-options="field:'ID',checkbox:true"></th>
+                        <th data-options="field:'Distributor',width:280,align:'left',sortable:true,formatter:function(v){ return v.DistributorName}">经销商</th>
+                        <th data-options="field:'Certificate',width:80,align:'center',sortable:true,formatter:formatterAttachment">证书</th>
+                        <th data-options="field:'StatusDesc',width:80,align:'center',sortable:true">状态</th>
+                        <th data-options="field:'Name',width:120,align:'center',sortable:true">姓名</th>
+                        <th data-options="field:'Department',width:120,align:'center',sortable:true">部门</th>
+                        <th data-options="field:'Title',width:120,align:'center',sortable:true">职位</th>
+                        <th data-options="field:'CompletedDate',width:120,align:'center',sortable:true,formatter:function(v){return v ? v.substr(0,10): ''}">培训完成日期</th>
+                        <th data-options="field:'OffWorkDesc',width:200,align:'left',sortable:true">在职状态</th>
+                        <th data-options="field:'DomainDesc',width:200,align:'left',sortable:true">所属领域</th>
+                        <th data-options="field:'UpdateDate',width:120,align:'center',sortable:true,formatter:function(v){return v ? v.substr(0,10): ''}">更新日期</th>
+                        <th data-options="field:'ExpireDate',width:120,align:'center',sortable:true,formatter:function(v){return v ? v.substr(0,10): ''}">过期日期</th>
+                        <th data-options="field:'Remark',width:120,align:'center'">备注</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        $('#certGrid').datagrid({
+            url: '@Url.Action("Query", "Credentials")',
+        });
+        $('#searchForm').combobox({
+            onSelect: function(rec){
+                if(rec.id == '0'){
+                    var conditionTree = $('#searchCondition').combotree({
+                        onCheck:function (node) {
+                            var t = $('#searchCondition').combotree('tree');
+                            var n = t.tree('getChecked', 'checked');
+                            var StatusID = [];
+                            if(n != null && n.length > 0){
+                                for(var i = 0; i < n.length; i++){
+                                    StatusID.push(n[i].id);
+                                }
+                            }
+                            $('#certGrid').datagrid('load',{
+                                "Status":StatusID.join(",")
+                            });
+                        }
+                    });
+                    $('#searchCondition').combotree('setValues',[]);
+                    $('#searchCondition').combotree('loadData',[
+                        {
+                            id:"99",
+                            text:'全部',
+                            children:[
+                                {"id":"0","text":"已完成"},
+                                {"id":"1","text":"新更新"},
+                                {"id":"2","text":"快过期"},
+                                {"id":"3","text":"未完成"},
+                                {"id":"4","text":"已过期"},
+                                {"id":"5","text":"不更新"}
+                            ]
+                        }
+                    ]);
+                }
+                else{
+                    var conditionTree = $('#searchCondition').combotree({
+                        onCheck:function (node) {
+                            var t = $('#searchCondition').combotree('tree');
+                            var n = t.tree('getChecked', 'checked');
+                            var DistributorID = [];
+                            if(n != null && n.length > 0){
+                                for(var i = 0; i < n.length; i++){
+                                    DistributorID.push(n[i].id);
+                                }
+                            }
+                            $('#certGrid').datagrid('load',{
+                                "DistributorID":DistributorID.join(",")
+                            });
+                        }
+                    });
+                    $.ajax({
+                        "async": true,
+                        //"crossDomain": true,
+                        "url": '@Url.Action("Distributors", "Credentials")',
+                        "method": "GET"
+                    }).done(function (response) {
+                        var group = _.groupBy(response, 'AreaName');
+                        var i = 1;
+                        var treeData = _.map(group,function(child){
+                            var item = child[0];
+                            return {
+                                id: ++i,
+                                text: item.AreaName,
+                                children:_.map(child,function(ch){
+                                    return {
+                                        id: ch.DistributorID,
+                                        text: ch.DistributorName
+                                    }
+                                })
+                            };
+                        });
+                        $('#searchCondition').combotree('setValues',[]);
+                        $('#searchCondition').combotree('loadData',treeData);
+                    });
+                }
+            }
+        });
+        function uploadFigureSubmit() {
+            var data = $('#uf-form').toJSON();
+            if(data.DistributorID==null || data.DistributorID==''){
+                alert('经销商不能为空');
+                return;
+            }
+            var OrgMap = $('#uf-form input[name=OrgMap]').val();
+            if(OrgMap==null || OrgMap==''){
+                alert('组织架构图不能为空');
+                return;
+            }
+            var Trains = $('#uf-form input[name=Trains]').val();
+            if(Trains==null || Trains==''){
+                alert('培训人员名单不能为空');
+                return;
+            }
+            var form = new FormData($('#uf-form')[0]);
+            var settings = {
+                "async": true,
+                //"crossDomain": true,
+                "url": '@Url.Action("AddOrgMap", "Credentials")',           
+                "method": "POST",
+                "processData": false,
+                "contentType": false,
+                "mimeType": "multipart/form-data",
+                "data": form
+            }
+            $.ajax(settings).done(function (response) {
+                var obj = JSON.parse(response);
+                if (!obj.success) {
+                    alert(obj.message);
+                    return;
+                }
+                $('#upload-figure').dialog('destroy');
+                $('#certGrid').datagrid('reload');
+            }).fail(function (response) {
+                var obj = JSON.parse(response.responseText);
+                alert(obj.Message);
+            });
+        }
+        function addCertSubmit() {
+            var data = $('#ac-form').toJSON();
+            if(data.DistributorID==null || data.DistributorID==''){
+                alert('经销商不能为空');
+                return;
+            }
+            var v = $('#ac-form input[name=Certificate]').val();
+            if(v==null || v==''){
+                alert('证书不能为空');
+                return;
+            }
+            if(data.Name==null || data.Name==''){
+                alert('姓名不能为空');
+                return;
+            }
+            if(data.Department==null || data.Department==''){
+                alert('部门不能为空');
+                return;
+            }
+            if(data.Title==null || data.Title==''){
+                alert('职位不能为空');
+                return;
+            }
+            if(data.CompletedDate==null || data.CompletedDate==''){
+                alert('完成日期不能为空');
+                return;
+            }
+            if(data.OffWork=='true' && (data.OffWorkDate==null || data.OffWorkDate=='')){
+                alert('离职日期不能为空');
+                return;
+            }
+            var form = new FormData($('#ac-form')[0]);
+            var settings = {
+                "async": true,
+                //"crossDomain": true,
+                "url":  '@Url.Action("Add", "Credentials")',
+                "method": "POST",
+                "processData": false,
+                "contentType": false,
+                "mimeType": "multipart/form-data",
+                "data": form
+            }
+            var myDate = new Date();
+            var expireDate = myDate.getFullYear()+'-12-31';
+            form.append('ExpireDate',expireDate);
+            $.ajax(settings).done(function (response) {
+                var obj = JSON.parse(response);
+                if (!obj.success) {
+                    alert(obj.message);
+                    return;
+                }                
+                $('#add-cert').dialog('destroy');
+                $('#certGrid').datagrid('reload');
+            }).fail(function (response) {
+                var obj = JSON.parse(response.responseText);
+                alert(obj.Message);
+            });
+        }
+        function updateCertSubmit() {
+            var data = $('#uc-form').toJSON();
+            if(data.DistributorID==null || data.DistributorID==''){
+                alert('经销商不能为空');
+                return;
+            }
+            if(data.Name==null || data.Name==''){
+                alert('姓名不能为空');
+                return;
+            }
+            if(data.Department==null || data.Department==''){
+                alert('部门不能为空');
+                return;
+            }
+            if(data.Title==null || data.Title==''){
+                alert('职位不能为空');
+                return;
+            }
+            if(data.CompletedDate==null || data.CompletedDate==''){
+                alert('完成日期不能为空');
+                return;
+            }
+            if(data.OffWork=='true' && (data.OffWorkDate==null || data.OffWorkDate=='')){
+                alert('离职日期不能为空');
+                return;
+            }
+            var form = new FormData($('#uc-form')[0]);
+            var settings = {
+                "async": true,
+                //"crossDomain": true,
+                "url": '@Url.Action("Update", "Credentials")',
+                "method": "POST",
+                "processData": false,
+                "contentType": false,
+                "mimeType": "multipart/form-data",
+                "data": form
+            }
+            var myDate = new Date();
+            var expireDate = myDate.getFullYear()+'-12-31';
+            form.append('ExpireDate',expireDate);
+            $.ajax(settings).done(function (response) {
+                var obj = JSON.parse(response);
+                if (!obj.success) {
+                    alert(obj.message);
+                    return;
+                }
+                $('#update-cert').dialog('destroy');
+                $('#certGrid').datagrid('reload');
+            }).fail(function (response) {
+                var obj = JSON.parse(response.responseText);
+                alert(obj.Message);
+            });
+        }
+        $('#btnSearch').click(function () {
+            $('<div/>').dialog({
+                title:'高级搜索',
+                collapsible:false,
+                minimizable:false,
+                maximizable:false,
+                resizable:false,
+                modal:true,
+                id: 'find-cert',
+                width : 700,
+                height : 640,
+                closed : false,
+                cache: false,
+                href: '../Dialog/FindCert',
+                onLoad: function () {
+                    $.ajax({
+                        "async": true,
+                        //"crossDomain": true,
+                        "url": '@Url.Action("Distributors", "Credentials")',
+                        "method": "GET"
+                    }).done(function (response) {
+                        $('#findcert-company').combobox('loadData', response);
+                        $('#findcert-area').combotree('loadData',[
+                            {
+                                id:"99",
+                                text:'全部',
+                                children:[
+                                    {"id":"东","text":"东"},
+                                    {"id":"西","text":"西"},
+                                    {"id":"南","text":"南"},
+                                    {"id":"北","text":"北"},
+                                    {"id":"中","text":"中"},
+                                    {"id":"直销","text":"直销"}
+                                ]
+                            }
+                        ]);
+                        $('#findcert-status').combotree('loadData',[
+                            {
+                                id:"99",
+                                text:'全部',
+                                children:[
+                                    {"id":"0","text":"已完成"},
+                                    {"id":"1","text":"新更新"},
+                                    {"id":"2","text":"快过期"},
+                                    {"id":"3","text":"未完成"},
+                                    {"id":"4","text":"已过期"},
+                                    {"id":"5","text":"不更新"}
+                                ]
+                            }
+                        ]);
+                        var options = $('#certGrid').datagrid('options');
+                        var data = $.extend(true,{}, options.queryParams);
+                        data.Area = data.Area ? data.Area.split(',') : [];
+                        data.Status = data.Status ? data.Status.split(',') : [];
+                        $('#fc-form').form('load',data);
+                    });
+                },
+                //onClose: function () {
+                //    $('#find-cert').dialog('destroy');
+                //},
+                buttons: [{
+                    text:'确定',
+                    iconCls:'icon-ok',
+                    handler:function(){
+                        var data = $('#fc-form').toJSON();
+                        data.Area = $.isArray(data.Area) ? data.Area.join(',') : data.Area;
+                        data.Status = $.isArray(data.Status) ? data.Status.join(',') : data.Status;
+                        $('#certGrid').datagrid('load',data);
+                        $('#find-cert').dialog('destroy');
+                    }
+                },{
+                    text:'取消',
+                    handler:function(){
+                        $('#find-cert').dialog('destroy');
+                    }
+                }]
+            });
+        });
+        $('#btnFigure').click(function () {
+            $('<div/>').dialog({
+                title:'组织架构图',
+                collapsible:false,
+                minimizable:false,
+                maximizable:false,
+                resizable:false,
+                modal:true,
+                id: 'upload-figure',
+                width : 700,
+                height : 420,
+                closed : false,
+                cache: false,
+                href: '../Dialog/UploadFigure',
+                onLoad: function () {
+                    //$('.panel-tool-close').hide();
+                    $.ajax({
+                        "async": true,
+                        //"crossDomain": true,
+                        "url": '@Url.Action("Distributors", "Credentials")',
+                        "method": "GET"
+                    }).done(function (response) {
+                        
+                        $('#upfile-company').combobox('loadData', response);
+                        $('#upfile-figure').filebox({
+                            buttonText: '选择文件',
+                            buttonAlign: 'right'
+                        });
+                        $('#upfile-persoon').filebox({
+                            buttonText: '选择文件',
+                            buttonAlign: 'right'
+                        });
+                    });
+                },
+                onClose: function () {
+                    $('#upload-figure').dialog('destroy');
+                },
+                buttons:[{
+                    text:'保存',
+                    iconCls:'icon-ok',
+                    handler:function(){
+                        uploadFigureSubmit();
+                    }
+                },{
+                    text:'取消',
+                    handler:function(){
+                        $('#upload-figure').dialog('destroy');
+                    }
+                }]
+            });
+        });
+        $('#btnFind').click(function(){
+            var searchText = $("#serchText").textbox('getText');
+            $('#certGrid').datagrid('load',{
+                "Name":searchText
+            });
+        });
+        $('#btnAdd').click(function(){
+            $('<div/>').dialog({
+                title:'添加证书',
+                collapsible:false,
+                minimizable:false,
+                maximizable:false,
+                resizable:false,
+                modal:true,
+                id:'add-cert',
+                width : 700,
+                height : 600,
+                closed : false,
+                cache : false,
+                href: '../Dialog/AddCert',
+                onLoad:function () {
+                    $.ajax({
+                        "async": true,
+                        //"crossDomain": true,
+                        "url": '@Url.Action("Distributors", "Credentials")',
+                        "method": "GET"
+                    }).done(function (response) {
+                        $('#addcert-company').combobox('loadData',response);
+                        $('#addcert-area').combobox('loadData',[
+                            {"id":"东","text":"东"},
+                            {"id":"西","text":"西"},
+                            {"id":"南","text":"南"},
+                            {"id":"北","text":"北"},
+                            {"id":"中","text":"中"},
+                            {"id":"直销","text":"直销"}
+                        ]);
+                        $('#upfile-certi').filebox({
+                            buttonText: '选择文件',
+                            buttonAlign: 'right'
+                        });
+                        var myDate = new Date();
+                        var expireDate = myDate.getFullYear()+'-12-31';
+                        $('#ac-form').form('load',{'ExpireDate':expireDate});
+                        $("#ac-form input[name='OffWork'][value='true']").change(function(){
+                            $("#OffWorkDate1").show();
+                        });
+                        $("#ac-form input[name='OffWork'][value='false']").change(function(){
+                            $("#OffWorkDate1").hide();
+                        });
+                    });
+                },
+                onClose: function () {
+                    $('#add-cert').dialog('destroy');
+                },
+                buttons:[{
+                    text:'保存',
+                    iconCls:'icon-ok',
+                    handler:function(){
+                        addCertSubmit();
+                    }
+                },{
+                    text:'取消',
+                    handler:function(){
+                        $('#add-cert').dialog('destroy');
+                    }
+                }]
+            });
+        });
+        $('#btnModify').click(function () {
+            var record = $('#certGrid').datagrid('getSelected');
+            if(record == null){
+                $('<div/>').dialog({
+                    title:'提示',
+                    collapsible:false,
+                    minimizable:false,
+                    maximizable:false,
+                    resizable:false,
+                    modal:true,
+                    id:'dialogAlert',
+                    width : 400,
+                    height : 200,
+                    closed : false,
+                    cache: false,
+                    href: '../Dialog/DialogAlert',
+                    onClose: function () {
+                        $('#btnModify').dialog('destroy');
+                    },
+                    buttons:[{
+                        text:'确定',
+                        iconCls:'icon-ok',
+                        handler:function(){
+                            $('#dialogAlert').dialog('destroy');
+                        }
+                    },{
+                        text:'取消',
+                        handler:function(){
+                            $('#dialogAlert').dialog('destroy');
+                        }
+                    }]
+                });
+                return;
+            }
+            $('<div/>').dialog({
+                title:'修改',
+                collapsible:false,
+                minimizable:false,
+                maximizable:false,
+                resizable:false,
+                modal:true,
+                id:'update-cert',
+                width : 700,
+                height : 600,
+                closed : false,
+                cache: false,
+                href: '../Dialog/UpdateCert',
+                onLoad:function () {
+                    $.ajax({
+                        "async": true,
+                        //"crossDomain": true,
+                        "url": '@Url.Action("Distributors", "Credentials")',
+                        "method": "GET"
+                    }).done(function (response) {
+                        $('#upfile-certi1').filebox({
+                            buttonText: '选择文件',
+                            buttonAlign: 'right'
+                        });
+                        var dist = record["Distributor"];
+
+                        record["DistributorID"] = dist.DistributorID;
+                        record["DistributorName"] = dist.DistributorName;
+                        var myDate = new Date();
+                        var expireDate = myDate.getFullYear()+'-12-31';
+                        record["ExpireDate"] = expireDate;
+                        $('#uc-form').form('reset');
+                        $('#uc-form').form('load',record);
+                        $("#uc-form input[name='OffWork'][value='true']").change(function(){
+                            $("#OffWorkDate1").show();
+                        });
+                        $("#uc-form input[name='OffWork'][value='false']").change(function(){
+                            $("#OffWorkDate1").hide();
+                        });
+                        var Certificate = record["Certificate"];
+                        if(Certificate) {
+                            var Name = record["Name"] || '未命名';
+                            $('#uc-form span[name=down]').html("<a target='_blank' href='" + window.apiHost + '/api/Credentials/Download?id=' + Certificate + "'>" + Name + ".pdf</a>");
+                        }
+                        var OffWork = record["OffWork"];
+                        if(OffWork){
+                            $("#OffWorkDate1").show();
+                        }
+                        else{
+                            $("#OffWorkDate1").hide();
+                        }
+                    });
+                },
+                onClose: function () {
+                    $('#update-cert').dialog('destroy');
+                },
+                buttons:[{
+                    text:'保存',
+                    iconCls:'icon-ok',
+                    handler:function(){
+                        updateCertSubmit();
+                    }
+                },{
+                    text:'取消',
+                    handler:function(){
+                        $('#update-cert').dialog('destroy');
+                    }
+                }]
+            });
+        });
+        $('#btnExport').click(function () {
+            $('<div/>').dialog({
+                title:'导出',
+                collapsible:false,
+                minimizable:false,
+                maximizable:false,
+                resizable:false,
+                id : 'dialogExport',
+                width : 400,
+                height : 200,
+                closed : false,
+                cache: false,
+                href: '../Dialog/Export',
+                modal: true,
+                onClose: function () {
+                    $('#dialogExport').dialog('destroy');
+                },
+                buttons:[{
+                    text:'确定',
+                    iconCls:'icon-ok',
+                    handler:function(){
+                        var options = $('#certGrid').datagrid('options');
+                        var extJson = $('#ext-form').toJSON();
+                        var params = '?token=' + window.token;
+                        if (extJson.current == 'true') {
+                            params += '&' + $.param(options.queryParams);
+                        }                       
+                        window.location.href = '@Url.Action("Export", "Credentials")' + params;
+                        $('#dialogExport').dialog('destroy');
+                    }
+                },{
+                    text:'取消',
+                    handler:function(){
+                        $('#dialogExport').dialog('destroy');
+                    }
+                }]
+            });
+        });
+    });
+    function rowStyler(index,row){
+        if(row.readState=="0"){
+            return 'font-weight:bold;';
+        }
+    }
+    function formatterAttachment(value,row,index){
+        if (value) {
+            var href = '@Url.Action("Download", "Credentials")?id='+value
+            return '<a target="_blank" href="' + href + '">下载</a>';
+        }
+        else{
+            return "";
+        }
+    }
+</script>

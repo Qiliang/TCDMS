@@ -1,0 +1,266 @@
+﻿@{
+    Layout = null;
+    ViewBag.SearchOption = "prompt:'支持付款条款名称、Oracle Name模糊查询',searcher:doSearch";
+}
+<script type="text/javascript">
+    $(function () {
+        $('#grid').datagrid({
+            url: '@Url.Action("GetPaymentList", "BaseInfo")',
+            width: function () { return document.body.clientWidth * 0.9 },
+            nowrap: true,
+            autoRowHeight: true,
+            striped: true,
+            collapsible: false,
+            pagination: true,
+            pageSize: 1000,
+            pageList: [1000],
+            rownumbers: true,
+            sortOrder: 'desc',
+            remoteSort: false,
+            singleSelect: true,
+            idField: 'PayID',
+            queryParams: {},
+            animate: true,
+            columns: [[
+            { title: 'ID', field: 'PayID', hidden: true, width: 1, halign: 'center', align: 'center' },
+            { title: '状态', field: 'PayStatusStr', width: 180, halign: 'center', align: 'center' },
+            { title: '付款条款', field: 'PayName', width: 280, halign: 'center', align: 'left' },
+           { title: 'Oracle Name', field: 'OracleName', width: 280, halign: 'center', align: 'left' },
+           {
+               title: '开始时间', field: 'PayStartTime', width: 200, halign: 'center', align: 'center', formatter: function (value, row, index) {
+                   if (value != null) {
+                       return jsonDateFormat(value);
+                   }
+               }
+           },
+           {
+               title: '结束时间', field: 'PayEndTime', width: 200, halign: 'center', align: 'center', formatter: function (value, row, index) {
+                   if (value != null) {
+                       return jsonDateFormat(value);
+                   }
+               }
+           },
+            ]]
+        });
+        //新增/修改
+        $('#AddorUpdateWindow').dialog({
+            width: 'auto',
+            height: 'auto',
+            top: 100,
+            modal: true,
+            closed: true,
+            inline: true,
+            buttons: [{
+                text: '确定',
+                handler: function () {
+                    Save();
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    $('#AddorUpdateWindow').dialog('close');
+                }
+            }]
+        });
+    })
+    function ClickAdd() {
+        $("#serchText").searchbox('setValue', null);
+        $('#AddID').val('');
+        $('#AddStatus').val(true);
+        $('#AddName').textbox('setValue', null),
+        $('#AddOracleName').textbox('setValue', null),
+        $('#AddStartTime').datebox('setValue', null),
+        $('#AddEndTime').datebox('setValue', null),
+        $('#AddUp').val(1);
+        $('#AddorUpdateWindow').dialog({ title: "新增付款条款" });
+        $('#AddorUpdateWindow').dialog('open');
+    }
+    function ClickModify() {
+        var row = $("#grid").datagrid("getSelected");
+        if (row == null) {
+            alert("您还没有选择付款条款，请选择！");
+            return;
+        }
+        $.post('@Url.Action("GetPayment", "BaseInfo")',
+                  { id: row.PayID },
+                      function (data, textStatus, jqXHR) {
+                          if (data.SubmitResult) {
+                              $('#AddUp').val(2);
+                              $('#AddID').val(data.Object.PayID);
+                              $('#AddStatus').val(data.Object.PayStatus);
+                              $('#AddName').textbox('setValue', data.Object.PayName);
+                              $('#AddOracleName').textbox('setValue', data.Object.OracleName);
+                              $('#AddStartTime').datebox('setValue', data.Object.PayStartTimeDes);
+                              $('#AddEndTime').datebox('setValue', data.Object.PayEndTimeDes);
+
+                              $('#AddorUpdateWindow').dialog({ title: "修改付款条款" });
+                              $('#AddorUpdateWindow').dialog('open');
+                          }
+                          else {
+                              alert(data.Message);
+                              return;
+                          }
+                      }, "json");
+
+    }
+    function ClickDel() {
+        var row = $("#grid").datagrid("getSelected");
+        if (row == null) {
+            alert("您还没有选择付款条款，请选择！");
+            return;
+        }
+        $.messager.confirm('提示', '是否删除选中数据?', function (data) {
+            if (!data) {
+                return;
+            }
+            $.post(
+            '@Url.Action("DeletePayment", "BaseInfo")',
+            {
+                PayID: row.PayID
+            },
+            function success(data, textStatus, jqXHR) {
+                if (data.SubmitResult) {
+                    $('#grid').datagrid('reload', { SearchText: $("#serchText").searchbox('getValue') });
+                    $('#grid').datagrid('clearSelections');
+                }
+                else {
+                    alert(data.Message);
+                    return;
+                }
+            }, "json");
+        });
+    }
+    function ClickActived() {
+        var row = $("#grid").datagrid("getSelected");
+        if (row == null) {
+            alert("您还没有选择付款条款，请选择！");
+            return;
+        }
+        $.post('@Url.Action("ChangeStatus", "BaseInfo")',
+                 { PayID: row.PayID },
+                     function (data, textStatus, jqXHR) {
+                         if (data.SubmitResult) {
+                             $('#grid').datagrid('reload');
+                         }
+                         else {
+                             alert(data.Message);
+                             return;
+                         }
+                     }, "json");
+    }
+    function doSearch(value) {
+        $('#grid').datagrid('reload', { SearchText: value });
+    }
+    function Save() {
+        if ($("#AddorUpdate").form('validate')) {
+            var sdate = new Date($('#AddStartTime').datebox('getValue'));
+            var edate = new Date($('#AddEndTime').datebox('getValue'));
+            if (edate - sdate < 0) {
+                alert("时间区域选择有误，请重新选择！")
+                return;
+            }
+            if ($('#AddUp').val() == 1) {
+                $.post(
+                 '@Url.Action("AddPayment", "BaseInfo")',
+                 {
+                     PayName: $('#AddName').textbox('getValue'),
+                     OracleName: $('#AddOracleName').textbox('getValue'),
+                     PayStartTime: $('#AddStartTime').datebox('getValue'),
+                     PayEndTime: $('#AddEndTime').datebox('getValue'),
+                     PayStatus: $('#AddStatus').val(),
+
+                 },
+                 function success(data, textStatus, jqXHR) {
+                     if (data.SubmitResult) {
+                         $('#AddorUpdateWindow').dialog('close');
+                         $('#grid').datagrid('reload', { SearchText: $("#serchText").searchbox('getValue') });
+                         $('#grid').datagrid('clearSelections');
+                     }
+                     else {
+                         alert(data.Message);
+                         return;
+                     }
+                 }, "json");
+            }
+            else {
+                $.post(
+                  '@Url.Action("UpdatePayment", "BaseInfo")',
+                  {
+                      PayID: $('#AddID').val(),
+                      PayName: $('#AddName').textbox('getValue'),
+                      OracleName: $('#AddOracleName').textbox('getValue'),
+                      PayStartTime: $('#AddStartTime').datebox('getValue'),
+                      PayEndTime: $('#AddEndTime').datebox('getValue'),
+                      PayStatus: $('#AddStatus').val(),
+                  },
+                  function success(data, textStatus, jqXHR) {
+                      if (data.SubmitResult) {
+                          $('#AddorUpdateWindow').dialog('close');
+                          $('#grid').datagrid('reload', { SearchText: $("#serchText").searchbox('getValue') });
+                      }
+                      else {
+                          alert(data.Message);
+                          return;
+                      }
+                  }, "json");
+            }
+        }
+    }
+    //获取json传来的时间格式化为YYYY-MM-DD
+    function jsonDateFormat(jsonDate) {
+        var date = new Date(parseInt(jsonDate.replace("/Date(", "").replace(")/", ""), 10));
+        var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+        var day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+        return date.getFullYear() + "-" + month + "-" + day;
+    }
+    // 导出
+    function ClickExport() {
+        $.post("@Url.Action("ExportPayment", "BaseInfo")", {
+            SearchText: $("#serchText").searchbox('getValue')
+        }, function (data) {
+            if (data) {
+                window.location.href = "/BaseInfo/DownloadPayment?filename=" + data;
+            } else {
+                alert("导出失败！");
+            }
+        })
+    }
+</script>
+<div class="easyui-layout" style="height:100%;">
+    <div region="north" style="height:94px">
+        @Html.Partial("_Partialtool")
+    </div>
+    <div region="center">
+        <div id="BodyContentDiv" class="DivPage">
+            <table id="grid" style="width:100%;height:100%;"></table>
+        </div>
+    </div>
+</div>
+
+
+@*新增/修改*@
+<div id="AddorUpdateWindow">
+    <div class="AddContent">
+        <form id="AddorUpdate">
+            <input id="AddID" hidden="hidden" />
+            <input id="AddStatus" hidden="hidden" />
+            <input id="AddUp" hidden="hidden" />
+            <p>
+                <span class="cl100">付款条款名称：</span>
+                <input class="easyui-textbox txt200" style="width:200px;" id="AddName" required missingmessage="付款条款名称必须填写！" />
+            </p>
+            <p>
+                <span class="cl100">Oracle Name：</span>
+                <input class="easyui-textbox txt200" style="width:200px;" id="AddOracleName" required missingmessage="Oracle Name必须填写！" />
+            </p>
+            <p>
+                <span class="cl100">开始时间：</span>
+                <input class="easyui-datebox txt200" style="width:200px;" id="AddStartTime" />
+            </p>
+            <p>
+                <span class="cl100">结束时间：</span>
+                <input class="easyui-datebox txt200" style="width:200px;" id="AddEndTime" />
+            </p>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,206 @@
+﻿body {
+    overflow: hidden;
+    background-color: #ffffff;
+    margin: 0px auto 0px auto;
+}
+
+
+#titleDiv {
+    text-align: center;
+}
+
+#XSWPT {
+    color: #0241aa;
+    font-size: 36px;
+    font-weight: 700;
+    font-family: "微软雅黑 Bold","微软雅黑";
+}
+
+#bodyDiv {
+    width: 100%;
+    background-position: left top;
+    background-size: cover;
+    background-attachment: scroll;
+    position: absolute;
+}
+
+#moveDiv {
+    position: absolute;
+    margin-left: 66%;
+    margin-top: 5%;
+}
+
+#icon {
+}
+
+    #icon #PhoneNO {
+        position: absolute;
+        top: 83px;
+        left: 53px;
+        z-index: 5555;
+        height:34px;
+    }
+
+#icon2 {
+}
+
+    #icon2 #PhoneYes {
+        position: absolute;
+        top: 83px;
+        left: 53px;
+        z-index: 5555;
+    }
+
+#icon3 {
+}
+
+    #icon3 #AC0 {
+        position: absolute;
+        top: 149px;
+        left: 53px;
+        z-index: 5555;
+    }
+
+#icon4 {
+}
+
+    #icon4 #AC0Yes {
+        position: absolute;
+        top: 150px;
+        left: 53px;
+        z-index: 5555;
+    }
+
+#icon5 {
+}
+
+    #icon5 #PW0 {
+        position: absolute;
+        top: 206px;
+        left: 53px;
+        z-index: 5555;
+    }
+
+#icon6 {
+}
+
+    #icon6 #PWYes {
+        position:absolute;
+        top: 206px;
+        left: 53px;
+        z-index: 5555;
+    }
+
+#dlDiv {
+    position: absolute;
+}
+
+#InputDiv {
+    position: absolute;
+    left: 50px;
+    top: 50px;
+    font-size: 11px;
+    font-style: normal;
+    font-weight: 400;
+    font-family: "微软雅黑 Regular","微软雅黑";
+    color: #ffffff;
+}
+
+    #InputDiv p {
+        margin-bottom: 15px;
+    }
+
+    #InputDiv #txtPhoneNumber {
+        width: 215px;
+        height: 35px;
+        padding-left: 40px;
+    }
+
+    #InputDiv #txtValidateCodeF5 {
+        position: relative;
+        top: 8px;
+        left: 8px;
+    }
+
+    #InputDiv #txtValidateCode, #InputDiv #txtPassword {
+        width: 100px;
+        height: 35px;
+        font-size: 13px;
+        padding-left: 36px;
+    }
+
+#valiCode {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    top: 12px;
+    left: 10px;
+    height: 35px;
+    width: 90px;
+}
+
+#btnDynPwd {
+    background-color: rgba(255, 255, 255, 1);
+    border-width: 2px;
+    border-style: solid;
+    border-color: #4e76b7;
+    border-radius: 5px;
+    position: absolute;
+    height: 40px;
+    width: 100px;
+    margin-left: 10px;
+    color: #0241aa;
+}
+
+#btnLogin {
+    cursor: pointer;
+    width: 250px;
+    height: 45px;
+    font-family: 'Microsoft YaHei', Arial, sans-serif;
+    font-size: 19px;
+    font-style: normal;
+    background: inherit;
+    background-color: rgba(255, 255, 255, 1);
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgba(121, 121, 121, 1);
+    border-radius: 5px;
+    margin-left: 0px;
+    color: #ffffff;
+    background-color: #0241aa;
+}
+
+#PromptDiv {
+    position: absolute;
+    top: 333px;
+    left: 55px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+    #PromptDiv p #RedDiv {
+        color: #ff0000;
+        font-size: 13px;
+        font-style: normal;
+        font-weight: 700;
+        font-family: "Microsoft YaHei","Arial";
+    }
+
+    #PromptDiv p #tsDiv {
+        font-family: "Microsoft YaHei","Arial";
+        font-weight: 400;
+        font-size: 11px;
+        color: #666666;
+    }
+
+#NewApply {
+    cursor: pointer;
+    margin-left: 180px;
+    font-size: 15px;
+}
+
+#southfont {
+    color: rgba(121, 121, 121, 1);
+    font-size: 15px;
+    text-align: center;
+}

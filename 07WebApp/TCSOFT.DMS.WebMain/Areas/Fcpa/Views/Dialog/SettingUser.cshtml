@@ -1,0 +1,46 @@
+﻿
+@{
+    Layout = null;
+}
+
+<div icon="icon-save" style="padding: 5px; padding-left: 20px;" class="flex flex-v">
+    <form id="su-form" method="post">
+        <input type="hidden" name="UserID">
+        <input type="hidden" name="Role">
+        <div class="flex flex-align-center" style="padding: 10px">
+            <div style="margin:0 10px 0 10px;width: 80px;text-align: right;">用户代号:</div>
+            <input id="setting-usercode" name="UserCode" editable='true' class='easyui-textbox txt200' style="width: 410px;" data-options="disabled:true" />
+        </div>
+        <div class="flex flex-align-center" style="padding: 10px">
+            <div style="margin:0 10px 0 10px;width: 80px;text-align: right;">用户名称:</div>
+            <input id="setting-fullname" name="FullName" editable='true' class='easyui-textbox txt200' style="width: 410px;" data-options="disabled:true" />
+        </div>
+        <div class="flex flex-align-center" style="padding: 10px">
+            <div style="margin:0 10px 0 10px;width: 80px;text-align: right;">手机号:</div>
+            <input id="setting-mobile" name="PhoneNumber" editable='true' class='easyui-textbox txt200' style="width: 410px;" data-options="disabled:true" />
+        </div>
+        <div class="flex flex-align-center" style="padding: 10px">
+            <div style="margin:0 10px 0 10px;width: 80px;text-align: right;">邮箱:</div>
+            <input id="setting-mail" name="Email" editable='true' class='easyui-textbox txt200' style="width: 410px;" data-options="disabled:true" />
+        </div>
+        <div class="flex flex-align-center" style="padding: 10px">
+            <div style="margin:0 10px 0 10px;width: 80px;text-align: right;">所属领域:</div>
+            <input type="checkbox" name="Domain1" value="true" style="margin: 0 10px; margin-left: 0px"/>临床诊断
+            <input type="checkbox" name="Domain2" value="true" style="margin: 0 10px;margin-left: 20px"/>生命科学
+        </div>
+        <div class="flex flex-align-center" style="padding: 10px">
+            <div style="margin:0 10px 0 10px;width: 80px;text-align: right;">角色:</div>
+            <input type="radio" name="Role" value="0" style="margin: 0 10px; margin-left: 0px"/>系统管理员
+            <input type="radio" name="Role" value="1" style="margin: 0 10px;margin-left: 44px"/>贝克曼
+            <input type="radio" name="Role" value="2" style="margin: 0 10px;margin-left: 44px"/>经销商
+        </div>
+        <div class="flex flex-align-center" style="padding: 10px">
+            <div style="margin:0 10px 0 10px;width: 80px;text-align: right;">相关邮箱:</div>
+            <input id="setting-relmail" name="RelEmail" editable='true' class='easyui-textbox txt200' style="width: 410px;" data-options="required:true"/>
+        </div>
+        <div class="flex flex-align-center" style="padding: 10px">
+            <div style="margin:0 10px 0 10px;width: 80px;text-align: right;">关联经销商:</div>
+            <input id="setting-company" name="RelDistributor" editable='false' class='easyui-combotree txt250' style="width: 410px;" data-options="multiple:true"/>
+        </div>
+    </form>
+</div>

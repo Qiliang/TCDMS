@@ -1,0 +1,201 @@
+﻿@{
+    Layout = null;
+    ViewBag.SearchOption = "prompt:'支持产品类型名称，Oracle名称模糊查询',searcher:doSearch";
+}
+
+<script type="text/javascript">
+    $(function () {
+        $('#grid').datagrid({
+            url: '@Url.Action("GetProductTypeList", "ProductManagement")',
+            iconCls: 'icon-view',
+            width: function () { return document.body.clientWidth * 0.9 },
+            nowrap: true,
+            autoRowHeight: true,
+            striped: true,
+            collapsible: false,
+            pagination: true,
+            pageSize: 1000,
+            pageList: [1000],
+            rownumbers: true,
+            sortOrder: 'desc',
+            remoteSort: false,
+            singleSelect: true,
+            idField: 'ProductTypeID',
+            queryParams: {},
+            animate: true,
+            columns: [[
+                 { title: 'ID', field: 'ProductTypeID', hidden: true, width: 1, halign: 'center', align: 'center' },
+                 { title: '产品类型名称', field: 'ProductTypeName', width: 380, halign: 'center', align: 'left' },
+                 { title: '缩写', field: 'ProductTypeAB', width: 280, halign: 'center', align: 'center' },
+                 { title: 'Oracle Name', field: 'OracleName', width: 280, halign: 'center', align: 'left' }
+            ]],
+        });
+        //新增/修改
+        $('#AddorUpdateWindow').dialog({
+            width: 'auto',
+            height: 'auto',
+            top: 20,
+            modal: true,
+            closed: true,
+            inline: true,
+            buttons: [{
+                text: '确定',
+                handler: function () {
+                    Save();
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    $('#AddorUpdateWindow').dialog('close');
+                }
+            }],
+            onOpen: function () {
+                
+            },
+            onClose: function () {
+                
+            }
+        });
+    })
+    function doSearch(value) {
+        $('#grid').datagrid('reload', { SearchText: value });
+    }
+    function ClickAdd() {
+        $('#AddUp').val(1);
+        $('#ProductTypeID').val('');
+        $('#ProductTypeName').textbox('setValue', null);
+        $('#ProductTypeAB').textbox('setValue', null);
+        $('#OracleName').textbox('setValue', null);
+        $('#AddorUpdateWindow').dialog({ title: "新增产品类型" });
+        $('#AddorUpdateWindow').dialog('open');
+
+    }
+    function ClickModify() {
+        var row = $("#grid").datagrid("getSelected");
+        if (row == null) {
+            alert("您还没有选择产品类型信息，请选择！");
+            return;
+        }
+        $.post('@Url.Action("GetProductType", "ProductManagement")',
+                      { id: row.ProductTypeID },
+                          function (data, textStatus, jqXHR) {
+                              if (data.SubmitResult) {
+                                  $('#AddUp').val(2);
+                                  $('#ProductTypeID').val(data.Object.ProductTypeID);
+                                  $('#ProductTypeName').textbox('setValue', data.Object.ProductTypeName);
+                                  $('#ProductTypeAB').textbox('setValue', data.Object.ProductTypeAB);
+                                  $('#OracleName').textbox('setValue', data.Object.OracleName);
+                                  $('#AddorUpdateWindow').dialog({ title: "修改产品类型" });
+                                  $('#AddorUpdateWindow').dialog('open');
+                              }
+                              else {
+                                  alert(data.Message);
+                                  return;
+                              }
+                          }, "json");
+    }
+    function ClickDel() {
+        var row = $("#grid").datagrid("getSelected");
+        if (row == null) {
+            alert("您还没有选择产品类型信息，请选择！");
+            return;
+        }
+        $.messager.confirm('提示', '是否删除选中数据?', function (data) {
+            if (!data) {
+                return;
+            }
+
+            $.post(
+            '@Url.Action("DeleteProductType", "ProductManagement")',
+            {
+                ProductTypeID: row.ProductTypeID,
+
+            },
+            function success(data, textStatus, jqXHR) {
+                if (!data.SubmitResult) {
+                    alert(data.Message);
+                }
+                else {
+                    alert("删除成功！");
+                    $('#grid').datagrid('clearSelections');
+                    $('#grid').datagrid('reload');
+                }
+            }, "json");
+        });
+    }
+    function Save() {
+        if ($("#AddorUpdate").form('validate')) {
+            if ($('#AddUp').val() == 1) {
+                $.post(
+                 '@Url.Action("AddProductType", "ProductManagement")',
+                 {
+                     ProductTypeName: $('#ProductTypeName').textbox('getValue'),
+                     ProductTypeAB: $('#ProductTypeAB').textbox('getValue'),
+                     OracleName: $('#OracleName').textbox('getValue'),
+                 },
+                 function success(data, textStatus, jqXHR) {
+                     if (!data.SubmitResult) {
+                         alert(data.Message);
+                     }
+                     else {
+                         $('#AddorUpdateWindow').dialog('close');
+                         $('#grid').datagrid('clearSelections');
+                         $('#grid').datagrid('reload');
+                     }
+                 }, "json");
+            }
+            else {
+                $.post(
+                  '@Url.Action("UpdateProductType", "ProductManagement")',
+                  {
+                      ProductTypeID: $('#ProductTypeID').val(),
+                      ProductTypeName: $('#ProductTypeName').textbox('getValue'),
+                      ProductTypeAB: $('#ProductTypeAB').textbox('getValue'),
+                      OracleName: $('#OracleName').textbox('getValue'),
+                  },
+                  function success(data, textStatus, jqXHR) {
+                      if (!data.SubmitResult) {
+                          alert(data.Message);
+                      }
+                      else {
+                          $('#AddorUpdateWindow').dialog('close');
+                          $('#grid').datagrid('reload');
+                      }
+                  }, "json");
+            }
+        }
+    }
+</script>
+<div class="easyui-layout" style="height:100%;">
+    <div region="north" style="height:94px">
+        @Html.Partial("_Partialtool")
+    </div>
+    <div region="center">
+        <div id="BodyContentDiv" class="DivPage">
+            <table id="grid" fit="true"></table>
+        </div>
+    </div>
+</div>
+
+@*产品类型新增/修改*@
+<div id="AddorUpdateWindow">
+    <div class="AddContent">
+        <input id="ProductTypeID" hidden="hidden" />
+        <input id="AddUp" hidden="hidden" />
+        <form id="AddorUpdate">
+            <p>
+                <span class="cl100">产品类型名称：</span>
+                <input class="easyui-textbox  txt150" style="width:150px;" id="ProductTypeName" required missingmessage="产品类型必须填写！" />
+            </p>
+            <p>
+                <span class="cl100">缩写：</span>
+                <input class="easyui-textbox txt150" style="width:150px;" id="ProductTypeAB" required missingmessage="缩写必须填写！" />
+            </p>
+            <p>
+                <span class="cl100">Oracle Name：</span>
+                <input class="easyui-textbox txt150" style="width:150px;" id="OracleName" required missingmessage="Oracle名称必须填写！" />
+            </p>
+        </form>
+    </div>
+</div>
+

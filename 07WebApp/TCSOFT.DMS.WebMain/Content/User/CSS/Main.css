@@ -1,0 +1,275 @@
+﻿body html {
+    border: none;
+    /*background-color:#ececec;*/
+}
+
+#Header {
+    width: 250px;
+    background-color: #666666;
+    border: none;
+    border-right: 1px solid #F2F2F2;
+}
+
+#HeaderImg {
+    background-color: #FFF;
+}
+
+    #HeaderImg img {
+        position: absolute;
+        border: none;
+        width: 172px;
+        height: 78px;
+       margin: 36px 39px;
+    }
+
+.areaUser {
+    background: url('../../MasterData/Image/User.png') center center no-repeat;
+    width: 56px;
+    height: 56px;
+    display: inline-block;
+}
+
+.areaLogout {
+    background: url('../../MasterData/Image/logout.png') center center no-repeat;
+    width: 56px;
+    height: 56px;
+    display: inline-block;
+    margin-left: 8px;
+}
+
+    .areaLogout:hover {
+        background: url('../../MasterData/Image/logout_hover.png') center center no-repeat;
+    }
+#lstSty {
+    background-color: #FFF;
+    width: 250px;
+}
+
+    #lstSty #H3jc {
+        padding-left: 30px;
+        padding-top: 30px;
+        padding-bottom: 10px;
+    }
+
+        #lstSty #H3jc a {
+            color: #ffb400;
+            font-size: 15px;
+            font: bold;
+        }
+
+#ListMenuOne {
+    position: absolute;
+    background-color: #FFFFFF;
+    width: 250px;
+    height: 100%;
+    line-height: 2.6;
+}
+
+/*手风琴*/
+/*两级手风琴*/
+* {
+    margin: 0;
+    padding: 0;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+ul {
+    list-style-type: none;
+}
+
+a {
+    color: #b63b4d;
+    text-decoration: none;
+}
+
+/* =======================
+ * Contenedor Principal
+ ===========================*/
+
+.hoverColor ul li:hover {
+    background: #acdafb;
+}
+
+
+.accordion {
+    background-color: #666666;
+    width: 250px;
+    border-style: none;
+}
+
+    .accordion .link {
+        cursor: pointer;
+        display: block;
+        padding: 8px 8px 8px 32px;
+        color: #4D4D4D;
+        text-align: center;
+        font-size: 16px;
+        font-weight: 700;
+        /*border-bottom: 1px solid #CCC;*/
+        position: relative;
+        -webkit-transition: all 0.4s ease;
+        -o-transition: all 0.4s ease;
+        transition: all 0.4s ease;
+        width: 250px;
+    }
+
+    .accordion li:last-child .link {
+        border-bottom: 0;
+    }
+
+    .accordion li i {
+        position: absolute;
+        top: 16px;
+        left: 12px;
+        font-size: 15px;
+        color: #595959;
+        -webkit-transition: all 0.4s ease;
+        -o-transition: all 0.4s ease;
+        transition: all 0.4s ease;
+    }
+
+    .accordion li.open i {
+        color: #3b3b3b;
+    }
+
+
+
+    .accordion .link {
+        height: 40px;
+        line-height: 24px;
+        background-color: #f5fafe;
+        color: #2D86B0;
+        font-weight: bold;
+        border-color: #0241a9;
+        border-top: 1px solid #0241a9;
+        font-size: 16pt;
+    }
+
+        .accordion .link:hover {
+            font-size: 16pt;
+            color: #0033CC;
+        }
+
+    .accordion li.open .link {
+        background-color: #8d8d8d;
+        color: #b2b2b2;
+        font: bold;
+        font-size: 21px;
+        height: 50px;
+    }
+
+/*矢量图标*
+ * Submenu
+ -----------------------------*/
+.submenu {
+    background: #444359;
+}
+
+    .submenu li {
+        height: 40px;
+        line-height: 40px;
+        width: 250px;
+        color: rgb(0, 51, 204);
+    background-color: rgb(0, 51, 204);
+    }
+
+    .submenu a {
+        height: 40px;
+        width: 210px;
+        display: block;
+        font-size: 14pt;
+        text-decoration: none;
+        color: #FFF;
+        right: 0px;
+        text-align: center;
+        margin-left: 32px;
+    }
+
+ul li {
+    list-style: none;
+}
+
+.submenu li a:hover {
+    height: 40px;
+    font-size: 14pt;
+   
+}
+
+/*头部*/
+#TitleTop {
+    height: 57px;
+    text-align: right;
+    overflow: hidden;
+    border-bottom: 1px solid #F2F2F2;
+}
+
+#TitleContent {
+    position: relative;
+    text-align: right;
+}
+
+#tipname{
+    position:absolute;
+    right:0;
+    text-align: right;
+    width:204px;
+}
+
+#spanA {
+    color: #0241a9;
+    font-size: 18px;
+    font-weight: 700;
+    height:30px;
+    line-height:30px;
+}
+
+#spanB {
+    color: #999999;
+    font-size: 16px;
+    font-weight: 700;
+    height:25px;
+    line-height:25px;   
+}
+
+#spanC {
+    color: #999999;
+    font-size: 12px;
+}
+/*搜索框样式*/
+.searchbox {
+    border-radius: 16px !important;
+    border: 1px solid #ccc !important;
+    margin-right: 10px !important;
+}
+
+    .searchbox .textbox-text {
+        padding-left: 8px !important;
+    }
+
+    .searchbox .textbox-addon {
+        position: absolute;
+        right: 0 !important;
+        top: 0 !important;
+    }
+
+.searchbox-button {
+    background: url('../../MasterData/Image/search.png') center center no-repeat;
+    width: 40px !important;
+    height: 26px !important;
+    border-left: 1px solid #CCC;
+    padding: 0 8px;
+    border-left: 1px solid #CCC;
+    margin: 2px 0;
+}
+/*用户页面工具栏样式*/
+.direcbtn{
+    height:94px;
+}
+.direcbtn .topContent{
+    vertical-align:middle;
+    display:table-cell;
+    height: 94px;
+    padding: 10px 20px 10px 45px;
+}

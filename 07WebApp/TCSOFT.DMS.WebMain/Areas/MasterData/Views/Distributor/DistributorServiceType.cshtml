@@ -1,0 +1,176 @@
+﻿@{
+    Layout = null;
+}
+
+<script type="text/javascript">
+    $(function () {
+        $('#grid').datagrid({
+            url: '@Url.Action("GetDistributorServiceTypeList", "Distributor")',
+            iconCls: 'icon-view',
+            width: function () { return document.body.clientWidth * 0.9 },
+            nowrap: true,
+            autoRowHeight: true,
+            striped: true,
+            collapsible: false,
+            pagination: true,
+            pageSize: 1000,
+            pageList: [1000],
+            rownumbers: true,
+            sortOrder: 'desc',
+            remoteSort: false,
+            singleSelect: true,
+            idField: 'DistributorServiceTypeID',
+            queryParams: {},
+            animate: true,
+            columns: [[
+                 { title: 'ID', field: 'DistributorServiceTypeID', hidden: true, width: 1, halign: 'center', align: 'center' },
+                { title: '经销商服务类型名称', field: 'DistributorServiceTypeName', width: 280, halign: 'center', align: 'left' }
+            ]]
+        });
+        //新增/修改
+        $('#AddorUpdateWindow').dialog({
+            width: 'auto',
+            height: 'auto',
+            top: 100,
+            modal: true,
+            closed: true,
+            inline: true,
+            buttons: [{
+                text: '确定',
+                handler: function () {
+                    Save();
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    $('#AddorUpdateWindow').dialog('close');
+                }
+            }],
+            onOpen: function () {
+
+            },
+            onClose: function () {
+
+            }
+        });
+    })
+    function ClickAdd() {
+        $('#AddUp').val(1);
+        $('#DistributorServiceTypeName').textbox('setValue', null);
+        $('#AddorUpdateWindow').dialog({ title: "新增经销商服务类型" });
+        $('#AddorUpdateWindow').dialog('open');
+    }
+    function ClickModify() {
+        var row = $("#grid").datagrid("getSelected");
+        if (row == null) {
+            alert("您还没有选择经销商服务类型，请选择！");
+            return;
+        }
+        $.post('@Url.Action("GetDistributorServiceType", "Distributor")',
+                      { DistributorServiceTypeID: row.DistributorServiceTypeID },
+                          function (data, textStatus, jqXHR) {
+                              if (data.SubmitResult) {
+                                  $('#AddUp').val(2);
+                                  $('#DistributorServiceTypeID').val(data.Object.DistributorServiceTypeID);
+                                  $('#DistributorServiceTypeName').textbox('setValue', data.Object.DistributorServiceTypeName);
+
+                                  $('#AddorUpdateWindow').dialog({ title: "修改经销商服务类型" });
+                                  $('#AddorUpdateWindow').dialog('open');
+                              }
+                              else {
+                                  alert(data.Message);
+                                  return;
+                              }
+                          }, "json");
+    }
+    function ClickDel() {
+        var row = $("#grid").datagrid("getSelected");
+        if (row == null) {
+            alert("您还没有选择经销商服务类型信息，请选择！");
+            return;
+        }
+        $.messager.confirm('提示', '是否删除选中数据?', function (data) {
+            if (!data) {
+                return;
+            }
+
+            $.post(
+            '@Url.Action("DeleteDistributorServiceType", "Distributor")',
+            {
+                DistributorServiceTypeID: row.DistributorServiceTypeID
+            },
+            function success(data, textStatus, jqXHR) {
+                if (!data.SubmitResult) {
+                    alert(data.Message);
+                }
+                else {
+                    alert("删除成功！");
+                    $('#grid').datagrid('clearSelections');
+                    $('#grid').datagrid('reload');
+                }
+            }, "json");
+        });
+    }
+    function Save() {
+        if ($("#AddorUpdate").form('validate')) {
+            if ($('#AddUp').val() == 1) {
+                $.post(
+                 '@Url.Action("AddDistributorServiceType", "Distributor")',
+                 {
+                     DistributorServiceTypeName: $('#DistributorServiceTypeName').textbox('getValue'),
+                 },
+                 function success(data, textStatus, jqXHR) {
+                     if (!data.SubmitResult) {
+                         alert(data.Message);
+                     }
+                     else {
+                         $('#AddorUpdateWindow').dialog('close');
+                         $('#grid').datagrid('clearSelections');
+                         $('#grid').datagrid('reload');
+                     }
+                 }, "json");
+            }
+            else {
+                $.post(
+                  '@Url.Action("UpdateDistributorServiceType", "Distributor")',
+                  {
+                      DistributorServiceTypeID: $('#DistributorServiceTypeID').val(),
+                      DistributorServiceTypeName: $('#DistributorServiceTypeName').textbox('getValue'),
+                  },
+                  function success(data, textStatus, jqXHR) {
+                      if (!data.SubmitResult) {
+                          alert(data.Message);
+                      }
+                      else {
+                          $('#AddorUpdateWindow').dialog('close');
+                          $('#grid').datagrid('reload');
+                      }
+                  }, "json");
+            }
+        }
+    }
+</script>
+<div class="easyui-layout" style="height:100%;">
+    <div region="north">
+        @Html.Partial("_Partialtool")
+    </div>
+    <div region="center">
+        <div id="BodyContentDiv" class="DivPage">
+            <table id="grid" style="width:100%;height:100%;"></table>
+        </div>
+    </div>
+</div>
+
+@*新增/修改*@
+<div id="AddorUpdateWindow" class="easyui-dialog">
+    <div class="AddContent">
+        <input id="DistributorServiceTypeID" hidden="hidden" />
+        <input id="AddUp" hidden="hidden" />
+        <form id="AddorUpdate">
+            <p>
+                <span class="cl120">经销商服务类型名称：</span>
+                <input class="easyui-textbox txt200" style="width:200px;" id="DistributorServiceTypeName" required missingmessage="经销商服务类型必须填写！" />
+            </p>
+        </form>
+    </div>
+</div>

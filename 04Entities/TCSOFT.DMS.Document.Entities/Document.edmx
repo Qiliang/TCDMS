@@ -1,0 +1,882 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="TCDMS_DocumentModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Document_Bcce">
+          <Key>
+            <PropertyRef Name="BcceID" />
+          </Key>
+          <Property Name="BcceID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ProductNo" Type="nvarchar" MaxLength="255" />
+          <Property Name="Title" Type="nvarchar" MaxLength="255" />
+          <Property Name="ValidDate" Type="datetime" />
+          <Property Name="Publisher" Type="nvarchar" MaxLength="255" />
+          <Property Name="PublishDate" Type="datetime" />
+          <Property Name="UpdateDate" Type="datetime" />
+          <Property Name="PublisherID" Type="int" />
+        </EntityType>
+        <EntityType Name="Document_BcceAttachment">
+          <Key>
+            <PropertyRef Name="AttachmentID" />
+          </Key>
+          <Property Name="AttachmentID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="AttachmentName" Type="nvarchar" MaxLength="255" />
+          <Property Name="AttachmentSize" Type="int" />
+          <Property Name="BcceID" Type="uniqueidentifier" />
+        </EntityType>
+        <EntityType Name="Document_BcceAttachmentDownload">
+          <Key>
+            <PropertyRef Name="UserID" />
+            <PropertyRef Name="AttachmentID" />
+          </Key>
+          <Property Name="UserID" Type="int" Nullable="false" />
+          <Property Name="AttachmentID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="IsDownload" Type="bit" />
+        </EntityType>
+        <EntityType Name="Document_Cts">
+          <Key>
+            <PropertyRef Name="CtsID" />
+          </Key>
+          <Property Name="CtsID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="TagID" Type="uniqueidentifier" />
+          <Property Name="ProductNo" Type="nvarchar" MaxLength="255" />
+          <Property Name="Title" Type="nvarchar" MaxLength="255" />
+          <Property Name="EffectDate" Type="datetime" />
+          <Property Name="ValidDate" Type="datetime" />
+          <Property Name="Publisher" Type="nvarchar" MaxLength="255" />
+          <Property Name="PublishDate" Type="datetime" />
+          <Property Name="UpdateDate" Type="datetime" />
+          <Property Name="PublisherID" Type="int" />
+          <Property Name="AttachmentName" Type="nvarchar" MaxLength="255" />
+          <Property Name="AttachmentSize" Type="int" />
+        </EntityType>
+        <EntityType Name="Document_CtsAttachmentDownload">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="UserID" Type="int" Nullable="false" />
+          <Property Name="CtsID" Type="uniqueidentifier" />
+          <Property Name="IsDownload" Type="bit" />
+        </EntityType>
+        <EntityType Name="Document_CtsFavorite">
+          <Key>
+            <PropertyRef Name="FavoriteID" />
+          </Key>
+          <Property Name="FavoriteID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="CtsID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="UserID" Type="int" Nullable="false" />
+          <Property Name="FavoriteDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Document_CtsTag">
+          <Key>
+            <PropertyRef Name="TagID" />
+          </Key>
+          <Property Name="ProductLineID" Type="int" Nullable="false" />
+          <Property Name="Tag" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="TagID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ParentID" Type="uniqueidentifier" />
+        </EntityType>
+        <EntityType Name="Document_Lss">
+          <Key>
+            <PropertyRef Name="LssID" />
+          </Key>
+          <Property Name="LssID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="TagID" Type="uniqueidentifier" />
+          <Property Name="ProductNo" Type="nvarchar" MaxLength="255" />
+          <Property Name="Title" Type="nvarchar" MaxLength="255" />
+          <Property Name="EffectDate" Type="datetime" />
+          <Property Name="ValidDate" Type="datetime" />
+          <Property Name="Publisher" Type="nvarchar" MaxLength="255" />
+          <Property Name="PublishDate" Type="datetime" />
+          <Property Name="UpdateDate" Type="datetime" />
+          <Property Name="PublisherID" Type="int" />
+          <Property Name="AttachmentName" Type="nvarchar" MaxLength="255" />
+          <Property Name="AttachmentSize" Type="int" />
+        </EntityType>
+        <EntityType Name="Document_LssAttachmentDownload">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="UserID" Type="int" Nullable="false" />
+          <Property Name="LssID" Type="uniqueidentifier" />
+          <Property Name="IsDownload" Type="bit" />
+        </EntityType>
+        <EntityType Name="Document_LssFavorite">
+          <Key>
+            <PropertyRef Name="FavoriteID" />
+          </Key>
+          <Property Name="FavoriteID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="LssID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="UserID" Type="int" Nullable="false" />
+          <Property Name="FavoriteDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Document_LssTag">
+          <Key>
+            <PropertyRef Name="TagID" />
+          </Key>
+          <Property Name="ProductLineID" Type="int" Nullable="false" />
+          <Property Name="TagName" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="TagID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ParentID" Type="uniqueidentifier" />
+        </EntityType>
+        <EntityType Name="Document_Register">
+          <Key>
+            <PropertyRef Name="RegisterID" />
+          </Key>
+          <Property Name="RegisterID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ProductTypeID" Type="int" />
+          <Property Name="ProductTypeName" Type="nvarchar" MaxLength="50" />
+          <Property Name="ProductLineID" Type="int" />
+          <Property Name="ProductLineName" Type="nvarchar" MaxLength="50" />
+          <Property Name="ProductNo" Type="nvarchar" MaxLength="255" />
+          <Property Name="Title" Type="nvarchar" MaxLength="255" />
+          <Property Name="ValidDate" Type="datetime" />
+          <Property Name="Publisher" Type="nvarchar" MaxLength="255" />
+          <Property Name="PublishDate" Type="datetime" />
+          <Property Name="UpdateDate" Type="datetime" />
+          <Property Name="PublisherID" Type="int" />
+        </EntityType>
+        <EntityType Name="Document_RegisterAttachment">
+          <Key>
+            <PropertyRef Name="AttachmentID" />
+          </Key>
+          <Property Name="AttachmentID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="AttachmentName" Type="nvarchar" MaxLength="255" />
+          <Property Name="AttachmentSize" Type="int" />
+          <Property Name="RegisterID" Type="uniqueidentifier" />
+        </EntityType>
+        <EntityType Name="Document_RegisterAttachmentDownload">
+          <Key>
+            <PropertyRef Name="UserID" />
+            <PropertyRef Name="AttachmentID" />
+          </Key>
+          <Property Name="UserID" Type="int" Nullable="false" />
+          <Property Name="AttachmentID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="IsDownload" Type="bit" />
+        </EntityType>
+        <Association Name="FK_DOCUMENT_REFERENCE_DOCUMENT1">
+          <End Role="Document_Register" Type="Self.Document_Register" Multiplicity="0..1" />
+          <End Role="Document_RegisterAttachment" Type="Self.Document_RegisterAttachment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Document_Register">
+              <PropertyRef Name="RegisterID" />
+            </Principal>
+            <Dependent Role="Document_RegisterAttachment">
+              <PropertyRef Name="RegisterID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DOCUMENT_REFERENCE_DOCUMENT11">
+          <End Role="Document_Lss" Type="Self.Document_Lss" Multiplicity="0..1" />
+          <End Role="Document_LssAttachmentDownload" Type="Self.Document_LssAttachmentDownload" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Document_Lss">
+              <PropertyRef Name="LssID" />
+            </Principal>
+            <Dependent Role="Document_LssAttachmentDownload">
+              <PropertyRef Name="LssID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DOCUMENT_REFERENCE_DOCUMENT12">
+          <End Role="Document_RegisterAttachment" Type="Self.Document_RegisterAttachment" Multiplicity="1" />
+          <End Role="Document_RegisterAttachmentDownload" Type="Self.Document_RegisterAttachmentDownload" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Document_RegisterAttachment">
+              <PropertyRef Name="AttachmentID" />
+            </Principal>
+            <Dependent Role="Document_RegisterAttachmentDownload">
+              <PropertyRef Name="AttachmentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DOCUMENT_REFERENCE_DOCUMENT2">
+          <End Role="Document_BcceAttachment" Type="Self.Document_BcceAttachment" Multiplicity="1" />
+          <End Role="Document_BcceAttachmentDownload" Type="Self.Document_BcceAttachmentDownload" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Document_BcceAttachment">
+              <PropertyRef Name="AttachmentID" />
+            </Principal>
+            <Dependent Role="Document_BcceAttachmentDownload">
+              <PropertyRef Name="AttachmentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DOCUMENT_REFERENCE_DOCUMENT22">
+          <End Role="Document_Cts" Type="Self.Document_Cts" Multiplicity="0..1" />
+          <End Role="Document_CtsAttachmentDownload" Type="Self.Document_CtsAttachmentDownload" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Document_Cts">
+              <PropertyRef Name="CtsID" />
+            </Principal>
+            <Dependent Role="Document_CtsAttachmentDownload">
+              <PropertyRef Name="CtsID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DOCUMENT_REFERENCE_DOCUMENT55">
+          <End Role="Document_Lss" Type="Self.Document_Lss" Multiplicity="1" />
+          <End Role="Document_LssFavorite" Type="Self.Document_LssFavorite" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Document_Lss">
+              <PropertyRef Name="LssID" />
+            </Principal>
+            <Dependent Role="Document_LssFavorite">
+              <PropertyRef Name="LssID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DOCUMENT_REFERENCE_DOCUMENT66">
+          <End Role="Document_Cts" Type="Self.Document_Cts" Multiplicity="1" />
+          <End Role="Document_CtsFavorite" Type="Self.Document_CtsFavorite" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Document_Cts">
+              <PropertyRef Name="CtsID" />
+            </Principal>
+            <Dependent Role="Document_CtsFavorite">
+              <PropertyRef Name="CtsID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DOCUMENT_REFERENCE_DOUMENT_2">
+          <End Role="Document_Bcce" Type="Self.Document_Bcce" Multiplicity="0..1" />
+          <End Role="Document_BcceAttachment" Type="Self.Document_BcceAttachment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Document_Bcce">
+              <PropertyRef Name="BcceID" />
+            </Principal>
+            <Dependent Role="Document_BcceAttachment">
+              <PropertyRef Name="BcceID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DOUMENT__REFERENCE_DOCUMENT12">
+          <End Role="Document_LssTag" Type="Self.Document_LssTag" Multiplicity="0..1" />
+          <End Role="Document_Lss" Type="Self.Document_Lss" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Document_LssTag">
+              <PropertyRef Name="TagID" />
+            </Principal>
+            <Dependent Role="Document_Lss">
+              <PropertyRef Name="TagID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DOUMENT__REFERENCE_DOCUMENT2">
+          <End Role="Document_CtsTag" Type="Self.Document_CtsTag" Multiplicity="0..1" />
+          <End Role="Document_Cts" Type="Self.Document_Cts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Document_CtsTag">
+              <PropertyRef Name="TagID" />
+            </Principal>
+            <Dependent Role="Document_Cts">
+              <PropertyRef Name="TagID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="TCDMS_DocumentModelStoreContainer">
+          <EntitySet Name="Document_Bcce" EntityType="Self.Document_Bcce" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Document_BcceAttachment" EntityType="Self.Document_BcceAttachment" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Document_BcceAttachmentDownload" EntityType="Self.Document_BcceAttachmentDownload" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Document_Cts" EntityType="Self.Document_Cts" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Document_CtsAttachmentDownload" EntityType="Self.Document_CtsAttachmentDownload" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Document_CtsFavorite" EntityType="Self.Document_CtsFavorite" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Document_CtsTag" EntityType="Self.Document_CtsTag" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Document_Lss" EntityType="Self.Document_Lss" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Document_LssAttachmentDownload" EntityType="Self.Document_LssAttachmentDownload" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Document_LssFavorite" EntityType="Self.Document_LssFavorite" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Document_LssTag" EntityType="Self.Document_LssTag" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Document_Register" EntityType="Self.Document_Register" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Document_RegisterAttachment" EntityType="Self.Document_RegisterAttachment" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Document_RegisterAttachmentDownload" EntityType="Self.Document_RegisterAttachmentDownload" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_DOCUMENT_REFERENCE_DOCUMENT1" Association="Self.FK_DOCUMENT_REFERENCE_DOCUMENT1">
+            <End Role="Document_Register" EntitySet="Document_Register" />
+            <End Role="Document_RegisterAttachment" EntitySet="Document_RegisterAttachment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DOCUMENT_REFERENCE_DOCUMENT11" Association="Self.FK_DOCUMENT_REFERENCE_DOCUMENT11">
+            <End Role="Document_Lss" EntitySet="Document_Lss" />
+            <End Role="Document_LssAttachmentDownload" EntitySet="Document_LssAttachmentDownload" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DOCUMENT_REFERENCE_DOCUMENT12" Association="Self.FK_DOCUMENT_REFERENCE_DOCUMENT12">
+            <End Role="Document_RegisterAttachment" EntitySet="Document_RegisterAttachment" />
+            <End Role="Document_RegisterAttachmentDownload" EntitySet="Document_RegisterAttachmentDownload" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DOCUMENT_REFERENCE_DOCUMENT2" Association="Self.FK_DOCUMENT_REFERENCE_DOCUMENT2">
+            <End Role="Document_BcceAttachment" EntitySet="Document_BcceAttachment" />
+            <End Role="Document_BcceAttachmentDownload" EntitySet="Document_BcceAttachmentDownload" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DOCUMENT_REFERENCE_DOCUMENT22" Association="Self.FK_DOCUMENT_REFERENCE_DOCUMENT22">
+            <End Role="Document_Cts" EntitySet="Document_Cts" />
+            <End Role="Document_CtsAttachmentDownload" EntitySet="Document_CtsAttachmentDownload" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DOCUMENT_REFERENCE_DOCUMENT55" Association="Self.FK_DOCUMENT_REFERENCE_DOCUMENT55">
+            <End Role="Document_Lss" EntitySet="Document_Lss" />
+            <End Role="Document_LssFavorite" EntitySet="Document_LssFavorite" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DOCUMENT_REFERENCE_DOCUMENT66" Association="Self.FK_DOCUMENT_REFERENCE_DOCUMENT66">
+            <End Role="Document_Cts" EntitySet="Document_Cts" />
+            <End Role="Document_CtsFavorite" EntitySet="Document_CtsFavorite" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DOCUMENT_REFERENCE_DOUMENT_2" Association="Self.FK_DOCUMENT_REFERENCE_DOUMENT_2">
+            <End Role="Document_Bcce" EntitySet="Document_Bcce" />
+            <End Role="Document_BcceAttachment" EntitySet="Document_BcceAttachment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DOUMENT__REFERENCE_DOCUMENT12" Association="Self.FK_DOUMENT__REFERENCE_DOCUMENT12">
+            <End Role="Document_LssTag" EntitySet="Document_LssTag" />
+            <End Role="Document_Lss" EntitySet="Document_Lss" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DOUMENT__REFERENCE_DOCUMENT2" Association="Self.FK_DOUMENT__REFERENCE_DOCUMENT2">
+            <End Role="Document_CtsTag" EntitySet="Document_CtsTag" />
+            <End Role="Document_Cts" EntitySet="Document_Cts" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="TCDMS_DocumentModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Document_Bcce">
+          <Key>
+            <PropertyRef Name="BcceID" />
+          </Key>
+          <Property Name="BcceID" Type="Guid" Nullable="false" />
+          <Property Name="ProductNo" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Title" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="ValidDate" Type="DateTime" Precision="3" />
+          <Property Name="Publisher" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="PublishDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdateDate" Type="DateTime" Precision="3" />
+          <Property Name="PublisherID" Type="Int32" />
+          <NavigationProperty Name="Document_BcceAttachment" Relationship="Self.FK_DOCUMENT_REFERENCE_DOUMENT_2" FromRole="Document_Bcce" ToRole="Document_BcceAttachment" />
+        </EntityType>
+        <EntityType Name="Document_BcceAttachment">
+          <Key>
+            <PropertyRef Name="AttachmentID" />
+          </Key>
+          <Property Name="AttachmentID" Type="Guid" Nullable="false" />
+          <Property Name="AttachmentName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="AttachmentSize" Type="Int32" />
+          <Property Name="BcceID" Type="Guid" />
+          <NavigationProperty Name="Document_Bcce" Relationship="Self.FK_DOCUMENT_REFERENCE_DOUMENT_2" FromRole="Document_BcceAttachment" ToRole="Document_Bcce" />
+          <NavigationProperty Name="Document_BcceAttachmentDownload" Relationship="Self.FK_DOCUMENT_REFERENCE_DOCUMENT2" FromRole="Document_BcceAttachment" ToRole="Document_BcceAttachmentDownload" />
+        </EntityType>
+        <EntityType Name="Document_BcceAttachmentDownload">
+          <Key>
+            <PropertyRef Name="UserID" />
+            <PropertyRef Name="AttachmentID" />
+          </Key>
+          <Property Name="UserID" Type="Int32" Nullable="false" />
+          <Property Name="AttachmentID" Type="Guid" Nullable="false" />
+          <Property Name="IsDownload" Type="Boolean" />
+          <NavigationProperty Name="Document_BcceAttachment" Relationship="Self.FK_DOCUMENT_REFERENCE_DOCUMENT2" FromRole="Document_BcceAttachmentDownload" ToRole="Document_BcceAttachment" />
+        </EntityType>
+        <EntityType Name="Document_Cts">
+          <Key>
+            <PropertyRef Name="CtsID" />
+          </Key>
+          <Property Name="CtsID" Type="Guid" Nullable="false" />
+          <Property Name="TagID" Type="Guid" />
+          <Property Name="ProductNo" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Title" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="EffectDate" Type="DateTime" Precision="3" />
+          <Property Name="ValidDate" Type="DateTime" Precision="3" />
+          <Property Name="Publisher" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="PublishDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdateDate" Type="DateTime" Precision="3" />
+          <Property Name="PublisherID" Type="Int32" />
+          <Property Name="AttachmentName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="AttachmentSize" Type="Int32" />
+          <NavigationProperty Name="Document_CtsAttachmentDownload" Relationship="Self.FK_DOCUMENT_REFERENCE_DOCUMENT22" FromRole="Document_Cts" ToRole="Document_CtsAttachmentDownload" />
+          <NavigationProperty Name="Document_CtsFavorite" Relationship="Self.FK_DOCUMENT_REFERENCE_DOCUMENT66" FromRole="Document_Cts" ToRole="Document_CtsFavorite" />
+          <NavigationProperty Name="Document_CtsTag" Relationship="Self.FK_DOUMENT__REFERENCE_DOCUMENT2" FromRole="Document_Cts" ToRole="Document_CtsTag" />
+        </EntityType>
+        <EntityType Name="Document_CtsAttachmentDownload">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="UserID" Type="Int32" Nullable="false" />
+          <Property Name="CtsID" Type="Guid" />
+          <Property Name="IsDownload" Type="Boolean" />
+          <NavigationProperty Name="Document_Cts" Relationship="Self.FK_DOCUMENT_REFERENCE_DOCUMENT22" FromRole="Document_CtsAttachmentDownload" ToRole="Document_Cts" />
+        </EntityType>
+        <EntityType Name="Document_CtsFavorite">
+          <Key>
+            <PropertyRef Name="FavoriteID" />
+          </Key>
+          <Property Name="FavoriteID" Type="Guid" Nullable="false" />
+          <Property Name="CtsID" Type="Guid" Nullable="false" />
+          <Property Name="UserID" Type="Int32" Nullable="false" />
+          <Property Name="FavoriteDate" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Document_Cts" Relationship="Self.FK_DOCUMENT_REFERENCE_DOCUMENT66" FromRole="Document_CtsFavorite" ToRole="Document_Cts" />
+        </EntityType>
+        <EntityType Name="Document_CtsTag">
+          <Key>
+            <PropertyRef Name="TagID" />
+          </Key>
+          <Property Name="ProductLineID" Type="Int32" Nullable="false" />
+          <Property Name="Tag" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="TagID" Type="Guid" Nullable="false" />
+          <Property Name="ParentID" Type="Guid" />
+          <NavigationProperty Name="Document_Cts" Relationship="Self.FK_DOUMENT__REFERENCE_DOCUMENT2" FromRole="Document_CtsTag" ToRole="Document_Cts" />
+        </EntityType>
+        <EntityType Name="Document_Lss">
+          <Key>
+            <PropertyRef Name="LssID" />
+          </Key>
+          <Property Name="LssID" Type="Guid" Nullable="false" />
+          <Property Name="TagID" Type="Guid" />
+          <Property Name="ProductNo" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Title" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="EffectDate" Type="DateTime" Precision="3" />
+          <Property Name="ValidDate" Type="DateTime" Precision="3" />
+          <Property Name="Publisher" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="PublishDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdateDate" Type="DateTime" Precision="3" />
+          <Property Name="PublisherID" Type="Int32" />
+          <Property Name="AttachmentName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="AttachmentSize" Type="Int32" />
+          <NavigationProperty Name="Document_LssAttachmentDownload" Relationship="Self.FK_DOCUMENT_REFERENCE_DOCUMENT11" FromRole="Document_Lss" ToRole="Document_LssAttachmentDownload" />
+          <NavigationProperty Name="Document_LssFavorite" Relationship="Self.FK_DOCUMENT_REFERENCE_DOCUMENT55" FromRole="Document_Lss" ToRole="Document_LssFavorite" />
+          <NavigationProperty Name="Document_LssTag" Relationship="Self.FK_DOUMENT__REFERENCE_DOCUMENT12" FromRole="Document_Lss" ToRole="Document_LssTag" />
+        </EntityType>
+        <EntityType Name="Document_LssAttachmentDownload">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="UserID" Type="Int32" Nullable="false" />
+          <Property Name="LssID" Type="Guid" />
+          <Property Name="IsDownload" Type="Boolean" />
+          <NavigationProperty Name="Document_Lss" Relationship="Self.FK_DOCUMENT_REFERENCE_DOCUMENT11" FromRole="Document_LssAttachmentDownload" ToRole="Document_Lss" />
+        </EntityType>
+        <EntityType Name="Document_LssFavorite">
+          <Key>
+            <PropertyRef Name="FavoriteID" />
+          </Key>
+          <Property Name="FavoriteID" Type="Guid" Nullable="false" />
+          <Property Name="LssID" Type="Guid" Nullable="false" />
+          <Property Name="UserID" Type="Int32" Nullable="false" />
+          <Property Name="FavoriteDate" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Document_Lss" Relationship="Self.FK_DOCUMENT_REFERENCE_DOCUMENT55" FromRole="Document_LssFavorite" ToRole="Document_Lss" />
+        </EntityType>
+        <EntityType Name="Document_LssTag">
+          <Key>
+            <PropertyRef Name="TagID" />
+          </Key>
+          <Property Name="ProductLineID" Type="Int32" Nullable="false" />
+          <Property Name="TagName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="TagID" Type="Guid" Nullable="false" />
+          <Property Name="ParentID" Type="Guid" />
+          <NavigationProperty Name="Document_Lss" Relationship="Self.FK_DOUMENT__REFERENCE_DOCUMENT12" FromRole="Document_LssTag" ToRole="Document_Lss" />
+        </EntityType>
+        <EntityType Name="Document_Register">
+          <Key>
+            <PropertyRef Name="RegisterID" />
+          </Key>
+          <Property Name="RegisterID" Type="Guid" Nullable="false" />
+          <Property Name="ProductTypeID" Type="Int32" />
+          <Property Name="ProductTypeName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ProductLineID" Type="Int32" />
+          <Property Name="ProductLineName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ProductNo" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Title" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="ValidDate" Type="DateTime" Precision="3" />
+          <Property Name="Publisher" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="PublishDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdateDate" Type="DateTime" Precision="3" />
+          <Property Name="PublisherID" Type="Int32" />
+          <NavigationProperty Name="Document_RegisterAttachment" Relationship="Self.FK_DOCUMENT_REFERENCE_DOCUMENT1" FromRole="Document_Register" ToRole="Document_RegisterAttachment" />
+        </EntityType>
+        <EntityType Name="Document_RegisterAttachment">
+          <Key>
+            <PropertyRef Name="AttachmentID" />
+          </Key>
+          <Property Name="AttachmentID" Type="Guid" Nullable="false" />
+          <Property Name="AttachmentName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="AttachmentSize" Type="Int32" />
+          <Property Name="RegisterID" Type="Guid" />
+          <NavigationProperty Name="Document_Register" Relationship="Self.FK_DOCUMENT_REFERENCE_DOCUMENT1" FromRole="Document_RegisterAttachment" ToRole="Document_Register" />
+          <NavigationProperty Name="Document_RegisterAttachmentDownload" Relationship="Self.FK_DOCUMENT_REFERENCE_DOCUMENT12" FromRole="Document_RegisterAttachment" ToRole="Document_RegisterAttachmentDownload" />
+        </EntityType>
+        <EntityType Name="Document_RegisterAttachmentDownload">
+          <Key>
+            <PropertyRef Name="UserID" />
+            <PropertyRef Name="AttachmentID" />
+          </Key>
+          <Property Name="UserID" Type="Int32" Nullable="false" />
+          <Property Name="AttachmentID" Type="Guid" Nullable="false" />
+          <Property Name="IsDownload" Type="Boolean" />
+          <NavigationProperty Name="Document_RegisterAttachment" Relationship="Self.FK_DOCUMENT_REFERENCE_DOCUMENT12" FromRole="Document_RegisterAttachmentDownload" ToRole="Document_RegisterAttachment" />
+        </EntityType>
+        <Association Name="FK_DOCUMENT_REFERENCE_DOUMENT_2">
+          <End Role="Document_Bcce" Type="Self.Document_Bcce" Multiplicity="0..1" />
+          <End Role="Document_BcceAttachment" Type="Self.Document_BcceAttachment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Document_Bcce">
+              <PropertyRef Name="BcceID" />
+            </Principal>
+            <Dependent Role="Document_BcceAttachment">
+              <PropertyRef Name="BcceID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DOCUMENT_REFERENCE_DOCUMENT2">
+          <End Role="Document_BcceAttachment" Type="Self.Document_BcceAttachment" Multiplicity="1" />
+          <End Role="Document_BcceAttachmentDownload" Type="Self.Document_BcceAttachmentDownload" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Document_BcceAttachment">
+              <PropertyRef Name="AttachmentID" />
+            </Principal>
+            <Dependent Role="Document_BcceAttachmentDownload">
+              <PropertyRef Name="AttachmentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DOCUMENT_REFERENCE_DOCUMENT22">
+          <End Role="Document_Cts" Type="Self.Document_Cts" Multiplicity="0..1" />
+          <End Role="Document_CtsAttachmentDownload" Type="Self.Document_CtsAttachmentDownload" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Document_Cts">
+              <PropertyRef Name="CtsID" />
+            </Principal>
+            <Dependent Role="Document_CtsAttachmentDownload">
+              <PropertyRef Name="CtsID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DOCUMENT_REFERENCE_DOCUMENT66">
+          <End Role="Document_Cts" Type="Self.Document_Cts" Multiplicity="1" />
+          <End Role="Document_CtsFavorite" Type="Self.Document_CtsFavorite" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Document_Cts">
+              <PropertyRef Name="CtsID" />
+            </Principal>
+            <Dependent Role="Document_CtsFavorite">
+              <PropertyRef Name="CtsID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DOUMENT__REFERENCE_DOCUMENT2">
+          <End Role="Document_CtsTag" Type="Self.Document_CtsTag" Multiplicity="0..1" />
+          <End Role="Document_Cts" Type="Self.Document_Cts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Document_CtsTag">
+              <PropertyRef Name="TagID" />
+            </Principal>
+            <Dependent Role="Document_Cts">
+              <PropertyRef Name="TagID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DOCUMENT_REFERENCE_DOCUMENT11">
+          <End Role="Document_Lss" Type="Self.Document_Lss" Multiplicity="0..1" />
+          <End Role="Document_LssAttachmentDownload" Type="Self.Document_LssAttachmentDownload" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Document_Lss">
+              <PropertyRef Name="LssID" />
+            </Principal>
+            <Dependent Role="Document_LssAttachmentDownload">
+              <PropertyRef Name="LssID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DOCUMENT_REFERENCE_DOCUMENT55">
+          <End Role="Document_Lss" Type="Self.Document_Lss" Multiplicity="1" />
+          <End Role="Document_LssFavorite" Type="Self.Document_LssFavorite" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Document_Lss">
+              <PropertyRef Name="LssID" />
+            </Principal>
+            <Dependent Role="Document_LssFavorite">
+              <PropertyRef Name="LssID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DOUMENT__REFERENCE_DOCUMENT12">
+          <End Role="Document_LssTag" Type="Self.Document_LssTag" Multiplicity="0..1" />
+          <End Role="Document_Lss" Type="Self.Document_Lss" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Document_LssTag">
+              <PropertyRef Name="TagID" />
+            </Principal>
+            <Dependent Role="Document_Lss">
+              <PropertyRef Name="TagID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DOCUMENT_REFERENCE_DOCUMENT1">
+          <End Role="Document_Register" Type="Self.Document_Register" Multiplicity="0..1" />
+          <End Role="Document_RegisterAttachment" Type="Self.Document_RegisterAttachment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Document_Register">
+              <PropertyRef Name="RegisterID" />
+            </Principal>
+            <Dependent Role="Document_RegisterAttachment">
+              <PropertyRef Name="RegisterID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DOCUMENT_REFERENCE_DOCUMENT12">
+          <End Role="Document_RegisterAttachment" Type="Self.Document_RegisterAttachment" Multiplicity="1" />
+          <End Role="Document_RegisterAttachmentDownload" Type="Self.Document_RegisterAttachmentDownload" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Document_RegisterAttachment">
+              <PropertyRef Name="AttachmentID" />
+            </Principal>
+            <Dependent Role="Document_RegisterAttachmentDownload">
+              <PropertyRef Name="AttachmentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="TCDMS_DocumentEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Document_Bcce" EntityType="Self.Document_Bcce" />
+          <EntitySet Name="Document_BcceAttachment" EntityType="Self.Document_BcceAttachment" />
+          <EntitySet Name="Document_BcceAttachmentDownload" EntityType="Self.Document_BcceAttachmentDownload" />
+          <EntitySet Name="Document_Cts" EntityType="Self.Document_Cts" />
+          <EntitySet Name="Document_CtsAttachmentDownload" EntityType="Self.Document_CtsAttachmentDownload" />
+          <EntitySet Name="Document_CtsFavorite" EntityType="Self.Document_CtsFavorite" />
+          <EntitySet Name="Document_CtsTag" EntityType="Self.Document_CtsTag" />
+          <EntitySet Name="Document_Lss" EntityType="Self.Document_Lss" />
+          <EntitySet Name="Document_LssAttachmentDownload" EntityType="Self.Document_LssAttachmentDownload" />
+          <EntitySet Name="Document_LssFavorite" EntityType="Self.Document_LssFavorite" />
+          <EntitySet Name="Document_LssTag" EntityType="Self.Document_LssTag" />
+          <EntitySet Name="Document_Register" EntityType="Self.Document_Register" />
+          <EntitySet Name="Document_RegisterAttachment" EntityType="Self.Document_RegisterAttachment" />
+          <EntitySet Name="Document_RegisterAttachmentDownload" EntityType="Self.Document_RegisterAttachmentDownload" />
+          <AssociationSet Name="FK_DOCUMENT_REFERENCE_DOUMENT_2" Association="Self.FK_DOCUMENT_REFERENCE_DOUMENT_2">
+            <End Role="Document_Bcce" EntitySet="Document_Bcce" />
+            <End Role="Document_BcceAttachment" EntitySet="Document_BcceAttachment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DOCUMENT_REFERENCE_DOCUMENT2" Association="Self.FK_DOCUMENT_REFERENCE_DOCUMENT2">
+            <End Role="Document_BcceAttachment" EntitySet="Document_BcceAttachment" />
+            <End Role="Document_BcceAttachmentDownload" EntitySet="Document_BcceAttachmentDownload" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DOCUMENT_REFERENCE_DOCUMENT22" Association="Self.FK_DOCUMENT_REFERENCE_DOCUMENT22">
+            <End Role="Document_Cts" EntitySet="Document_Cts" />
+            <End Role="Document_CtsAttachmentDownload" EntitySet="Document_CtsAttachmentDownload" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DOCUMENT_REFERENCE_DOCUMENT66" Association="Self.FK_DOCUMENT_REFERENCE_DOCUMENT66">
+            <End Role="Document_Cts" EntitySet="Document_Cts" />
+            <End Role="Document_CtsFavorite" EntitySet="Document_CtsFavorite" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DOUMENT__REFERENCE_DOCUMENT2" Association="Self.FK_DOUMENT__REFERENCE_DOCUMENT2">
+            <End Role="Document_CtsTag" EntitySet="Document_CtsTag" />
+            <End Role="Document_Cts" EntitySet="Document_Cts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DOCUMENT_REFERENCE_DOCUMENT11" Association="Self.FK_DOCUMENT_REFERENCE_DOCUMENT11">
+            <End Role="Document_Lss" EntitySet="Document_Lss" />
+            <End Role="Document_LssAttachmentDownload" EntitySet="Document_LssAttachmentDownload" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DOCUMENT_REFERENCE_DOCUMENT55" Association="Self.FK_DOCUMENT_REFERENCE_DOCUMENT55">
+            <End Role="Document_Lss" EntitySet="Document_Lss" />
+            <End Role="Document_LssFavorite" EntitySet="Document_LssFavorite" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DOUMENT__REFERENCE_DOCUMENT12" Association="Self.FK_DOUMENT__REFERENCE_DOCUMENT12">
+            <End Role="Document_LssTag" EntitySet="Document_LssTag" />
+            <End Role="Document_Lss" EntitySet="Document_Lss" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DOCUMENT_REFERENCE_DOCUMENT1" Association="Self.FK_DOCUMENT_REFERENCE_DOCUMENT1">
+            <End Role="Document_Register" EntitySet="Document_Register" />
+            <End Role="Document_RegisterAttachment" EntitySet="Document_RegisterAttachment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DOCUMENT_REFERENCE_DOCUMENT12" Association="Self.FK_DOCUMENT_REFERENCE_DOCUMENT12">
+            <End Role="Document_RegisterAttachment" EntitySet="Document_RegisterAttachment" />
+            <End Role="Document_RegisterAttachmentDownload" EntitySet="Document_RegisterAttachmentDownload" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="TCDMS_DocumentModelStoreContainer" CdmEntityContainer="TCDMS_DocumentEntities">
+          <EntitySetMapping Name="Document_Bcce">
+            <EntityTypeMapping TypeName="TCDMS_DocumentModel.Document_Bcce">
+              <MappingFragment StoreEntitySet="Document_Bcce">
+                <ScalarProperty Name="BcceID" ColumnName="BcceID" />
+                <ScalarProperty Name="ProductNo" ColumnName="ProductNo" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="ValidDate" ColumnName="ValidDate" />
+                <ScalarProperty Name="Publisher" ColumnName="Publisher" />
+                <ScalarProperty Name="PublishDate" ColumnName="PublishDate" />
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+                <ScalarProperty Name="PublisherID" ColumnName="PublisherID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Document_BcceAttachment">
+            <EntityTypeMapping TypeName="TCDMS_DocumentModel.Document_BcceAttachment">
+              <MappingFragment StoreEntitySet="Document_BcceAttachment">
+                <ScalarProperty Name="AttachmentID" ColumnName="AttachmentID" />
+                <ScalarProperty Name="AttachmentName" ColumnName="AttachmentName" />
+                <ScalarProperty Name="AttachmentSize" ColumnName="AttachmentSize" />
+                <ScalarProperty Name="BcceID" ColumnName="BcceID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Document_BcceAttachmentDownload">
+            <EntityTypeMapping TypeName="TCDMS_DocumentModel.Document_BcceAttachmentDownload">
+              <MappingFragment StoreEntitySet="Document_BcceAttachmentDownload">
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="AttachmentID" ColumnName="AttachmentID" />
+                <ScalarProperty Name="IsDownload" ColumnName="IsDownload" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Document_Cts">
+            <EntityTypeMapping TypeName="TCDMS_DocumentModel.Document_Cts">
+              <MappingFragment StoreEntitySet="Document_Cts">
+                <ScalarProperty Name="CtsID" ColumnName="CtsID" />
+                <ScalarProperty Name="TagID" ColumnName="TagID" />
+                <ScalarProperty Name="ProductNo" ColumnName="ProductNo" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="EffectDate" ColumnName="EffectDate" />
+                <ScalarProperty Name="ValidDate" ColumnName="ValidDate" />
+                <ScalarProperty Name="Publisher" ColumnName="Publisher" />
+                <ScalarProperty Name="PublishDate" ColumnName="PublishDate" />
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+                <ScalarProperty Name="PublisherID" ColumnName="PublisherID" />
+                <ScalarProperty Name="AttachmentName" ColumnName="AttachmentName" />
+                <ScalarProperty Name="AttachmentSize" ColumnName="AttachmentSize" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Document_CtsAttachmentDownload">
+            <EntityTypeMapping TypeName="TCDMS_DocumentModel.Document_CtsAttachmentDownload">
+              <MappingFragment StoreEntitySet="Document_CtsAttachmentDownload">
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="CtsID" ColumnName="CtsID" />
+                <ScalarProperty Name="IsDownload" ColumnName="IsDownload" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Document_CtsFavorite">
+            <EntityTypeMapping TypeName="TCDMS_DocumentModel.Document_CtsFavorite">
+              <MappingFragment StoreEntitySet="Document_CtsFavorite">
+                <ScalarProperty Name="FavoriteID" ColumnName="FavoriteID" />
+                <ScalarProperty Name="CtsID" ColumnName="CtsID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="FavoriteDate" ColumnName="FavoriteDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Document_CtsTag">
+            <EntityTypeMapping TypeName="TCDMS_DocumentModel.Document_CtsTag">
+              <MappingFragment StoreEntitySet="Document_CtsTag">
+                <ScalarProperty Name="ProductLineID" ColumnName="ProductLineID" />
+                <ScalarProperty Name="Tag" ColumnName="Tag" />
+                <ScalarProperty Name="TagID" ColumnName="TagID" />
+                <ScalarProperty Name="ParentID" ColumnName="ParentID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Document_Lss">
+            <EntityTypeMapping TypeName="TCDMS_DocumentModel.Document_Lss">
+              <MappingFragment StoreEntitySet="Document_Lss">
+                <ScalarProperty Name="LssID" ColumnName="LssID" />
+                <ScalarProperty Name="TagID" ColumnName="TagID" />
+                <ScalarProperty Name="ProductNo" ColumnName="ProductNo" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="EffectDate" ColumnName="EffectDate" />
+                <ScalarProperty Name="ValidDate" ColumnName="ValidDate" />
+                <ScalarProperty Name="Publisher" ColumnName="Publisher" />
+                <ScalarProperty Name="PublishDate" ColumnName="PublishDate" />
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+                <ScalarProperty Name="PublisherID" ColumnName="PublisherID" />
+                <ScalarProperty Name="AttachmentName" ColumnName="AttachmentName" />
+                <ScalarProperty Name="AttachmentSize" ColumnName="AttachmentSize" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Document_LssAttachmentDownload">
+            <EntityTypeMapping TypeName="TCDMS_DocumentModel.Document_LssAttachmentDownload">
+              <MappingFragment StoreEntitySet="Document_LssAttachmentDownload">
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="LssID" ColumnName="LssID" />
+                <ScalarProperty Name="IsDownload" ColumnName="IsDownload" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Document_LssFavorite">
+            <EntityTypeMapping TypeName="TCDMS_DocumentModel.Document_LssFavorite">
+              <MappingFragment StoreEntitySet="Document_LssFavorite">
+                <ScalarProperty Name="FavoriteID" ColumnName="FavoriteID" />
+                <ScalarProperty Name="LssID" ColumnName="LssID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="FavoriteDate" ColumnName="FavoriteDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Document_LssTag">
+            <EntityTypeMapping TypeName="TCDMS_DocumentModel.Document_LssTag">
+              <MappingFragment StoreEntitySet="Document_LssTag">
+                <ScalarProperty Name="ProductLineID" ColumnName="ProductLineID" />
+                <ScalarProperty Name="TagName" ColumnName="TagName" />
+                <ScalarProperty Name="TagID" ColumnName="TagID" />
+                <ScalarProperty Name="ParentID" ColumnName="ParentID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Document_Register">
+            <EntityTypeMapping TypeName="TCDMS_DocumentModel.Document_Register">
+              <MappingFragment StoreEntitySet="Document_Register">
+                <ScalarProperty Name="RegisterID" ColumnName="RegisterID" />
+                <ScalarProperty Name="ProductTypeID" ColumnName="ProductTypeID" />
+                <ScalarProperty Name="ProductTypeName" ColumnName="ProductTypeName" />
+                <ScalarProperty Name="ProductLineID" ColumnName="ProductLineID" />
+                <ScalarProperty Name="ProductLineName" ColumnName="ProductLineName" />
+                <ScalarProperty Name="ProductNo" ColumnName="ProductNo" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="ValidDate" ColumnName="ValidDate" />
+                <ScalarProperty Name="Publisher" ColumnName="Publisher" />
+                <ScalarProperty Name="PublishDate" ColumnName="PublishDate" />
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+                <ScalarProperty Name="PublisherID" ColumnName="PublisherID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Document_RegisterAttachment">
+            <EntityTypeMapping TypeName="TCDMS_DocumentModel.Document_RegisterAttachment">
+              <MappingFragment StoreEntitySet="Document_RegisterAttachment">
+                <ScalarProperty Name="AttachmentID" ColumnName="AttachmentID" />
+                <ScalarProperty Name="AttachmentName" ColumnName="AttachmentName" />
+                <ScalarProperty Name="AttachmentSize" ColumnName="AttachmentSize" />
+                <ScalarProperty Name="RegisterID" ColumnName="RegisterID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Document_RegisterAttachmentDownload">
+            <EntityTypeMapping TypeName="TCDMS_DocumentModel.Document_RegisterAttachmentDownload">
+              <MappingFragment StoreEntitySet="Document_RegisterAttachmentDownload">
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="AttachmentID" ColumnName="AttachmentID" />
+                <ScalarProperty Name="IsDownload" ColumnName="IsDownload" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="无" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

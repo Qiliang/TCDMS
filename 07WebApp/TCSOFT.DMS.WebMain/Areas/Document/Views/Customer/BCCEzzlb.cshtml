@@ -1,0 +1,106 @@
+﻿@{
+    Layout = null;
+}
+
+
+<div class="easyui-layout" style="height:100%;">
+    <div region="north" style="height:94px">
+        <link href="~/Content/Document/CSS/_Partialtool.css" rel="stylesheet" />
+        <div id="BodyContentTool">
+            <div id="btnButton">
+                <div class="comboelse" style="padding:5px 5px 5px 0;">
+                    <select id='searchproductline' class='easyui-combobox txt250' editable='false' panelHeight='auto'
+                            buttonText='类别'>
+                        <option value="">-- 请选择产品类型 --</option>
+                        <option value="1">产品类型1</option>
+                        <option value="2">产品类型2</option>
+                        <option value="3">产品类型3</option>
+                    </select>
+                    <input class='easyui-datebox txt350' id='EffectiveTtime' editable='false' buttonText='发布日期起'/>
+                    <input class='easyui-datebox txt350' id='EffectiveTtime1' editable='false' buttonText='发布日期止'/>
+                </div>
+                <ul>
+                    <li><input id="serchText" class="easyui-searchbox search" style="height:32px;width:500px;"
+                               data-options="prompt:'支持标题、发布人模糊查询',searcher:function(){}"/></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div region="center">
+        <div id="BodyContentDiv">
+            <table class="easyui-datagrid"
+                   data-options="
+                    iconCls: 'icon-view',
+                    width: function () { return document.body.clientWidth * 0.9 },
+                    nowrap: true,
+                    autoRowHeight: true,
+                    striped: true,
+                    collapsible: false,
+                    pagination: true,
+                    pageSize: 10,
+                    pageList: [10, 20, 30],
+                    rownumbers: true,
+                    sortOrder: 'desc',
+                    remoteSort: false,
+                    singleSelect: true,
+                    queryParams: {},
+                    animate: true,
+                    url:'customer/zczlb_data.json',
+                    method:'get',
+                    idField:'id',
+                    fit:true">
+                <thead>
+                <tr>
+                    <th data-options="field:'id',width:80,align:'center',formatter:formatterAttachment">附件</th>
+                    <th data-options="field:'product_num',width:120,align:'center',sortable:true">产品线</th>
+                    <th data-options="field:'goods_num',width:120,align:'center',sortable:true">货号</th>
+                    <th data-options="field:'title',width:250,align:'center'">标题</th>
+                    <th data-options="field:'validity_date',width:100,align:'center'">有效期</th>
+                    <th data-options="field:'release_person',width:100,align:'center'">发布人</th>
+                    <th data-options="field:'release_time',width:160,align:'center'">发布日期</th>
+                    <th data-options="field:'update_time',width:160,align:'center'">更新日期</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<div class="easyui-dialog" id="downloadDialog" title="下载附件" style="padding:10px" data-options="height: 'auto',
+            top: 20,
+            modal: true,
+            closed: true,
+            inline: true,
+            buttons:[{
+				text:'下载',
+				handler:gotoDownload
+			}]">
+    <div class="easyui-panel" style="width:400px;padding:20px 60px">
+        <div style="margin-bottom:10px">
+            <input type="checkbox" name="downloadUrl"/>&nbsp;&nbsp;附件1
+        </div>
+        <div style="margin-bottom:10px">
+            <input type="checkbox" name="downloadUrl"/>&nbsp;&nbsp;附件2
+        </div>
+    </div>
+</div>
+<!--[if lte IE 9]>
+<p class="browserupgrade">您使用的浏览器 <strong>版本过低</strong>. 请 <a href="https://browsehappy.com/">升级浏览器</a></p>
+<![endif]-->
+
+<!-- Add your site or application content here -->
+<script>
+
+    function formatterAttachment(value, row, index) {
+        return "<a href='javascript:void(0);' onclick='downloadAttachment();'>下载</a>"
+    }
+    function downloadAttachment() {
+        $("#downloadDialog").dialog('open');
+    }
+    function gotoDownload() {
+
+    }
+
+</script>
+</div>

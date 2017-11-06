@@ -1,0 +1,57 @@
+﻿
+@{
+    Layout = null;
+}
+
+<div id="update-cert" icon="icon-save" style="padding: 5px; padding-left: 20px;" class="flex flex-v">
+    <form id="uc-form" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="ID">
+        <input type="hidden" name="DistributorID">
+        <div class="flex flex-align-center" style="padding: 10px">
+            <div style="margin:0 10px 0 10px;width: 80px;text-align: right;">经销商:</div>
+            <input id="updatecert-company" name="DistributorName" editable='false' class='easyui-textbox txt200' style="width: 410px;" data-options="required:true"/>
+        </div>
+        <div class="flex flex-align-center" style="padding: 10px">
+            <div style="margin:0 10px 0 10px;width: 80px;text-align: right;">上传证书:</div>
+            <input id="upfile-certi1" name="Certificate" class="easyui-filebox txt200" style="width: 310px;" data-options="prompt:'选择附件...',required:true"/>
+            <span name="down" style="margin: 0 10px;"></span>
+        </div>
+        <div class="flex flex-align-center" style="padding: 10px">
+            <div style="margin:0 10px 0 10px;width: 80px;text-align: right;"><span style="color: red;margin-right: 2px">*</span>姓名:</div>
+            <input class="easyui-textbox txt200" name="Name" style="width: 410px;" data-options="required:true"/>
+        </div>
+        <div class="flex flex-align-center" style="padding: 10px">
+            <div style="margin:0 10px 0 10px;width: 80px;text-align: right;"><span style="color: red;margin-right: 2px">*</span>部门:</div>
+            <input id="updatecert-dept" class="easyui-textbox txt200" name="Department" style="width: 410px;" data-options="required:true"/>
+        </div>
+        <div class="flex flex-align-center" style="padding: 10px">
+            <div style="margin:0 10px 0 10px;width: 80px;text-align: right;"><span style="color: red;margin-right: 2px">*</span>职位:</div>
+            <input id="updatecert-title" class="easyui-textbox txt200" name="Title" style="width: 410px;" data-options="required:true"/>
+        </div>
+        <div class="flex flex-align-center" style="padding: 10px">
+            <div style="margin:0 10px 0 10px;width: 80px;text-align: right;">培训完成日期:</div>
+            <input class="easyui-datebox" name="CompletedDate" editable='false' style="width:200px">
+            <span style="color: red;margin-left: 20px">请填写证书上标注的日期</span>
+        </div>
+        <div class="flex flex-align-center" style="padding: 10px">
+            <div style="margin:0 10px 0 10px;width: 80px;text-align: right;">过期日期:</div>
+            <input class="easyui-datebox" name="ExpireDate" editable='false' style="width:200px" data-options="disabled:true">
+            <span style="color: red;margin-left: 20px">过期日期默认为当前年份的12月31日</span>
+        </div>
+        <div class="flex flex-align-center" style="padding: 10px">
+            <div style="margin:0 10px 0 10px;width: 80px;text-align: right;">在职状态:</div>
+            <input type="radio" name="OffWork" value="false" checked="checked" style="margin: 0 10px; margin-left: 0px"/>在职
+            <input type="radio" name="OffWork" value="true" style="margin: 0 10px;margin-left: 44px"/>离职
+            <span id="OffWorkDate1" style="margin: 0 10px;display: none"><input class="easyui-datebox" name="OffWorkDate" editable='false' style="width:140px;"></span>
+        </div>
+        <div class="flex flex-align-center" style="padding: 10px">
+            <div style="margin:0 10px 0 10px;width: 80px;text-align: right;">所属领域:</div>
+            <input type="checkbox" name="Domain1" value="true" checked="checked" style="margin: 0 10px; margin-left: 0px"/>临床诊断
+            <input type="checkbox" name="Domain2" value="true" style="margin: 0 10px;margin-left: 20px"/>生命科学
+        </div>
+        <div class="flex flex-align-center" style="padding: 10px">
+            <div style="margin:0 10px 0 10px;width: 80px;text-align: right;">备注:</div>
+            <input class="easyui-textbox txt200" name="Remark" style="width: 410px;"/>
+        </div>
+    </form>
+</div>

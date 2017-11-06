@@ -1,0 +1,72 @@
+﻿
+@{
+    Layout = null;
+}
+
+<div id="userLogin" class="easyui-window" title="用户登录" style="width:400px;height:280px;padding-top: 60px;"
+     data-options="modal:true,collapsible:false,minimizable:false,maximizable:false,resizable:false,closable:false">
+    <form id="login-form" method="post">
+        <div class="flex flex-align-center" style="padding: 10px">
+            <div style="margin:0 10px 0 10px;width: 80px;text-align: right;">登录ID:</div>
+            <input class="easyui-textbox txt200" name="userCode" style="width: 220px;" />
+        </div>
+    </form>
+    <link href="~/Content/Fpca/CSS/_Partialtool.css" rel="stylesheet" />
+    <div id="btnButton" style="padding-top: 40px; padding-left: 80px;">
+        <ul>
+            <li><a href="#" class="easyui-linkbutton" id="btnLogin">登录</a></li>
+            <li><a href="#" class="easyui-linkbutton" id="btnCancel">重置</a></li>
+        </ul>
+    </div>
+</div>
+<script>
+    $(function () {
+        $('#btnCancel').click(function(){
+            $('#login-form').form('reset');
+        });
+        $('#btnLogin').click(function () {
+           var data = $('#login-form').toJSON();
+            $.ajax({
+                url: "@Url.Action("Login", "User")?userCode="+data.userCode,
+                method: "POST",
+                success: function (response) {
+                    window.token = response.token;
+                    window.role = response.role;
+                    //window.role = 0;
+                    $('#spanA').text(response.phone)
+                    $('#spanB').text(response.name)
+                    if(window.role == 1){
+                        $('#095001004').closest('li').remove();
+                        $('#095001005').closest('li').remove();
+                    }
+                    else if(window.role == 2){
+                        $('#095001001').closest('li').remove();
+                        $('#095001002').closest('li').remove();
+                        $('#095001005').closest('li').remove();
+                        $('#095001006').closest('li').remove();
+                    }
+                    $('#userLogin').dialog('destroy');
+                    if(window.role == 2){
+                        $.ajax({
+                            url: window.apiHost+"/api/Credentials/HasOrgMap",
+                            method:"POST",
+                            success: function (response) {
+                                if(!response){
+                                    $('#095001004').closest('li').hide();
+                                    $("#ContentArea").panel({href: 'module/uploadFigure.html'});
+                                }
+                                else{
+                                    $("#ContentArea").panel({href: 'module/certificate.html'});
+                                }
+                            }
+                        });
+                    }
+                    else{
+                        $("#ContentArea").panel({ href: 'Dashboard' });
+                    }
+
+                }
+            });
+        });
+    });
+</script>

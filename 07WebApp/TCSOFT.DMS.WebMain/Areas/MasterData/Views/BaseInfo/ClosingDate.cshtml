@@ -1,0 +1,451 @@
+﻿@{
+    Layout = null;
+}
+<script type="text/javascript">
+    $(function () {
+        $('#grid').datagrid({
+            url: '@Url.Action("GetAccountDateList", "BaseInfo")',
+            width: function () { return document.body.clientWidth * 0.9 },
+            nowrap: true,
+            autoRowHeight: true,
+            striped: true,
+            collapsible: false,
+            pagination: true,
+            rownumbers: true,
+            sortOrder: 'desc',
+            pageSize: 1000,
+            pageList: [1000],
+            remoteSort: false,
+            singleSelect: true,
+            idField: 'AccountDateID',
+            queryParams: {},
+            animate: true,
+            columns: [[
+            { title: 'AccountDateID', field: 'AccountDateID', hidden: true, width: 1, halign: 'center', align: 'center' },
+            { title: '模块', field: 'AccountDateBelongModel', width: 180, halign: 'center', align: 'left' },
+            { title: '关账日名称', field: 'AccountDateName', width: 350, halign: 'center', align: 'left' },
+            { title: '年份', field: 'AccountDateYear', width: 80, halign: 'center', align: 'center' },
+            { title: '送货地点', field: 'AccountDatePlace', width: 180, halign: 'center', align: 'center' },
+                {
+                    title: '一月', field: 'MonthDate', width: 100, halign: 'center', align: 'center', formatter: function (value, row, index) {
+                        if (value != null) {
+                            return jsonDateFormat(value);
+                        }
+                    }
+                },
+                {
+                    title: '二月', field: 'FebDate', width: 100, halign: 'center', align: 'center', formatter: function (value, row, index) {
+                        if (value != null) {
+                            return jsonDateFormat(value);
+                        }
+                    }
+                },
+                {
+                    title: '三月', field: 'MarchDate', width: 100, halign: 'center', align: 'center', formatter: function (value, row, index) {
+                        if (value != null) {
+                            return jsonDateFormat(value);
+                        }
+                    }
+                },
+                {
+                    title: '四月', field: 'AprilDate', width: 100, halign: 'center', align: 'center', formatter: function (value, row, index) {
+                        if (value != null) {
+                            return jsonDateFormat(value);
+                        }
+                    }
+                },
+                {
+                    title: '五月', field: 'MayDate', width: 100, halign: 'center', align: 'center', formatter: function (value, row, index) {
+                        if (value != null) {
+                            return jsonDateFormat(value);
+                        }
+                    }
+                },
+                {
+                    title: '六月', field: 'JuneDate', width: 100, halign: 'center', align: 'center', formatter: function (value, row, index) {
+                        if (value != null) {
+                            return jsonDateFormat(value);
+                        }
+                    }
+                },
+                {
+                    title: '七月', field: 'JulyDate', width: 100, halign: 'center', align: 'center', formatter: function (value, row, index) {
+                        if (value != null) {
+                            return jsonDateFormat(value);
+                        }
+                    }
+                },
+                {
+                    title: '八月', field: 'AugustDate', width: 100, halign: 'center', align: 'center', formatter: function (value, row, index) {
+                        if (value != null) {
+                            return jsonDateFormat(value);
+                        }
+                    }
+                },
+                {
+                    title: '九月', field: 'SepDate', width: 100, halign: 'center', align: 'center', formatter: function (value, row, index) {
+                        if (value != null) {
+                            return jsonDateFormat(value);
+                        }
+                    }
+                },
+                {
+                    title: '十月', field: 'OctDate', width: 100, halign: 'center', align: 'center', formatter: function (value, row, index) {
+                        if (value != null) {
+                            return jsonDateFormat(value);
+                        }
+                    }
+                },
+                {
+                    title: '十一月', field: 'NovDate', width: 100, halign: 'center', align: 'center', formatter: function (value, row, index) {
+                        if (value != null) {
+                            return jsonDateFormat(value);
+                        }
+                    }
+                },
+                {
+                    title: '十二月', field: 'DecDate', width: 100, halign: 'center', align: 'center', formatter: function (value, row, index) {
+                        if (value != null) {
+                            return jsonDateFormat(value);
+                        }
+                    }
+                },
+            ]]
+        });
+        //新增/修改
+        $('#AddorUpdateWindow').dialog({
+            width: 'auto',
+            height: 'auto',
+            top: 20,
+            modal: true,
+            closed: true,
+            inline: true,
+            buttons: [{
+                text: '确定',
+                handler: function () {
+                    Save();
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    $('#AddorUpdateWindow').dialog('close');
+                }
+            }]
+        });
+        @*导入表单提交*@
+        $('#ColseDate').dialog({
+            width: 'auto',
+            height: 'auto',
+            top: 100,
+            modal: true,
+            closed: true,
+            inline: true,
+            buttons: [{
+                text: '确定',
+                handler: function () {
+                    if ($('#ProductFile').filebox("getValue") == "") { alert('请选择导入文件！') } else { $('#CloseDataFile').submit(); }
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    $('#ColseDate').dialog('close');
+                }
+            }],
+            title: "导入关帐日"
+        });
+
+        $('#CloseDataFile').ajaxForm({
+            url: '@Url.Action("CloseDataFile", "BaseInfo")',
+            dataType: 'json',
+            beforeSend: function () {
+            },
+            success: function () {
+            },
+            complete: function (data) {
+                if (!data.responseJSON) {
+                    alert("导入成功！")
+                    $('#ColseDate').dialog('close');
+                    $('#grid').datagrid('reload', { AccountDateID: null, SearchText: null });
+                }
+                else {
+                    if (data.responseJSON == "导入失败") {
+                        alert("导入失败！");
+                    }
+                    else {
+                        alert("导入失败，即将下载错误文件！");
+                        window.location.href = "/BaseInfo/DownloadAccountDate?filename=" + data.responseJSON;
+                    }
+                }
+            }
+        });
+
+    })
+
+    function ClickAdd() {
+        AccountDateBelongModel()
+        $("#AccountDateYear").combobox("setValue", null);
+        $("#AccountDateBelongModel").combobox("setValue", null);
+        $("#AccountDateName").textbox("setValue", null);
+        $("#AccountDatePlace").combobox("setValue", null);
+        $("#MonthDate").datebox("setValue", null);
+        $("#FebDate").datebox("setValue", null);
+        $("#MarchDate").datebox("setValue", null);
+        $("#AprilDate").datebox("setValue", null);
+        $("#MayDate").datebox("setValue", null);
+        $("#JuneDate").datebox("setValue", null);
+        $("#JulyDate").datebox("setValue", null);
+        $("#AugustDate").datebox("setValue", null);
+        $("#SepDate").datebox("setValue", null);
+        $("#OctDate").datebox("setValue", null);
+        $("#NovDate").datebox("setValue", null);
+        $("#DecDate").datebox("setValue", null);
+        $("#AddUp").val(0);
+        $('#AddorUpdateWindow').dialog({ title: "新增关账日" });
+        $('#AddorUpdateWindow').dialog('open');
+    }
+    function ClickModify() {
+        var row = $("#grid").datagrid("getSelected");
+        if (row == null) {
+            alert("您还没有选择关账日，请选择！");
+            return;
+        }
+        AccountDateBelongModel()
+        $.post("@Url.Action("GetOneAccountDate", "BaseInfo")", {
+            id: row.AccountDateID
+        }, function (data) {
+            if (data.SubmitResult) {
+                $("#AccountDateID").val(row.AccountDateID);
+                $("#AccountDateYear").combobox("setValue", data.Object.AccountDateYear);
+                $("#AccountDateBelongModel").combobox("setValue", data.Object.AccountDateBelongModel);
+                $("#AccountDateName").textbox("setValue", data.Object.AccountDateName);
+                $("#AccountDatePlace").combobox("setValue", data.Object.AccountDatePlace);
+                $("#MonthDate").datebox("setValue", jsonDateFormat(data.Object.MonthDate));
+                $("#FebDate").datebox("setValue", jsonDateFormat(data.Object.FebDate));
+                $("#MarchDate").datebox("setValue", jsonDateFormat(data.Object.MarchDate));
+                $("#AprilDate").datebox("setValue", jsonDateFormat(data.Object.AprilDate));
+                $("#MayDate").datebox("setValue", jsonDateFormat(data.Object.MayDate));
+                $("#JuneDate").datebox("setValue", jsonDateFormat(data.Object.JuneDate));
+                $("#JulyDate").datebox("setValue", jsonDateFormat(data.Object.JulyDate));
+                $("#AugustDate").datebox("setValue", jsonDateFormat(data.Object.AugustDate));
+                $("#SepDate").datebox("setValue", jsonDateFormat(data.Object.SepDate));
+                $("#OctDate").datebox("setValue", jsonDateFormat(data.Object.OctDate));
+                $("#NovDate").datebox("setValue", jsonDateFormat(data.Object.NovDate));
+                $("#DecDate").datebox("setValue", jsonDateFormat(data.Object.DecDate));
+                $("#AddUp").val(1);
+                $('#AddorUpdateWindow').dialog({ title: "修改关账日" });
+                $('#AddorUpdateWindow').dialog('open');
+            } else {
+                alert(data.Message)
+            }
+        })
+    }
+    function Save() {
+        if ($("#AddorUpdate").form('validate')) {
+            if ($("#AddUp").val() == 0) {
+                $.post("@Url.Action("AddAccountDate", "BaseInfo")", {
+                    AccountDateYear: $("#AccountDateYear").combobox("getValue"),
+                    AccountDateBelongModel: $("#AccountDateBelongModel").combobox("getValue"),
+                    AccountDateName: $("#AccountDateName").textbox("getValue"),
+                    AccountDatePlace: $("#AccountDatePlace").combobox("getValue"),
+                    MonthDate: $("#MonthDate").datebox("getValue"),
+                    FebDate: $("#FebDate").datebox("getValue"),
+                    MarchDate: $("#MarchDate").datebox("getValue"),
+                    AprilDate: $("#AprilDate").datebox("getValue"),
+                    MayDate: $("#MayDate").datebox("getValue"),
+                    JuneDate: $("#JuneDate").datebox("getValue"),
+                    JulyDate: $("#JulyDate").datebox("getValue"),
+                    AugustDate: $("#AugustDate").datebox("getValue"),
+                    SepDate: $("#SepDate").datebox("getValue"),
+                    OctDate: $("#OctDate").datebox("getValue"),
+                    NovDate: $("#NovDate").datebox("getValue"),
+                    DecDate: $("#DecDate").datebox("getValue")
+                }, function (data) {
+                    if (data.SubmitResult) {
+                        $('#grid').datagrid('clearSelections');
+                        $('#grid').datagrid("reload");
+                        $('#AddorUpdateWindow').dialog('close');
+                    } else {
+                        alert(data.Message)
+                    }
+                })
+            } else {
+                $.post("@Url.Action("UpdateAccountDate", "BaseInfo")", {
+                    AccountDateID: $("#AccountDateID").val(),
+                    AccountDateYear: $("#AccountDateYear").combobox("getValue"),
+                    AccountDateBelongModel: $("#AccountDateBelongModel").combobox("getValue"),
+                    AccountDateName: $("#AccountDateName").textbox("getValue"),
+                    AccountDatePlace: $("#AccountDatePlace").combobox("getValue"),
+                    MonthDate: $("#MonthDate").datebox("getValue"),
+                    FebDate: $("#FebDate").datebox("getValue"),
+                    MarchDate: $("#MarchDate").datebox("getValue"),
+                    AprilDate: $("#AprilDate").datebox("getValue"),
+                    MayDate: $("#MayDate").datebox("getValue"),
+                    JuneDate: $("#JuneDate").datebox("getValue"),
+                    JulyDate: $("#JulyDate").datebox("getValue"),
+                    AugustDate: $("#AugustDate").datebox("getValue"),
+                    SepDate: $("#SepDate").datebox("getValue"),
+                    OctDate: $("#OctDate").datebox("getValue"),
+                    NovDate: $("#NovDate").datebox("getValue"),
+                    DecDate: $("#DecDate").datebox("getValue")
+                }, function (data) {
+                    if (data.SubmitResult) {
+                        $('#grid').datagrid("reload");
+                        $('#AddorUpdateWindow').dialog('close');
+                    } else {
+                        alert(data.Message)
+                    }
+                })
+            }
+        }
+    }
+    function AccountDateBelongModel() {
+        $('#AccountDateBelongModel').combobox({
+            url: '@Url.Action("GetModule", "BaseInfo")',
+            valueField: 'StructureName',
+            textField: 'StructureName',
+            editable: false,
+            onLoadSuccess: function (data) {
+                return;
+            }
+        });
+    }
+    // 导出
+    function ClickExport() {
+        $.post("@Url.Action("ExportAccountDate", "BaseInfo")", {
+
+        }, function (data) {
+            if (data) {
+                window.location.href = "/BaseInfo/DownloadAccountDate?filename=" + data;
+            } else {
+                alert("导出失败！");
+            }
+        })
+    }
+    // 导入
+    function ClickImport() {;
+        $('#ProductFile').val('');
+        $('#ColseDate').dialog('open');
+    }
+  
+    //获取json传来的时间格式化为YYYY-MM-DD HH:mm:ss
+    function jsonDateHMSFormat(jsonDate) {
+        var date = new Date(parseInt(jsonDate.replace("/Date(", "").replace(")/", ""), 10));
+        var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+        var day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+        var h = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+        var m = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+        var s = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+        return date.getFullYear() + "-" + month + "-" + day + " " + h + ":" + m + ":" + s;
+    }
+    //获取json传来的时间格式化为YYYY-MM-DD
+    function jsonDateFormat(jsonDate) {
+        if (jsonDate != null) {
+            var date = new Date(parseInt(jsonDate.replace("/Date(", "").replace(")/", ""), 10));
+            var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+            var day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+            return date.getFullYear() + "-" + month + "-" + day;
+        }
+    }
+</script>
+<div class="easyui-layout" style="height:100%;">
+    <div region="north" style="height:94px">
+        @Html.Partial("_Partialtool")
+    </div>
+    <div region="center">
+        <div id="BodyContentDiv" class="DivPage">
+            <table id="grid" style="width:100%;height:100%;"></table>
+        </div>
+    </div>
+</div>
+
+@*新增/修改*@
+<div id="AddorUpdateWindow">
+    <div class="AddContent">
+        <form id="AddorUpdate">
+            <input id="AddUp" type="text" hidden="hidden" />
+            <input id="AccountDateID" type="text" hidden="hidden" />
+            <p>
+                <span class="cl100">年份：</span>
+                <select id="AccountDateYear" class="easyui-combobox txt100" style="width:100px;" editable="false" required missingmessage="年份必须选择！">
+                    <option value="@DateTime.Now.AddYears(-2).Year">@DateTime.Now.AddYears(-2).Year</option>
+                    <option value="@DateTime.Now.AddYears(-1).Year">@DateTime.Now.AddYears(-1).Year</option>
+                    <option value="@DateTime.Now.Year">@DateTime.Now.Year</option>
+                    <option value="@DateTime.Now.AddYears(1).Year">@DateTime.Now.AddYears(1).Year</option>
+                    <option value="@DateTime.Now.AddYears(2).Year">@DateTime.Now.AddYears(2).Year</option>
+                    <option value="@DateTime.Now.AddYears(3).Year">@DateTime.Now.AddYears(3).Year</option>
+                    <option value="@DateTime.Now.AddYears(4).Year">@DateTime.Now.AddYears(4).Year</option>
+                    <option value="@DateTime.Now.AddYears(5).Year">@DateTime.Now.AddYears(5).Year</option>
+                </select>
+                <span class="cl80">模块：</span>
+                <select id="AccountDateBelongModel" class="easyui-combobox txt150" style="width:150px;" editable="false" required missingmessage="模块必须选择！">
+                    <option value="全部">全部</option>
+                    <option value="订购系统（贝克曼）">订购系统（贝克曼）</option>
+                    <option value="销售系统（贝克曼）">销售系统（贝克曼）</option>
+                </select>
+            </p>
+            <p>
+                <span class="cl100">关账日名称：</span>
+                <input class="easyui-textbox txt350" style="width:350px;" id="AccountDateName" required missingmessage="关账日名称必须填写！" />
+
+            </p>
+            <p>
+                <span class="cl100">送货地点：</span>
+                <select id="AccountDatePlace" class="easyui-combobox txt350" style="width:350px;" editable="false" required missingmessage="发货地点必须选择！">
+
+                    <option value="BCCE">BCCE</option>
+                    <option value="BCHK">BCHK</option>
+                    <option value="BCIT">BCIT</option>
+                </select>
+            </p>
+            <p>
+                <span class="cl100">一月：</span>
+                <input class="easyui-datebox txt100" style="width:100px;" id="MonthDate" />
+                <span class="cl60">二月：</span>
+                <input class="easyui-datebox txt100" style="width:100px;" id="FebDate" />
+                <span class="cl60">三月：</span>
+                <input class="easyui-datebox txt100" style="width:100px;" id="MarchDate" />
+            </p>
+            <p>
+                <span class="cl100">四月：</span>
+                <input class="easyui-datebox txt100" style="width:100px;" id="AprilDate" />
+                <span class="cl60">五月：</span>
+                <input class="easyui-datebox txt100" style="width:100px;" id="MayDate" />
+                <span class="cl60">六月：</span>
+                <input class="easyui-datebox txt100" style="width:100px;" id="JuneDate" />
+            </p>
+            <p>
+                <span class="cl100">七月：</span>
+                <input class="easyui-datebox txt100" style="width:100px;" id="JulyDate" />
+                <span class="cl60">八月：</span>
+                <input class="easyui-datebox txt100" style="width:100px;" id="AugustDate" />
+                <span class="cl60">九月：</span>
+                <input class="easyui-datebox txt100" style="width:100px;" id="SepDate" />
+            </p>
+            <p>
+                <span class="cl100">十月：</span>
+                <input class="easyui-datebox txt100" style="width:100px;" id="OctDate" />
+                <span class="cl60">十一月：</span>
+                <input class="easyui-datebox txt100" style="width:100px;" id="NovDate" />
+                <span class="cl60">十二月：</span>
+                <input class="easyui-datebox txt100" style="width:100px;" id="DecDate" />
+            </p>
+        </form>
+    </div>
+</div>
+
+@*导入对话框*@
+<div id="ColseDate">
+    <div class="AddContent">
+        <div region="center">
+            <form id="CloseDataFile" method="post" enctype="multipart/form-data">
+                <p>
+                    <input id="ProductFile" class="easyui-filebox txt410" style="width:410px;" name="ProductFile" data-options="prompt:'导入关帐日文件',accept:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel' ,buttonText:'选择导入文件'">
+                </p>
+                <br />
+                <p>
+                    <a href="~/TempLate/IMP_AccountDate.xlsx">下载关帐日导入模板</a>
+                </p>
+            </form>
+        </div>
+    </div>
+</div>

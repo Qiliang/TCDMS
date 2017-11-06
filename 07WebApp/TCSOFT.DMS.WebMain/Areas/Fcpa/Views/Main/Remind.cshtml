@@ -1,0 +1,173 @@
+﻿
+@{
+    Layout = null;
+}
+
+<div class="easyui-layout" style="height:100%;">
+    <div region="north" style="height:64px">
+        <link href="~/Content/Fpca/CSS/_Partialtool.css" rel="stylesheet" />
+        <div id="BodyContentTool" style="height: 64px">
+            <div id="btnButton">
+                <ul>
+                    <li>
+                        <input id="serchText" class="easyui-searchbox search" style="height:32px;width:500px;"
+                               data-options="prompt:'支持姓名模糊查询',searcher:function(){}" />
+                    </li>
+                    <li><a href="#" class="easyui-linkbutton" id="btnFind">搜索</a></li>
+                    <li><a href="#" class="easyui-linkbutton" id="btnSearch">高级查询</a></li>
+                    <li><a href="#" class="easyui-linkbutton" id="btnExport">导出</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div region="center">
+        <div id="BodyContentDiv">
+            <table id="remindGrid" class="easyui-datagrid"
+                   data-options="
+                   iconCls: 'icon-view' ,
+                   width: function () { return document.body.clientWidth * 0.9 },
+                   nowrap: true,
+                   autoRowHeight: true,
+                   striped: true,
+                   collapsible: false,
+                   pagination: true,
+                   pageSize: 20,
+                   pageList: [10, 20, 30, 40, 50],
+                   rownumbers: true,
+                   sortOrder: 'desc' ,
+                   remoteSort: false,
+                   singleSelect: true,
+                   queryParams: {},
+                   animate: true,
+                   method:'POST',
+                   idField:'ID',
+                   fit:true">
+                <thead>
+                    <tr>
+                        <th data-options="field:'ID',checkbox:true"></th>
+                        <th data-options="field:'UserCode',width:80,align:'center',sortable:true">用户代码</th>
+                        <th data-options="field:'FullName',width:80,align:'center',sortable:true">用户名称</th>
+                        <th data-options="field:'PhoneNumber',width:180,align:'center',sortable:true,sortable:true">手机号</th>
+                        <th data-options="field:'Email',width:180,align:'center',sortable:true">邮箱</th>
+                        <th data-options="field:'DomainDesc',width:160,align:'center',sortable:true">所属领域</th>
+                        <th data-options="field:'RoleDesc',width:280,align:'center',sortable:true">角色</th>
+                        <th data-options="field:'RelDistributorDesc',width:200,align:'center',sortable:true">关联经销商</th>
+                        <th data-options="field:'AlarmTime',width:100,align:'center',sortable:true,formatter:function(v){return v ? v.substr(0,10): ''}">提醒日期</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        $('#remindGrid').datagrid({
+            url: '@Url.Action("Query", "Alerm")'            
+        });
+        $('#btnFind').click(function(){
+            var searchText = $("#serchText").textbox('getText');
+            $('#remindGrid').datagrid('load',{
+                "FullName":searchText
+            });
+        });
+        $('#btnSearch').click(function () {
+            $('<div/>').dialog({
+                title:'高级搜索',
+                collapsible:false,
+                minimizable:false,
+                maximizable:false,
+                resizable:false,
+                id:'remind-user',
+                width : 700,
+                height: 500,
+                href: '../Dialog/RemindUser',
+                onLoad:function () {
+                    $.ajax({
+                        "async": true,
+                        //"crossDomain": true,
+                        "url": '@Url.Action("Distributors", "Credentials")',
+                        "method": "GET"
+                    }).done(function (response) {
+                        var group = _.groupBy(response, 'AreaName');
+                        var i = 1;
+                        var treeData = _.map(group, function (child) {
+                            var item = child[0];
+                            return {
+                                id: ++i,
+                                text: item.AreaName,
+                                children: _.map(child, function (ch) {
+                                    return {
+                                        id: ch.DistributorID,
+                                        text: ch.DistributorName
+                                    }
+                                })
+                            };
+                        });
+                        $("#setting-company").combotree('loadData', treeData);
+                        var options = $('#remindGrid').datagrid('options');
+                        var data = $.extend(true,{}, options.queryParams);
+                        data.RelDistributor = data.RelDistributor ? data.RelDistributor.split(',') : [];
+                        $('#au-form').form('load',data);
+                    });
+
+                },
+                buttons:[{
+                    text:'确定',
+                    iconCls:'icon-ok',
+                    handler:function(){
+                        var data = $('#au-form').toJSON();
+                        data.RelDistributor = $.isArray(data.RelDistributor) ? data.RelDistributor.join(',') : data.RelDistributor;
+                        $('#remindGrid').datagrid('load',data);
+                        $('#remind-user').dialog('destroy');
+                    }
+                },{
+                    text:'取消',
+                    handler:function(){
+                        $('#remind-user').dialog('destroy');
+                    }
+                }]
+            });
+        });
+        $('#btnExport').click(function () {
+            $('<div/>').dialog({
+                title:'导出',
+                collapsible:false,
+                minimizable:false,
+                maximizable:false,
+                resizable:false,
+                id : 'dialogExport',
+                width : 400,
+                height : 200,
+                closed : false,
+                cache: false,
+                href: '../Dialog/Export',
+                modal:true,
+                buttons:[{
+                    text:'确定',
+                    iconCls:'icon-ok',
+                    handler:function(){
+                        var options = $('#remindGrid').datagrid('options');
+                        var extJson = $('#ext-form').toJSON();
+                        var params = '?token=' + window.token;
+                        if (extJson.current == 'true') {
+                            params += '&' + $.param(options.queryParams);
+                        }
+                        window.location.href = '@Url.Action("Export", "Alerm")' + params;
+                        $('#dialogExport').dialog('destroy');
+                    }
+                },{
+                    text:'取消',
+                    handler:function(){
+                        $('#dialogExport').dialog('destroy');
+                    }
+                }]
+            });
+        });
+    });
+
+    function rowStyler(index,row){
+        if(row.readState=="0"){
+            return 'font-weight:bold;';
+        }
+    }
+</script>

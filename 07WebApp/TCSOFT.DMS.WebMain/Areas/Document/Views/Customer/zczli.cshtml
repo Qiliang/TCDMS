@@ -1,0 +1,71 @@
+﻿@{
+    Layout = null;
+}
+
+
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="manifest" href="site.webmanifest">
+        <link rel="apple-touch-icon" href="icon.png">
+        <!-- Place favicon.ico in the root directory -->
+        <link rel="stylesheet" href="../css/normalize.css">
+        <link rel="stylesheet" href="../css/main.css">
+        <link rel="stylesheet" href="../css/easyui.css">
+        <link rel="stylesheet" href="../css/icon.css">
+    </head>
+    <body class="easyui-layout">
+    <div data-options="region:'center'," style="padding:10px;">
+        <div style="max-width: 300px">
+            <div class="flex flex-pack-justify" style="margin-bottom: 5px;"><div><li><a href="javascript:void(0)" onclick="downloadeasyui-textbox();">注册证标题1</a></li></div><div>2017/09/01</div></div>
+            <div class="flex flex-pack-justify" style="margin-bottom: 5px;"><div><li><a href="javascript:void(0)" onclick="downloadeasyui-textbox();">注册证标题2</a></li></div><div>2017/08/01</div></div>
+            <div class="flex flex-pack-justify" style="margin-bottom: 5px;"><div><li><a href="javascript:void(0)" onclick="downloadeasyui-textbox();">注册证标题3</a></li></div><div>2017/07/01</div></div>
+            <div class="flex flex-pack-justify" style="margin-bottom: 5px;"><div><li><a href="javascript:void(0)" onclick="downloadeasyui-textbox();">注册证标题4</a></li></div><div>2017/06/01</div></div>
+            <div class="flex flex-pack-justify" style="margin-bottom: 5px;"><div><li><a href="javascript:void(0)" onclick="downloadeasyui-textbox();">注册证标题5</a></li></div><div>2017/05/01</div></div>
+        </div>
+        <div style="max-width: 300px" align="right"><a href="zczlb.html" class="easyui-linkbutton">更多</a></div>
+        </div>
+    </div>
+    <div class="easyui-dialog" id="downloadDialog" title="下载附件" style="padding:10px" data-options="closed: true,modal:true,
+            buttons:[{
+				text:'下载',
+				handler:gotoDownload
+			}],
+            onResize:function(){
+                $(this).dialog('center');
+            }">
+        <div class="easyui-panel" style="width:400px;padding:20px 60px">
+            <div style="margin-bottom:10px">
+                <input type="checkbox" name="downloadUrl"/>&nbsp;&nbsp;附件1
+            </div>
+            <div style="margin-bottom:10px">
+                <input type="checkbox" name="downloadUrl"/>&nbsp;&nbsp;附件2
+            </div>
+        </div>
+    </div>
+        <!--[if lte IE 9]>
+            <p class="browserupgrade">您使用的浏览器 <strong>版本过低</strong>. 请 <a href="https://browsehappy.com/">升级浏览器</a></p>
+        <![endif]-->
+
+        <!-- Add your site or application content here -->
+        <script src="../js/vendor/modernizr-3.5.0.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+        <script type="text/javascript" src="../js/vendor/jquery.easyui.min.js"></script>
+        <script type="text/javascript" src="../js/vendor/locale/easyui-lang-zh_CN.js"></script>
+        <script>window.jQuery || document.write('<script src="../js/vendor/jquery-3.2.1.min.js"><\/script>')</script>
+        <script>
+            function downloadeasyui-textbox(){
+                $("#downloadDialog").dialog('open');
+            }
+            function gotoDownload(){
+
+            }
+        </script>
+    </body>
+</html>

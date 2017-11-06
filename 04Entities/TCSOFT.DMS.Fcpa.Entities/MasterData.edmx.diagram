@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="4e4877e8b64a4fae904e8da4ba320c4b" Name="Diagram1">
+        <EntityTypeShape EntityType="TCDMS_MasterDataModel.common_AttachFileInfo" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCDMS_MasterDataModel.common_LogInfo" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCDMS_MasterDataModel.common_WarningInfo" Width="1.5" PointX="2.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCDMS_MasterDataModel.dict_ButtonInfo" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCDMS_MasterDataModel.dict_RegionInfo" Width="1.5" PointX="0.75" PointY="22.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCDMS_MasterDataModel.dict_Structure" Width="1.5" PointX="17.25" PointY="14.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCDMS_MasterDataModel.imp_CustomerInfo" Width="1.5" PointX="4.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCDMS_MasterDataModel.master_AccountDateInfo" Width="1.5" PointX="6.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCDMS_MasterDataModel.master_AreaInfo" Width="1.5" PointX="19.5" PointY="27" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCDMS_MasterDataModel.master_AreaRegionInfo" Width="1.5" PointX="3" PointY="22.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCDMS_MasterDataModel.master_CustomerApplyInfo" Width="1.5" PointX="8.25" PointY="19.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCDMS_MasterDataModel.master_CustomerInfo" Width="1.5" PointX="8.25" PointY="23.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCDMS_MasterDataModel.master_DepartmentInfo" Width="1.5" PointX="17.25" PointY="18.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCDMS_MasterDataModel.master_DistributorADInfo" Width="1.5" PointX="11.25" PointY="19.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCDMS_MasterDataModel.master_DistributorInfo" Width="1.5" PointX="6" PointY="20.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCDMS_MasterDataModel.master_DistributorOKCInfo" Width="1.5" PointX="10.5" PointY="23" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCDMS_MasterDataModel.master_DistributorPayInfo" Width="1.5" PointX="11.25" PointY="26.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCDMS_MasterDataModel.master_DistributorProductLineInfo" Width="1.5" PointX="14.25" PointY="22.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCDMS_MasterDataModel.master_DistributorRegionInfo" Width="1.5" PointX="16.5" PointY="22.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCDMS_MasterDataModel.master_DistributorServiceType" Width="1.5" PointX="3.75" PointY="19" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCDMS_MasterDataModel.master_DistributorTransport" Width="1.5" PointX="14.25" PointY="18.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCDMS_MasterDataModel.master_DistributorType" Width="1.5" PointX="3.75" PointY="26" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCDMS_MasterDataModel.master_FeedbackStat" Width="1.5" PointX="16.5" PointY="28.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCDMS_MasterDataModel.master_InstrumentType" Width="1.5" PointX="0.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCDMS_MasterDataModel.master_MessageStat" Width="1.5" PointX="16.5" PointY="32.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCDMS_MasterDataModel.master_OKCInfo" Width="1.5" PointX="8.25" PointY="29.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCDMS_MasterDataModel.master_PaymentInfo" Width="1.5" PointX="9" PointY="34.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCDMS_MasterDataModel.master_ProductInfo" Width="1.5" PointX="19.5" PointY="16.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCDMS_MasterDataModel.master_ProductLine" Width="1.5" PointX="9" PointY="13.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCDMS_MasterDataModel.master_ProductModel" Width="1.5" PointX="11.25" PointY="11.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCDMS_MasterDataModel.master_ProductOKCPriceInfo" Width="1.5" PointX="21.75" PointY="25.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCDMS_MasterDataModel.master_ProductPriceInfo" Width="1.5" PointX="21.75" PointY="21.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCDMS_MasterDataModel.master_ProductSmallType" Width="1.5" PointX="11.25" PointY="33.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCDMS_MasterDataModel.master_ProductType" Width="1.5" PointX="17.25" PointY="9.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCDMS_MasterDataModel.master_RateInfo" Width="1.5" PointX="6.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCDMS_MasterDataModel.master_RoleAuthority" Width="1.5" PointX="22.5" PointY="18.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCDMS_MasterDataModel.master_RoleInfo" Width="1.5" PointX="12" PointY="30.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCDMS_MasterDataModel.master_TransportInfo" Width="1.5" PointX="12" PointY="15.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCDMS_MasterDataModel.master_UserCustomerAuthority" Width="1.5" PointX="19.5" PointY="23.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCDMS_MasterDataModel.master_UserInfo" Width="1.5" PointX="14.25" PointY="25.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="TCDMS_MasterDataModel.master_UsersStat" Width="1.5" PointX="16.5" PointY="37.625" IsExpanded="true" />
+        <AssociationConnector Association="TCDMS_MasterDataModel.FK_MASTER_A_REFERENCE_DICT_REG" ManuallyRouted="false" />
+        <AssociationConnector Association="TCDMS_MasterDataModel.FK_MASTER_D_REFERENCE_DICT_REG" ManuallyRouted="false" />
+        <AssociationConnector Association="TCDMS_MasterDataModel.FK_MAST_DICT_STR" ManuallyRouted="false" />
+        <AssociationConnector Association="TCDMS_MasterDataModel.FK_MASTCE_DICT_STR" ManuallyRouted="false" />
+        <AssociationConnector Association="TCDMS_MasterDataModel.FK_MASTENCE_MASTER_D" ManuallyRouted="false" />
+        <AssociationConnector Association="TCDMS_MasterDataModel.FK_MASTER_A_REFERENCE_MASTER_A" ManuallyRouted="false" />
+        <AssociationConnector Association="TCDMS_MasterDataModel.FK_MASTER_C_REFERENCE_MASTER_DAPPLY" ManuallyRouted="false" />
+        <AssociationConnector Association="TCDMS_MasterDataModel.FK_MASERENE_MASTER_C" ManuallyRouted="false" />
+        <AssociationConnector Association="TCDMS_MasterDataModel.FK_MASTER_C_REFERENCE_MASTER_DCUS" ManuallyRouted="false" />
+        <AssociationConnector Association="TCDMS_MasterDataModel.FK_MASRENTER_D" ManuallyRouted="false" />
+        <AssociationConnector Association="TCDMS_MasterDataModel.FK_MASTSTER_D" ManuallyRouted="false" />
+        <AssociationConnector Association="TCDMS_MasterDataModel.FK_MASSTER_D" ManuallyRouted="false" />
+        <AssociationConnector Association="TCDMS_MasterDataModel.FK_ME_MASTER_P" ManuallyRouted="false" />
+        <AssociationConnector Association="TCDMS_MasterDataModel.FK_MASTER_D_REFERENCE_MASTER_D" ManuallyRouted="false" />
+        <AssociationConnector Association="TCDMS_MasterDataModel.FK_MASTER_D_REFERENCE_MASTER_D1" ManuallyRouted="false" />
+        <AssociationConnector Association="TCDMS_MasterDataModel.FK_MASTER_D_REFERENCE_MASTER_DOKC" ManuallyRouted="false" />
+        <AssociationConnector Association="TCDMS_MasterDataModel.FK_MASTER_D_REFERENCE_MASTER_DPAY" ManuallyRouted="false" />
+        <AssociationConnector Association="TCDMS_MasterDataModel.FK_MASTER_D_REFERENCE_MASTER_DPROLINE" ManuallyRouted="false" />
+        <AssociationConnector Association="TCDMS_MasterDataModel.FK_MTER_D" ManuallyRouted="false" />
+        <AssociationConnector Association="TCDMS_MasterDataModel.FK_MASTER_D_REFERENCE_MASTER_OOKC" ManuallyRouted="false" />
+        <AssociationConnector Association="TCDMS_MasterDataModel.FK_MASTER_D_REFERENCE_MASTER_P" ManuallyRouted="false" />
+        <AssociationConnector Association="TCDMS_MasterDataModel.FK_MASTER_D_REFER_D" ManuallyRouted="false" />
+        <AssociationConnector Association="TCDMS_MasterDataModel.FK_MASTER_D_REFERENCE_MASTER_PLINE" ManuallyRouted="false" />
+        <AssociationConnector Association="TCDMS_MasterDataModel.FK_MASTASTER_T" ManuallyRouted="false" />
+        <AssociationConnector Association="TCDMS_MasterDataModel.FK_MASTER_F_REFERENCE_MASTER_UFEEDBACK" ManuallyRouted="false" />
+        <AssociationConnector Association="TCDMS_MasterDataModel.FK_MASTER_M_REFERENCE_MASTER_USTAT" ManuallyRouted="false" />
+        <AssociationConnector Association="TCDMS_MasterDataModel.FK_MASTER_P_REFERENCE_MASTER_O" ManuallyRouted="false" />
+        <AssociationConnector Association="TCDMS_MasterDataModel.FK_MAS_ProductSmall" ManuallyRouted="false" />
+        <AssociationConnector Association="TCDMS_MasterDataModel.FK_MASSTER_P" ManuallyRouted="false" />
+        <AssociationConnector Association="TCDMS_MasterDataModel.FK_MASTER_P_REFERENCE_MASTER_PLINE" ManuallyRouted="false" />
+        <AssociationConnector Association="TCDMS_MasterDataModel.FK_MASTER_P_REFERENCE_MASTER_PPRICE" ManuallyRouted="false" />
+        <AssociationConnector Association="TCDMS_MasterDataModel.FK_MASTER_P_REFERENCE_MASTER_PProductOKCPriceInfo" ManuallyRouted="false" />
+        <AssociationConnector Association="TCDMS_MasterDataModel.FK_MASTER_P_REFERENCE_MASTER_P_SMALL" ManuallyRouted="false" />
+        <AssociationConnector Association="TCDMS_MasterDataModel.FK_MASTER_P_REFERENCE_MASTER_PMODEL" ManuallyRouted="false" />
+        <AssociationConnector Association="TCDMS_MasterDataModel.FK_MASTERENCER_R" ManuallyRouted="false" />
+        <AssociationConnector Association="TCDMS_MasterDataModel.FK_MASTSTER_U" ManuallyRouted="false" />
+        <AssociationConnector Association="TCDMS_MasterDataModel.FK_MASTER_U_REFERENCE_MASTER_USERSTAT" ManuallyRouted="false" />
+        <AssociationConnector Association="TCDMS_MasterDataModel.master_AreaAdmin" ManuallyRouted="false" />
+        <AssociationConnector Association="TCDMS_MasterDataModel.master_DistributorUserInfo" ManuallyRouted="false" />
+        <AssociationConnector Association="TCDMS_MasterDataModel.master_UserRoleInfo" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

@@ -1,0 +1,220 @@
+﻿@{
+    Layout = "~/Areas/User/Views/Shared/_LayoutDetails.cshtml"; ;
+}
+
+<script type="text/javascript">
+    $(function () {
+        $('#grid').datagrid({
+            url: '@Url.Action("GetEnableUser", "User")',
+            pagination: true,
+            autoRowHeight: true,
+            pageSize: 20,
+            pageList: [20, 30, 50],
+            singleSelect: true,
+            queryParams: {},
+            idField: 'UserID',
+            fitColumns: false,
+            columns: [[
+                 { title: 'UserID', field: 'UserID', hidden: true, width: 200, halign: 'center', align: 'center' },
+                 { title: '用户编号', field: 'UserCode', width: 180, halign: 'center', align: 'center' },
+                 { title: '用户名称', field: 'FullName', width: 200, halign: 'center', align: 'center' },
+                 { title: '手机号', field: 'PhoneNumber', width: 130, halign: 'center', align: 'center' },
+                 { title: '邮箱', field: 'Email', width: 200, halign: 'center', align: 'center' },
+                 { title: '部门', field: 'DepartName', width: 200, halign: 'center', align: 'left' },
+                 { title: '用户类型', field: 'UserTypestr', width: 150, halign: 'center', align: 'center' },
+                 { title: '经销商', field: 'UserDistributorstr', width: 280, halign: 'center', align: 'left' },
+                 { title: '到期日期', field: 'StopTimestr', width: 130, halign: 'center', align: 'center' }
+            ]]
+        });
+        $('#Authority').datagrid({
+            nowrap: true,
+            autoRowHeight: true,
+            striped: true,
+            collapsible: false,
+            rownumbers: true,
+            sortName: '',
+            sortOrder: 'desc',
+            remoteSort: false,
+            singleSelect: false,
+            idField: 'ID',
+            columns: [[
+                 { title: '权限申请', field: 'IsChecked', checkbox: true },
+                 { title: 'ID', field: 'ID', hidden: true, width: 1, halign: 'center', align: 'center' },
+                 { title: '一级模块', field: 'LevelOneDes', width: 150, halign: 'center', align: 'center' },
+                 { title: '二级模块', field: 'LevelTWODes', width: 150, halign: 'center', align: 'center' },
+                 { title: '三级功能', field: 'LevelThreeDes', width: 150, halign: 'center', align: 'center' },
+                 { title: '功能描述', field: 'Description', width: 200, halign: 'center', align: 'center' }
+            ]],
+            onLoadSuccess: function (data) {
+                $('#Authority').datagrid("clearSelections")
+                if (data) {
+                    $.each(data.rows, function (index, item) {
+                        if (item.IsChecked) {
+                            $('#Authority').datagrid('checkRow', index);
+                        }
+                    });
+                }
+            },
+        });
+        $('#UpdateApplyModelWindow').dialog({
+            title: "用户申请权限变更",
+            width: 'auto',
+            height: 'auto',
+            top: 50,
+            modal: true,
+            closed: true,
+            maximizable: false,
+            minimizable: false,
+            collapsible: false,
+            resizable: false,
+            inline: true,
+            buttons: [{
+                text: '申请',
+                handler: function () {
+                    SaveUpdateApply();
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    $('#UpdateApplyModelWindow').dialog('close');
+                }
+            }],
+        });
+        $('#RoleNames').combobox({
+            url: '@Url.Action("GetRoleList", "User")',
+            valueField: 'RoleID',
+            textField: 'RoleName',
+            editable: false,
+            queryParams: {},
+            onSelect: function (row) {
+                $('#Authority').datagrid({ url: "@Url.Action("GetRoleAuthorityInfo", "User")", queryParams: { roleid: row.RoleID } });
+            },
+        });
+    });
+    function doSearch(value) {
+        $('#grid').datagrid('clearSelections');
+        $('#grid').datagrid('reload', { SearchText: value });
+    }
+
+    function Disable() {
+        var row = $("#grid").datagrid("getSelected");
+        if (row == null) {
+            alert("您还没有选择用户，请选择！");
+            return;
+        }
+        $.post("@Url.Action("StopUser", "User")", {
+            UserID: row.UserID
+        }, function (data) {
+            if (data.SubmitResult) {
+                $("#grid").datagrid("reload");
+            } else {
+                alert(data.Message)
+            }
+        });
+    }
+    //用户权限变更
+    function UpdateUserAuthority() {
+        var row = $("#grid").datagrid("getSelected");
+        if (row == null) {
+            alert("您还没有选择用户，请选择！");
+            return;
+        }
+        if (row.UserID == 1) {
+            alert("系统管理员不可变更");
+            return;
+        }
+        $.post("@Url.Action("GetOneEnableUser", "User")", {
+            UserID: row.UserID
+        }, function (data) {
+            if (data.SubmitResult) {
+                $("#Getid").val(data.Object.UserID);
+                $("#Name").textbox("setValue", data.Object.FullName);
+                $("#Phone").textbox("setValue", data.Object.PhoneNumber);
+                $("#email").textbox("setValue", data.Object.Email);
+                $("#UsetType").val(data.Object.UserDistributorstr);
+                $("#DistributorIDList").val(data.Object.UserDistributoridstr);
+                $("#DistriName").textbox("setValue", data.Object.UserDistributorstr);
+            } else {
+                alert(data.Message)
+            }
+        });
+        $('#Authority').datagrid({ url: "@Url.Action("GetUserAuthorityInfo", "User")", queryParams: { userid: row.UserID } });
+        $('#Authority').datagrid('clearSelections');
+        $('#UpdateApplyModelWindow').dialog({ title: "用户申请权限变更" });
+        $('#UpdateApplyModelWindow').dialog('open');
+    }
+    function SaveUpdateApply() {
+        var checkrowlist = $('#Authority').datagrid("getChecked");
+        if (checkrowlist.length == 0) {
+            alert("请勾选权限");
+            return;
+        }
+        var rowlist = $('#Authority').datagrid("getData");
+        for (var i = 0; i < rowlist.rows.length; i++) {
+            rowlist.rows[i].IsChecked = false;
+        }
+        for (var i = 0; i < checkrowlist.length; i++) {
+            checkrowlist[i].IsChecked = true;
+        }
+        var ppdata = $('#Authority').datagrid("getData");
+        if ($("#AddOneWindow").form('validate')) {
+            $.post("@Url.Action("ChangeUserAut", "User")", {
+                UserChangeID: $("#Getid").val(),
+                UserApplyName: $("#Name").textbox("getValue"),
+                DistributorIDList: $("#DistributorIDList").val(),
+                UserApplyTelNumber: $("#Phone").textbox("getValue"),
+                UserApplyEmail: $("#email").textbox("getValue"),
+                UserApplyType: $("#UsetType").val(),
+                ApplyAuth: ppdata.rows
+            }, function (data) {
+                if (data.SubmitResult) {
+                    $('#UpdateApplyModelWindow').dialog('close');
+                    $('#grid').datagrid('reload');
+                } else {
+                    alert(data.Message);
+                }
+            });
+        }
+    }
+</script>
+
+<div class="easyui-layout" style="height:100%;">
+    <div region="north" class="direcbtn" style="height:94px;">
+        <div class="topContent">
+            <input id="serchText" class="easyui-searchbox" style="height:32px;width:460px;" data-options=" prompt:'按用户编号、手机号、姓名、邮箱、经销商名称模糊搜索',searcher:doSearch" />
+            <a href="#" class="easyui-linkbutton" id="NewOneUser" style="margin-left:10px" onclick="UpdateUserAuthority()">变更权限</a>
+            <a href="#" class="easyui-linkbutton" id="NewOneUser" onclick="Disable()">停用</a>
+        </div>
+    </div>
+    <div region="center">
+        <div id="BodyContentDiv">
+            <table id="grid" style="width:100%;height:100%;"></table>
+        </div>
+    </div>
+</div>
+@*变更权限*@
+<div id="UpdateApplyModelWindow">
+    <div class="AddContent">
+        <input id="UsetID" type="hidden" />
+        <input id="UsetType" type="hidden" />
+        <input id="Getid" type="hidden" />
+        <input id="DistributorIDList" type="hidden" />
+        <p>
+            <span class="cl60">姓名：</span>
+            <input class="easyui-textbox txt150" disabled="disabled" id="Name" type="text" required missingmessage="姓名必须填写" value="@ViewBag.FullName" /><span class="MustRequre">*</span>
+            <span class="cl60">手机号：</span>
+            <input class="easyui-textbox txt150" disabled="disabled" id="Phone" type="text" value="@ViewBag.PhoneNumber" required missingmessage="手机号必须填写" /><span class="MustRequre">*</span>
+        </p>
+        <p>
+            <span class="cl60">邮箱：</span>
+            <input class="easyui-textbox txt150" disabled="disabled" validtype="Email" value="@ViewBag.Email" id="email" type="text" required missingmessage="邮箱必须填写" /><span class="MustRequre">*</span>
+            <span class="cl60">模板：</span>
+            <select id="RoleNames" class="easyui-combobox txt150" editable="false"></select>
+        </p>
+        <div id="bkmDiv" style="margin-left:8px;">
+            <table id="Authority" style="width:620px;height:350px;"></table>
+            <p> <label style="color:red;margin-left:30px;">请在需要申请的功能前打“√”。</label></p>
+        </div>
+    </div>
+</div>
+

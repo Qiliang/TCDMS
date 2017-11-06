@@ -1,0 +1,17 @@
+﻿<link href="~/Content/MasterData/CSS/_LayoutDetails.css" rel="stylesheet" />
+<style>
+    #dataContent {
+        width: 100%;
+        height: 100%;
+        display: inherit;
+        position: relative;
+        overflow: hidden;
+    }
+</style>
+<div class="easyui-layout" style="height:100%;">
+    <div region="center">
+        <div id="dataContent">
+            @RenderBody()
+        </div>
+    </div>
+</div>

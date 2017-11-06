@@ -1,0 +1,1427 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>TCSOFT.DMS.MasterDataAPI</name>
+    </assembly>
+    <members>
+        <member name="T:TCSOFT.DMS.MasterDataAPI.Controllers.AccountDateController">
+            <summary>
+            关账日信息
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.AccountDateController.#ctor">
+            <summary>
+            关账日信息信息
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.AccountDateController.GetAccountDateList">
+            <summary>
+            得到所有关账日信息信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.AccountDateController.GetOneAccountDate(System.Int32)">
+            <summary>
+            得到一条关账日信息信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.AccountDateController.AddAccountDate(TCSOFT.DMS.MasterData.DTO.AccountDate.AccountDateOperateDTO)">
+            <summary>
+            新增关账日信息信息
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.AccountDateController.UpdateAccountDate(TCSOFT.DMS.MasterData.DTO.AccountDate.AccountDateOperateDTO)">
+            <summary>
+            修改关账日信息信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.AccountDateController.DeleteAccountDate(System.String)">
+            <summary>
+            删除关账日信息信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.AreaController.GetAreaTree(System.String)">
+            <summary>
+            大小区显示/小区省份显示
+            </summary>
+            <param name="AreaSearchDTO"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.AreaController.AddArea(TCSOFT.DMS.MasterData.DTO.Area.AreaOperateDTO)">
+            <summary>
+            大小区新增/小区省份新增
+            </summary>
+            <param name="AreaOperateDTO"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.AreaController.UpdateArea(TCSOFT.DMS.MasterData.DTO.Area.AreaOperateDTO)">
+            <summary>
+            大小区修改/小区省份修改
+            </summary>
+            <param name="AreaOperateDTO"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.AreaController.DeleteArea(System.String)">
+            <summary>
+            大小区删除/小区省份删除
+            </summary>
+            <param name="AreaOperateDTO"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.AreaController.GetArea">
+            <summary>
+            大区
+            </summary>
+            <param name="AreaSearchDTO"></param>
+            <returns></returns>
+        </member>
+        <member name="F:TCSOFT.DMS.MasterDataAPI.Controllers.AttachFileController._ICommonServices">
+            <summary>
+            附件信息
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.AttachFileController.#ctor">
+            <summary>
+            附件信息
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.AttachFileController.GetAttachFileList(System.String)">
+            <summary>
+            得到附件信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.AttachFileController.AddAttachFileList(System.Collections.Generic.List{TCSOFT.DMS.MasterData.DTO.Common.AttachFileOperateDTO})">
+            <summary>
+            新增附件
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.AttachFileController.DeleteAttachFile(System.String)">
+            <summary>
+            删除附件
+            </summary>
+            <param name="AttachFileOperateDTO"></param>
+            <returns></returns>
+        </member>
+        <member name="T:TCSOFT.DMS.MasterDataAPI.Controllers.CommonController">
+            <summary>
+            公共服务
+            </summary>
+        </member>
+        <member name="F:TCSOFT.DMS.MasterDataAPI.Controllers.CommonController._ICommonServices">
+            <summary>
+            定义公共数据接口
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.CommonController.#ctor">
+            <summary>
+            构造并实现公共数据接口
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.CommonController.GetAllCommonInfo(System.Int32)">
+            <summary>
+            取得公共信息
+            </summary>
+            <param name="type">类型：1 结构信息；2 按钮信息</param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.CommonController.GetAllLogByBelongModel(System.String)">
+            <summary>
+            通过所属模块取得日志
+            </summary>
+            <param name="BelongModel">模块名</param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.CommonController.GetAuthority(System.String,System.Int32,System.Nullable{System.Int32})">
+            <summary>
+            获取权限
+            </summary>
+            <param name="strIdlst">用户或者角色ID(多个用|相隔)</param>
+            <param name="type">1：用户类型 2：角色类型</param>
+            <param name="roletype">0：系统管理员 1：贝克曼 2：经销商</param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.CommonController.GetAllAdminInfo(System.String)">
+            <summary>
+            取得管理员信息
+            </summary>
+            <param name="asdto">管理员查询对象</param>
+            <returns></returns>
+        </member>
+        <member name="T:TCSOFT.DMS.MasterDataAPI.Controllers.CustomerAuditController">
+            <summary>
+            客户审核
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.CustomerAuditController.#ctor">
+            <summary>
+            客户审核
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.CustomerAuditController.GetCustomerAuditList(System.String)">
+            <summary>
+            得到客户审核列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.CustomerAuditController.AuditCustomer(TCSOFT.DMS.MasterData.DTO.CustomerAudit.CustomerAuditOperateDTO)">
+            <summary>
+            审核
+            </summary>
+            <param name="dto">Status（1.审核失败 2.审核成功）</param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.CustomerInfoController.#ctor">
+            <summary>
+            客户信息
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.CustomerInfoController.GetCustomerList(System.String)">
+            <summary>
+            得到所有客户信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.CustomerInfoController.AddCustomer(TCSOFT.DMS.MasterData.DTO.Customer.CustomerOperateDTO)">
+            <summary>
+            新增客户信息
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.CustomerInfoController.UpdateCustomer(TCSOFT.DMS.MasterData.DTO.Customer.CustomerOperateDTO)">
+            <summary>
+            修改客户信息
+            </summary>
+            <param name="dto">UpType修改类型（1.修改 2.停启用）</param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.CustomerInfoController.DeleteCustomer(System.String)">
+            <summary>
+            删除客户信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:TCSOFT.DMS.MasterDataAPI.Controllers.DepartmentController">
+            <summary>
+            部门信息
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.DepartmentController.#ctor">
+            <summary>
+            部门信息
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.DepartmentController.GetDepartmentList">
+            <summary>
+            得到所有部门信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.DepartmentController.GetDepartment(System.Int32)">
+            <summary>
+            得到一条部门信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.DepartmentController.AddDepartment(TCSOFT.DMS.MasterData.DTO.Common.DepartmentOperateDTO)">
+            <summary>
+            新增部门信息
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.DepartmentController.UpdateDepartment(TCSOFT.DMS.MasterData.DTO.Common.DepartmentOperateDTO)">
+            <summary>
+            修改部门信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.DepartmentController.DeleteDepartment(System.String)">
+            <summary>
+            删除部门信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.DepartmentController.GetDepartmentlist(System.Int32)">
+            <summary>
+            得到所有部门信息
+            </summary>
+            <param name="i"></param>
+            <returns></returns>
+        </member>
+        <member name="T:TCSOFT.DMS.MasterDataAPI.Controllers.DistributorAnnounceAuthorityController">
+            <summary>
+            经销商公告授权
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.DistributorAnnounceAuthorityController.#ctor">
+            <summary>
+            经销商公告授权
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.DistributorAnnounceAuthorityController.GetDistributorAnnounceAuthorityList(System.String)">
+            <summary>
+            得到经销商公告授权
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.DistributorAnnounceAuthorityController.AddDistributorAnnounceAuthority(TCSOFT.DMS.MasterData.DTO.Distributor.DistributorAnnounceAuthority.DistributorAnnounceAuthorityOperateDTO)">
+            <summary>
+            新增经销商公告授权
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.DistributorAuthorityController.#ctor">
+            <summary>
+            经销商授权
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.DistributorAuthorityController.GetDistributorAuthority(System.String)">
+            <summary>
+            得到经销商授权信息
+            </summary>
+            <param name="DistributorAuthoritySearchDTO"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.DistributorAuthorityController.AddDistributorAuthority(TCSOFT.DMS.MasterData.DTO.Distributor.DistributorAuthority.DistributorAuthorityOperateDTO)">
+            <summary>
+            授权经销商
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.DistributorAuthorityController.UpdataDistributorAuthority(TCSOFT.DMS.MasterData.DTO.Distributor.DistributorAuthority.DistributorAuthorityOperateDTO)">
+            <summary>
+            经销商授权修改
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.DistributorAuthorityController.DeleteDistributorAuthority(System.String)">
+            <summary>
+            删除经销商信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.DistributorAuthorityPayController.#ctor">
+            <summary>
+            经销商授权付款条款
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.DistributorAuthorityPayController.GetDistributorAuthorityPay(System.String)">
+            <summary>
+            得到经销商授权付款条款信息
+            </summary>
+            <param name="DistributorAuthoritySearchDTO"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.DistributorAuthorityProductLineController.#ctor">
+            <summary>
+            经销商授权产品线
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.DistributorAuthorityProductLineController.GetDistributorAuthorityProductLine(System.String)">
+            <summary>
+            得到经销商授权产品线信息
+            </summary>
+            <param name="DistributorAuthoritySearchDTO"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.DistributorAuthorityRegionController.#ctor">
+            <summary>
+            经销商授权产品线区域
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.DistributorAuthorityRegionController.GetDistributorAuthorityRegion(System.String)">
+            <summary>
+            得到经销商授权产品线区域
+            </summary>
+            <param name="DistributorAuthoritySearchDTO"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.DistributorAuthorityTransportController.#ctor">
+            <summary>
+            经销商授权运输方式
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.DistributorAuthorityTransportController.GetDistributorAuthorityTransport(System.String)">
+            <summary>
+            得到经销商授权运输方式信息
+            </summary>
+            <param name="DistributorAuthoritySearchDTO"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.DistributorChangeNameController.#ctor">
+            <summary>
+            经销商更名
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.DistributorChangeNameController.DistributorChangeName(TCSOFT.DMS.MasterData.DTO.Distributor.Distributor.DistributorChangeNameDTO)">
+            <summary>
+            新增经销商信息
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="T:TCSOFT.DMS.MasterDataAPI.Controllers.DistributorManagermentController">
+            <summary>
+            经销商管理
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.DistributorManagermentController.#ctor">
+            <summary>
+            经销商管理
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.DistributorManagermentController.GetDistributorList(System.String)">
+            <summary>
+            得到经销商信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.DistributorManagermentController.AddDistributor(TCSOFT.DMS.MasterData.DTO.Distributor.Distributor.DistributorOperateDTO)">
+            <summary>
+            新增经销商信息
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.DistributorManagermentController.UpdateDistributor(TCSOFT.DMS.MasterData.DTO.Distributor.Distributor.DistributorOperateDTO)">
+            <summary>
+            修改经销商
+            </summary>
+            <param name="dto">UpType修改类型（1.修改 2.停启用）</param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.DistributorManagermentController.DeleteDistributor(System.String)">
+            <summary>
+            删除经销商信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.DistributorPriceAuthorityController.#ctor">
+            <summary>
+            经销商管理
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.DistributorPriceAuthorityController.GetDisOKCList(System.String)">
+            <summary>
+            得到经销商信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:TCSOFT.DMS.MasterDataAPI.Controllers.DistributorServiceTypeController">
+            <summary>
+            经销商服务类型
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.DistributorServiceTypeController.GetDistributorServiceType(System.String)">
+            <summary>
+            得到所有经销商服务类型
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.DistributorServiceTypeController.AddDistributorServiceType(TCSOFT.DMS.MasterData.DTO.Distributor.DistributorServiceType.DistributorServiceTypeOperateDTO)">
+            <summary>
+            经销商服务类型新增
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.DistributorServiceTypeController.UpdateDistributorServiceType(TCSOFT.DMS.MasterData.DTO.Distributor.DistributorServiceType.DistributorServiceTypeOperateDTO)">
+            <summary>
+            经销商服务类型修改
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.DistributorServiceTypeController.DeleteDistributorServiceType(System.String)">
+            <summary>
+            经销商服务类型删除
+            </summary>
+            <param name="DistributorServiceTypeOperateDTO"></param>
+            <returns></returns>
+        </member>
+        <member name="T:TCSOFT.DMS.MasterDataAPI.Controllers.DistributorTypeController">
+            <summary>
+            经销商类别
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.DistributorTypeController.#ctor">
+            <summary>
+            经销商类别
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.DistributorTypeController.GetDepartmentList(System.String)">
+            <summary>
+            得到所有经销商类别
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.DistributorTypeController.AddDistributorType(TCSOFT.DMS.MasterData.DTO.Distributor.DistributorType.DistributorTypeOperateDTO)">
+            <summary>
+            经销商类别新增
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.DistributorTypeController.UpdateDistributorType(TCSOFT.DMS.MasterData.DTO.Distributor.DistributorType.DistributorTypeOperateDTO)">
+            <summary>
+            经销商类别修改
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.DistributorTypeController.DeleteDistributorType(System.String)">
+            <summary>
+            经销商类别删除
+            </summary>
+            <param name="DistributorTypeOperateDTO"></param>
+            <returns></returns>
+        </member>
+        <member name="F:TCSOFT.DMS.MasterDataAPI.Controllers.FeedbackController._ICommonServices">
+            <summary>
+            反馈管理
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.FeedbackController.#ctor">
+            <summary>
+            反馈管理
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.FeedbackController.GetFeedbackList(System.String)">
+            <summary>
+            得到反馈管理
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.FeedbackController.AddFeedback(TCSOFT.DMS.MasterData.DTO.Common.FeedbackOperateDTO)">
+            <summary>
+            新增反馈管理
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.FeedbackController.UpdateFeedback(TCSOFT.DMS.MasterData.DTO.Common.FeedbackOperateDTO)">
+            <summary>
+            修改反馈管理(改变状态)
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="T:TCSOFT.DMS.MasterDataAPI.Controllers.ImportDataController">
+            <summary>
+            导入数据服务
+            </summary>
+        </member>
+        <member name="T:TCSOFT.DMS.MasterDataAPI.Controllers.ImportDataController.ImportDataBody">
+            <summary>
+            导入数据实体
+            </summary>
+        </member>
+        <member name="P:TCSOFT.DMS.MasterDataAPI.Controllers.ImportDataController.ImportDataBody.Data">
+            <summary>
+            导入数据
+            </summary>
+        </member>
+        <member name="P:TCSOFT.DMS.MasterDataAPI.Controllers.ImportDataController.ImportDataBody.Type">
+            <summary>
+            导入类型
+            1、试剂产品清单
+            2、维修产品清单
+            3、试剂产品价格
+            4、试剂产品特价
+            5、维修产品价格
+            6、经销商信息管理
+            7、经销商授权
+            8、经销商公告授权
+            9、关账日
+            10、客户信息
+            11、产品小类
+            12、产品型号
+            13、用户管理
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.ImportDataController.ImportData(TCSOFT.DMS.MasterDataAPI.Controllers.ImportDataController.ImportDataBody)">
+            <summary>
+            导入数据
+            </summary>
+            <param name="idb"></param>
+            <returns></returns>
+        </member>
+        <member name="F:TCSOFT.DMS.MasterDataAPI.Controllers.LogController._ICommonServices">
+            <summary>
+            日志管理
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.LogController.#ctor">
+            <summary>
+            日志管理
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.LogController.GetLog(System.String)">
+            <summary>
+            得到日志信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:TCSOFT.DMS.MasterDataAPI.Controllers.MessageStatController">
+            <summary>
+            短信统计
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.MessageStatController.#ctor">
+            <summary>
+            短信统计
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.MessageStatController.GetMessageStatList(System.String)">
+            <summary>
+            得到短信统计
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.MessageStatController.AddMessageStat(System.Collections.Generic.List{TCSOFT.DMS.MasterData.DTO.Message.MessageOperateDTO})">
+            <summary>
+            新增短信统计
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.MessageStatController.DeleteMessageStat(System.String)">
+            <summary>
+            删除短信统计
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:TCSOFT.DMS.MasterDataAPI.Controllers.ModularSysController">
+            <summary>
+            模块管理员配置
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.ModularSysController.#ctor">
+            <summary>
+            模块管理员配置
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.ModularSysController.GetModularList(System.String)">
+            <summary>
+            得到所有模块模块管理员信息
+            </summary>
+            <param name="ModularSearchDTO"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.ModularSysController.UpdateModularInfo(TCSOFT.DMS.MasterData.DTO.System.ModularSysEmail.ModularOperateDTO)">
+            <summary>
+            修改模块管理员邮箱
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.OKCDistributorController.#ctor">
+            <summary>
+            OKC经销商及最终客户
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.OKCDistributorController.GetOKCDistributor(System.String)">
+            <summary>
+            得到OKC经销商及最终客户
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.OKCInfoController.#ctor">
+            <summary>
+            OKC
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.OKCInfoController.GetOKCList(System.String)">
+            <summary>
+            得到OKC信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.OKCInfoController.AddOKC(TCSOFT.DMS.MasterData.DTO.Product.OKCPriceInfo.OKCPriceInfoOperateDTO)">
+            <summary>
+            新增OKC
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.OKCInfoController.UpdateOKC(TCSOFT.DMS.MasterData.DTO.Product.OKCPriceInfo.OKCPriceInfoOperateDTO)">
+            <summary>
+            修改OKC号
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.OKCInfoController.DeleteOKC(System.String)">
+            <summary>
+            删除OKC
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:TCSOFT.DMS.MasterDataAPI.Controllers.OperationSysController">
+            <summary>
+            运维管理员配置
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.OperationSysController.#ctor">
+            <summary>
+            运维管理员配置
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.OperationSysController.UpdateOperationInfo(TCSOFT.DMS.MasterData.DTO.System.OperationSysEmail.OperationOperateDTO)">
+            <summary>
+            修改模块管理员邮箱
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="T:TCSOFT.DMS.MasterDataAPI.Controllers.ProductModelController">
+            <summary>
+            产品型号
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.ProductModelController.GetProductModel(System.String)">
+            <summary>
+            得到所有产品型号信息(含模糊查询)
+            </summary>
+            <param name="ProductModelSearchDTO"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.ProductModelController.GetOneProductModel(System.Int32)">
+            <summary>
+            得到一条产品型号信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.ProductModelController.AddProductModel(TCSOFT.DMS.MasterData.DTO.Product.ProductModel.ProductModelOperateDTO)">
+            <summary>
+            产品型号新增
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.ProductModelController.UpdateStopEnableProductModel(TCSOFT.DMS.MasterData.DTO.Product.ProductModel.ProductModelOperateDTO)">
+            <summary>
+            产品型号修改/停启用
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.ProductModelController.DeleteProductModel(System.String)">
+            <summary>
+            产品型号删除
+            </summary>
+            <param name="ProductModelOperateDTO"></param>
+            <returns></returns>
+        </member>
+        <member name="T:TCSOFT.DMS.MasterDataAPI.Controllers.InstrumentTypeController">
+            <summary>
+            仪器类型
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.InstrumentTypeController.#ctor">
+            <summary>
+            仪器类型
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.InstrumentTypeController.GetInstrumentTypeList">
+            <summary>
+            得到仪器类型
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.InstrumentTypeController.GetInstrumentType(System.Int32)">
+            <summary>
+            得到一条仪器类型
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.InstrumentTypeController.AddInstrumentType(TCSOFT.DMS.MasterData.DTO.Product.InstrumentType.InstrumentTypeOperateDTO)">
+            <summary>
+            新增仪器类型
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.InstrumentTypeController.UpdateInstrumentType(TCSOFT.DMS.MasterData.DTO.Product.InstrumentType.InstrumentTypeOperateDTO)">
+            <summary>
+            修改仪器类型
+            </summary>
+            <param name="dto">UpType修改类型（1.修改 2.停启用）</param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.InstrumentTypeController.DeleteProductType(System.String)">
+            <summary>
+            删除仪器类型
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:TCSOFT.DMS.MasterDataAPI.Controllers.LoginController">
+            <summary>
+            登录服务
+            </summary>
+        </member>
+        <member name="F:TCSOFT.DMS.MasterDataAPI.Controllers.LoginController._ILoginServices">
+            <summary>
+            定义登录接口
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.LoginController.#ctor">
+            <summary>
+            构造并实现登录接口
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.LoginController.Login(System.String)">
+            <summary>
+            用户登录
+            </summary>
+            <param name="logins"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.LoginController.CheckPhoneNumber(System.String,System.String)">
+            <summary>
+            检测手机号是否存在
+            </summary>
+            <param name="PhoneNumber">手机号</param>
+            <param name="validecode">权限码(后续扩展用)</param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.LoginController.SaveDymicPassword(TCSOFT.DMS.MasterData.DTO.MoblieLoginDTO)">
+            <summary>
+            保存密码
+            </summary>
+            <param name="mldto">手机密码相关信息</param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.LoginController.SaveMessageLog(System.String,System.String)">
+            <summary>
+            保存登录信息
+            </summary>
+            <param name="PhoneNumber">手机号</param>
+            <param name="SendContent">登录信息</param>
+            <returns></returns>
+        </member>
+        <member name="T:TCSOFT.DMS.MasterDataAPI.Controllers.MaintenanceInfoController">
+            <summary>
+            维修产品清单
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.MaintenanceInfoController.#ctor">
+            <summary>
+             维修产品清单
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.MaintenanceInfoController.GetMaintenanceInfo(System.String)">
+            <summary>
+            得到所有维修产品清单信息(含模糊查询)
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.MaintenanceInfoController.AddMaintenanceInfo(TCSOFT.DMS.MasterData.DTO.Product.ProductInfo.ProductInfoOperateDTO)">
+            <summary>
+            维修产品清单新增
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.MaintenanceInfoController.UpdateStopEnableMaintenanceInfo(TCSOFT.DMS.MasterData.DTO.Product.ProductInfo.ProductInfoOperateDTO)">
+            <summary>
+            维修产品清单修改/停启用
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.MaintenanceInfoController.DeleteMaintenanceInfo(System.String)">
+            <summary>
+            维修产品清单删除
+            </summary>
+            <param name="ProductInfoOperateDTO"></param>
+            <returns></returns>
+        </member>
+        <member name="T:TCSOFT.DMS.MasterDataAPI.Controllers.MaintenancePriceController">
+            <summary>
+            维修产品价格
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.MaintenancePriceController.GetMaintenancePrice(System.String)">
+            <summary>
+            得到所有维修产品价格信息(含模糊查询)
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.MaintenancePriceController.UpdateMaintenancePrice(TCSOFT.DMS.MasterData.DTO.Product.ProductPriceInfo.ProductPriceInfoOperateDTO)">
+            <summary>
+            维修产品价格修改
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.MaintenancePriceController.DeleteMaintenancePrice(System.String)">
+            <summary>
+            维修产品价格删除
+            </summary>
+            <param name="ProductPriceInfoOperateDTO"></param>
+            <returns></returns>
+        </member>
+        <member name="T:TCSOFT.DMS.MasterDataAPI.Controllers.OKCPriceInfoController">
+            <summary>
+            OKC产品特价
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.OKCPriceInfoController.#ctor">
+            <summary>
+            OKC产品特价
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.OKCPriceInfoController.GetOKCPrice(System.String)">
+            <summary>
+            得到OKC产品特价
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:TCSOFT.DMS.MasterDataAPI.Controllers.PaymentController">
+            <summary>
+            付款条款
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.PaymentController.#ctor">
+            <summary>
+            付款条款
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.PaymentController.GetPaymentList(System.String)">
+            <summary>
+            得到所有付款条款信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.PaymentController.GetPayment(System.Int32)">
+            <summary>
+            得到一条付款条款信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.PaymentController.AddPayment(TCSOFT.DMS.MasterData.DTO.Payment.PaymentOperateDTO)">
+            <summary>
+            新增付款条款信息
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.PaymentController.UpdatePayment(TCSOFT.DMS.MasterData.DTO.Payment.PaymentOperateDTO)">
+            <summary>
+            修改付款条款信息
+            </summary>
+            <param name="dto">UpType修改类型（1.修改 2.停启用）</param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.PaymentController.DeletePayment(System.String)">
+            <summary>
+            删除付款条款信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:TCSOFT.DMS.MasterDataAPI.Controllers.ProductLineController">
+            <summary>
+            产品线
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.ProductLineController.GetProductLine(System.String)">
+            <summary>
+            得到所有产品线信息(含模糊查询)
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.ProductLineController.GetOneProductLine(System.Int32)">
+            <summary>
+            得到一条产品线信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.ProductLineController.AddProductLine(TCSOFT.DMS.MasterData.DTO.Product.ProductLine.ProductLineOperateDTO)">
+            <summary>
+            产品线新增
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.ProductLineController.UpdateStopEnableProductLine(TCSOFT.DMS.MasterData.DTO.Product.ProductLine.ProductLineOperateDTO)">
+            <summary>
+            产品线修改/停启用
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.ProductLineController.DeleteProductLine(System.String)">
+            <summary>
+            产品线删除
+            </summary>
+            <param name="ProductLineOperateDTO"></param>
+            <returns></returns>
+        </member>
+        <member name="T:TCSOFT.DMS.MasterDataAPI.Controllers.ProductSmallTypeController">
+            <summary>
+            产品小类
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.ProductSmallTypeController.GetProductSmallType(System.String)">
+            <summary>
+            得到所有产品小类信息(含模糊查询)
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.ProductSmallTypeController.GetOneProductSmallType(System.Int32)">
+            <summary>
+            得到一条产品小类信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.ProductSmallTypeController.AddProductSmallType(TCSOFT.DMS.MasterData.DTO.Product.ProductSmallType.ProductSmallTypeOperateDTO)">
+            <summary>
+            产品小类新增
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.ProductSmallTypeController.UpdateStopEnableProductSmallType(TCSOFT.DMS.MasterData.DTO.Product.ProductSmallType.ProductSmallTypeOperateDTO)">
+            <summary>
+            产品小类修改/停启用
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.ProductSmallTypeController.DeleteProductSmallType(System.String)">
+            <summary>
+            产品小类删除
+            </summary>
+            <param name="UserOperate"></param>
+            <returns></returns>
+        </member>
+        <member name="T:TCSOFT.DMS.MasterDataAPI.Controllers.ProductTypeController">
+            <summary>
+            产品类型
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.ProductTypeController.#ctor">
+            <summary>
+            产品类型
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.ProductTypeController.GetProductTypeList(System.String)">
+            <summary>
+            得到产品类型
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.ProductTypeController.GetProductType(System.Int32)">
+            <summary>
+            得到一条产品类型
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.ProductTypeController.AddProductType(TCSOFT.DMS.MasterData.DTO.Product.ProductType.ProductTypeOperateDTO)">
+            <summary>
+            新增产品类型
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.ProductTypeController.UpdateProductType(TCSOFT.DMS.MasterData.DTO.Product.ProductType.ProductTypeOperateDTO)">
+            <summary>
+            修改产品类型
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.ProductTypeController.DeleteProductType(System.String)">
+            <summary>
+            删除产品类型
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:TCSOFT.DMS.MasterDataAPI.Controllers.QueryDistributorBaseInfoController">
+            <summary>
+            经销商信息查询
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.QueryDistributorBaseInfoController.#ctor">
+            <summary>
+            经销商信息查询
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.QueryDistributorBaseInfoController.GetDistributorBaseInfoByName(System.String)">
+            <summary>
+            得到经销商信息(开头字符为查询条件)
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.QueryProductBaseInfoController.GetProductBaseInfo">
+            <summary>
+            得到所有产品基本信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.QueryProductLineBaseInfoController.GetProductLineBaseInfo">
+            <summary>
+            得到所有产品线基本信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.QueryProductSmallTypeBaseInfoController.GetProductSmallTypeBaseInfo">
+            <summary>
+            得到所有产品小类基本信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.QueryProductTypeBaseInfoController.GetProductTypeBaseInfo">
+            <summary>
+            得到所有产品类型基本信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:TCSOFT.DMS.MasterDataAPI.Controllers.RateController">
+            <summary>
+            汇率信息
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.RateController.#ctor">
+            <summary>
+            汇率信息
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.RateController.GetRateList">
+            <summary>
+            得到所有汇率信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.RateController.GetOneRate(System.Int32)">
+            <summary>
+            得到一条汇率信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.RateController.AddRate(TCSOFT.DMS.MasterData.DTO.RateDTO.RateOperateDTO)">
+            <summary>
+            新增汇率信息
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.RateController.UpdateRate(TCSOFT.DMS.MasterData.DTO.RateDTO.RateOperateDTO)">
+            <summary>
+            修改汇率信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.RateController.DeleteRate(System.String)">
+            <summary>
+            删除汇率信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:TCSOFT.DMS.MasterDataAPI.Controllers.ReagentInfoController">
+            <summary>
+            试剂产品
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.ReagentInfoController.#ctor">
+            <summary>
+            试剂产品
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.ReagentInfoController.GetReagentInfoList(System.String)">
+            <summary>
+            得到试剂产品
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.ReagentInfoController.AddReagentInfo(TCSOFT.DMS.MasterData.DTO.Product.ProductInfo.ProductInfoOperateDTO)">
+            <summary>
+            新增试剂产品
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.ReagentInfoController.UpdateReagentInfo(TCSOFT.DMS.MasterData.DTO.Product.ProductInfo.ProductInfoOperateDTO)">
+            <summary>
+            修改试剂产品
+            </summary>
+            <param name="dto">UpType修改类型（1.修改 2.停启用）</param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.ReagentInfoController.DeleteReagentInfo(System.String)">
+            <summary>
+            删除试剂产品
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:TCSOFT.DMS.MasterDataAPI.Controllers.ReagentPriceController">
+            <summary>
+            试剂价格
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.ReagentPriceController.#ctor">
+            <summary>
+            试剂价格
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.ReagentPriceController.GetReagentPriceList(System.String)">
+            <summary>
+            得到试剂产品
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.ReagentPriceController.UpdateReagentPrice(TCSOFT.DMS.MasterData.DTO.Product.ProductPriceInfo.ProductPriceInfoOperateDTO)">
+            <summary>
+            修改试剂价格
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.ReagentPriceController.DeleteReagentPrice(System.String)">
+            <summary>
+            删除试剂价格
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:TCSOFT.DMS.MasterDataAPI.Controllers.RegionController">
+            <summary>
+            行政区划控制器
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.RegionController.#ctor">
+            <summary>
+            行政区划控制器
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.RegionController.GetRegionList">
+            <summary>
+            得到所有行政区划
+            </summary>
+            <param ></param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.RegionController.AddRegion(TCSOFT.DMS.MasterData.DTO.Common.RegionOperateDTO)">
+            <summary>
+            新增行政区划
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.RegionController.UpdateRegion(TCSOFT.DMS.MasterData.DTO.Common.RegionOperateDTO)">
+            <summary>
+            修改行政区划
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.RegionController.DeleteRegion(System.String)">
+            <summary>
+            删除行政区划
+            </summary>
+            <param name="RegionSearchDTO"></param>
+            <returns></returns>
+        </member>
+        <member name="T:TCSOFT.DMS.MasterDataAPI.Controllers.RoleController">
+            <summary>
+            角色信息
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.RoleController.#ctor">
+            <summary>
+            角色信息
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.RoleController.GetRoleList(System.String)">
+            <summary>
+            得到所有角色信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.RoleController.GetRole(System.Int32)">
+            <summary>
+            得到一条角色信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.RoleController.AddRole(TCSOFT.DMS.MasterData.DTO.Role.RoleOperateDTO)">
+            <summary>
+            新增角色信息
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.RoleController.UpdateRole(TCSOFT.DMS.MasterData.DTO.Role.RoleOperateDTO)">
+            <summary>
+            修改角色信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.RoleController.DeleteRole(System.String)">
+            <summary>
+            删除角色信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:TCSOFT.DMS.MasterDataAPI.Controllers.TransportController">
+            <summary>
+            运输方式
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.TransportController.GetTransport(System.String)">
+            <summary>
+            得到所有运输方式信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.TransportController.GetOneTransport(System.Int32)">
+            <summary>
+            得到一条运输方式信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.TransportController.AddTransport(TCSOFT.DMS.MasterData.DTO.Transport.TransportOperateDTO)">
+            <summary>
+            运输方式新增
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.TransportController.UpdateStopEnableTransport(TCSOFT.DMS.MasterData.DTO.Transport.TransportOperateDTO)">
+            <summary>
+            运输方式修改/停启用
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="T:TCSOFT.DMS.MasterDataAPI.Controllers.UserApplyController">
+            <summary>
+            用户申请
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.UserAuditController.AuditUserApplyAdopt(TCSOFT.DMS.MasterData.DTO.User.UserApply.UserApplyOperateDTO)">
+            <summary>
+            用户审核(通过)
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.UserManagerController.GetUser(System.String)">
+            <summary>
+            得到所有用户信息(含模糊查询)
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.UserManagerController.GetOneUser(System.Int32)">
+            <summary>
+            得到一条用户信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.UserManagerController.AddUser(TCSOFT.DMS.MasterData.DTO.User.UserOperate)">
+            <summary>
+            用户信息新增
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.UserManagerController.UpdateStopEnableUser(TCSOFT.DMS.MasterData.DTO.User.UserOperate)">
+            <summary>
+            用户信息修改/停启用
+            </summary>
+            <param name="dto">Uptype（3.新增客户管理员  4.删除客户管理员  5.修改模块管理员邮箱）</param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.UserManagerController.DeleteUser(System.String)">
+            <summary>
+            用户信息删除
+            </summary>
+            <param name="UserOperate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.UsersByAuthoritedController.GetUsersByAuthorited(System.String)">
+            <summary>
+            得到已授权用户模块
+            </summary>
+            <param name="UsersByAuthoritedSearchDTO"></param>
+            <returns></returns>
+        </member>
+        <member name="T:TCSOFT.DMS.MasterDataAPI.Controllers.UsersStatController">
+            <summary>
+            用户统计
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.UsersStatController.#ctor">
+            <summary>
+            用户统计
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.UsersStatController.GetUsersStatList(System.String)">
+            <summary>
+            得到用户统计
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.UsersStatController.AddUsersStat(TCSOFT.DMS.MasterData.DTO.UsersStat.UsersStatOperateDTO)">
+            <summary>
+            新增用户统计
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.UsersStatController.DeleteUsersStat(System.String)">
+            <summary>
+            删除用户统计信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:TCSOFT.DMS.MasterDataAPI.Controllers.WarningController">
+            <summary>
+            提醒管理
+            </summary>
+        </member>
+        <member name="F:TCSOFT.DMS.MasterDataAPI.Controllers.WarningController._ICommonServices">
+            <summary>
+            提醒管理
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.WarningController.#ctor">
+            <summary>
+            提醒管理
+            </summary>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.WarningController.GetWarningInfo(System.String)">
+            <summary>
+            得到提醒信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.WarningController.AddWarningInfo(TCSOFT.DMS.MasterData.DTO.Common.WarningDTO)">
+            <summary>
+            新增提醒管理
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TCSOFT.DMS.MasterDataAPI.Controllers.WarningController.DeleteWarningInfo(System.String)">
+            <summary>
+            删除一条提醒信息
+            </summary>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

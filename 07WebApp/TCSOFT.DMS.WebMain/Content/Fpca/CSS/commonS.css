@@ -1,0 +1,254 @@
+﻿html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre, a,
+abbr, acronym, address, big, cite, code, del,
+dfn, em, img, ins, kbd, q, s, samp, small,
+strike, strong, sub, sup, tt, var, u, i, center,
+dl, dt, dd, ol, ul, li, fieldset, form, label,
+legend, table, caption, tbody, tfoot, thead, tr,
+th, td, article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup, menu,
+nav, output, ruby, section, summary, time, mark, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+}
+
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
+    display: block;
+}
+
+.fr {
+    float: right;
+}
+
+.window-body .layout {
+    padding-bottom: 10px;
+    border: 0 !important;
+}
+
+body {
+    font-family: "Microsoft YaHei",Arial;
+}
+
+/*公用样式*/
+.lb80 {
+    display: block;
+    width: 80px;
+    height: 20px;
+    text-align: right;
+    float: left;
+}
+
+span.cl40 {
+    display: inline-block;
+    text-align: right;
+    width: 40px;
+}
+
+span.cl60 {
+    display: inline-block;
+    text-align: right;
+    width: 60px;
+}
+
+span.cl80 {
+    display: inline-block;
+    text-align: right;
+    width: 80px;
+}
+
+span.cl100 {
+    display: inline-block;
+    text-align: right;
+    width: 100px;
+}
+
+span.cl100right {
+    display: inline-block;
+    text-align: right;
+    width: 100px;
+    margin-right: 2px;
+}
+
+span.cl120 {
+    display: inline-block;
+    text-align: right;
+    width: 120px;
+}
+
+span.cl140 {
+    display: inline-block;
+    text-align: right;
+    width: 140px;
+}
+
+span.cl160 {
+    display: inline-block;
+    text-align: right;
+    width: 160px;
+}
+
+span.cl170 {
+    display: inline-block;
+    text-align: right;
+    width: 170px;
+}
+
+.txt60 {
+    width: 60px;
+    height: 20px;
+}
+
+.txt80 {
+    width: 80px;
+    height: 20px;
+}
+
+.txt100 {
+    width: 100px;
+    height: 20px;
+}
+.txt120 {
+    width: 120px;
+    height: 20px;
+}
+
+.txt150 {
+    width: 150px;
+    height: 20px;
+}
+
+.txt170 {
+    width: 170px;
+    height: 20px;
+}
+
+.txt180 {
+    width: 180px;
+    height: 20px;
+}
+
+.txt190 {
+    width: 190px;
+    height: 20px;
+}
+
+.txt200 {
+    width: 200px;
+    height: 20px;
+}
+
+.txt250 {
+    width: 250px;
+    height: 20px;
+}
+
+.txt300 {
+    width: 300px;
+    height: 20px;
+}
+
+.txt350 {
+    width: 350px;
+    height: 20px;
+}
+
+.txt370 {
+    width: 370px;
+    height: 20px;
+}
+
+.txt400 {
+    width: 400px;
+    height: 20px;
+}
+
+.txt410 {
+    width: 410px;
+    height: 20px;
+}
+
+.txt460 {
+    width: 460px;
+    height: 20px;
+}
+
+span.MustRequre {
+    width: 5px;
+    color: red;
+}
+
+.operat1 {
+    position: relative;
+    text-align: center;
+}
+
+    .operat1 p a {
+        width: 100px;
+        margin-right: 10px;
+    }
+
+.operatStyle {
+    position: relative;
+    text-align: center;
+}
+
+.AddContent {
+    padding: 10px 30px 10px 6px;
+}
+
+    .AddContent p {
+        margin-bottom: 2px;
+    }
+
+#bodyDIV {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+    display: inherit;
+}
+
+
+#HContTitle {
+    height: 100%;
+    float: left;
+    margin-left: 5px;
+    position: relative;
+}
+
+    #HContTitle #lstinfo {
+        height: 100%;
+        width: 100%;
+    }
+
+#bodyLst {
+    float: right;
+    width: 78%;
+    height: 100%;
+    /*margin-right: 10px;*/
+    padding: 3px;
+}
+
+/*//用户审核*/
+#Auditdiv {
+    height: 300px;
+    width: 980px;
+    margin-top: 30px;
+}
+
+#BodyContentDiv {
+    width: 100%;
+    height: 100%;
+}
+
+/*不分页，只显示总条数*/
+.DivPage .pagination {
+    height: 30px;
+}
+
+    .DivPage .pagination table {
+        display: none;
+    }

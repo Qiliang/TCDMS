@@ -1,0 +1,60 @@
+﻿<div class="easyui-layout" style="height:100%;">
+    <div region="north" style="height:94px">
+        <link href="~/Content/Document/CSS/_Partialtool.css" rel="stylesheet" />
+        <div id="BodyContentTool">
+            <div id="btnButton">
+                <div class="comboelse" style="padding:5px 5px 5px 0;">
+                    <input class='easyui-datebox txt350' id='EffectiveTtime' editable='false' buttonText='发布日期起'/>
+                    <input class='easyui-datebox txt350' id='EffectiveTtime1' editable='false' buttonText='发布日期止'/>
+                    <input class='easyui-datebox txt350' id='EffectiveTtime2' editable='false' buttonText='更新日期起'/>
+                    <input class='easyui-datebox txt350' id='EffectiveTtime3' editable='false' buttonText='更新日期止'/>
+                </div>
+                <ul>
+                    <li><input id="serchText" class="easyui-searchbox search" style="height:32px;width:500px;"
+                               data-options="prompt:'支持货号、产品描述模糊查询',searcher:function(){}"/></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div region="center">
+        <div id="BodyContentDiv">
+            <table class="easyui-datagrid"
+                   data-options="
+                    iconCls: 'icon-view',
+                    width: function () { return document.body.clientWidth * 0.9 },
+                    nowrap: true,
+                    autoRowHeight: true,
+                    striped: true,
+                    collapsible: false,
+                    pagination: true,
+                    pageSize: 10,
+                    pageList: [10, 20, 30],
+                    rownumbers: true,
+                    sortOrder: 'desc',
+                    remoteSort: false,
+                    singleSelect: true,
+                    queryParams: {},
+                    animate: true,
+                    url:'customer/smkxyqbjlb_data.json',
+                    method:'get',
+                    idField:'id',
+                    fit:true">
+                <thead>
+                <tr>
+                    <th data-options="field:'goods_num',width:80,align:'center'">货号</th>
+                    <th data-options="field:'product_desc',width:250,align:'center',sortable:true">产品描述</th>
+                    <th data-options="field:'dollar_offer',width:120,align:'center',sortable:true">美金报价</th>
+                    <th data-options="field:'validity_date',width:100,align:'center'">有效期</th>
+                    <th data-options="field:'release_person',width:100,align:'center'">发布人</th>
+                    <th data-options="field:'release_time',width:160,align:'center'">发布日期</th>
+                    <th data-options="field:'update_time',width:160,align:'center'">更新日期</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+
+</script>

@@ -1,0 +1,525 @@
+﻿@{
+    Layout = null;
+    ViewBag.SearchCombination = "<select id='searchprovince' class='easyui-combobox txt170' editable='false' buttonText='省份'></select>" +
+        "<select id='searchcity' class='easyui-combobox txt170' editable='false' buttonText='城市'></select>" +
+        "<select id='searchcountry' class='easyui-combobox txt170' editable='false' buttonText='县区'></select>";
+    ViewBag.SearchOption = "prompt:'支持客户名、申请经销商模糊查询',searcher:doSearch";
+}
+<script type="text/javascript">
+    $(function () {
+        InitSearchProvince();
+        InitProvince();
+        $('#grid').datagrid({
+            width: function () { return document.body.clientWidth * 0.9 },
+            nowrap: true,
+            autoRowHeight: true,
+            striped: true,
+            collapsible: false,
+            pagination: true,
+            pageSize: 10,
+            pageList: [10, 20, 30],
+            rownumbers: true,
+            sortOrder: 'desc',
+            remoteSort: false,
+            singleSelect: true,
+            idField: 'CustomerID',
+            queryParams: {},
+            animate: true,
+            columns: [[
+                 { title: 'ID', field: 'CustomerID', hidden: true, width: 1, halign: 'center', align: 'center' },
+                 { title: '状态', field: 'Status', width: 80, halign: 'center', align: 'center' },
+                 { title: '', field: 'IsActive', hidden: true, width: 80, halign: 'center', align: 'center' },
+                 { title: '省份', field: 'Province', width: 80, halign: 'center', align: 'center' },
+                 { title: '城市', field: 'City', width: 180, halign: 'center', align: 'center' },
+                 { title: '县区', field: 'Country', width: 180, halign: 'center', align: 'center' },
+                 { title: 'Oracle号', field: 'OracleNO', width: 200, halign: 'center', align: 'center' },
+                 { title: 'OracleName', field: 'OracleName', width: 200, halign: 'center', align: 'left' },
+                 { title: '客户名', field: 'CustomerName', width: 380, halign: 'center', align: 'left' },
+                 { title: 'XSW编号', field: 'XSWNO', width: 180, halign: 'center', align: 'center' },
+                 { title: '申请经销商', field: 'DistributorName', width: 150, halign: 'center', align: 'left' },
+                 { title: '审批人', field: 'Auditor', width: 100, halign: 'center', align: 'center' },
+                 { title: '最后修改人', field: 'ModifyUser', width: 100, halign: 'center', align: 'center' }
+            ]]
+        });
+        //新增/修改
+        $('#AddorUpdateWindow').dialog({
+            width: 'auto',
+            height: 'auto',
+            top: 20,
+            modal: true,
+            closed: true,
+            inline: true,
+            buttons: [{
+                text: '确定',
+                handler: function () {
+                    Save();
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    $('#AddorUpdateWindow').dialog('close');
+                }
+            }]
+        });
+
+        //停用原因
+        $('#StopWindow').dialog({
+            width: 'auto',
+            height: 'auto',
+            top: 100,
+            modal: true,
+            closed: true,
+            inline: true,
+            buttons: [{
+                text: '确定',
+                handler: function () {
+                    StopActived();
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    $('#StopWindow').dialog('close');
+                }
+            }]
+        });
+        $('#ImportCustomer').dialog({
+            width: 'auto',
+            height: 'auto',
+            top: 100,
+            modal: true,
+            closed: true,
+            inline: true,
+            buttons: [{
+                text: '确定',
+                handler: function () {
+                    if ($('#CustomerFile').filebox('getValue')=="") { alert('请选择导入文件！'); }
+                    else { $('#CustomerFileform').submit(); }
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    $('#ImportCustomer').dialog('close');
+                }
+            }],
+            title: "导入客户信息"
+        });
+
+        $('#CustomerFileform').ajaxForm({
+            url: '@Url.Action("ImportCustomer", "Customer")',
+            dataType: 'json',
+            beforeSend: function () {
+            },
+            success: function () {
+            },
+            complete: function (data) {
+
+                if (!data.responseJSON) {
+                    alert("导入成功！")
+                    $('#ImportCustomer').dialog('close');
+                    $('#grid').datagrid('reload', { SearchText: null, Province: null, City: null, Country: null });
+                }
+                else {
+                    if (data.responseJSON == "导入失败") {
+                        alert("导入失败！");
+                    }
+                    else {
+                        alert("导入失败，即将下载错误文件！");
+                        window.location.href = "/Customer/DownloadCustomer?filename=" + data.responseJSON;
+                    }
+                }
+            }
+        });
+    })
+    function doSearch(value) {
+        var province = $('#searchprovince').combobox('getText') == "请选择" ? "" : $('#searchprovince').combobox('getText');
+        var city = $('#searchcity').combobox('getText') == "请选择" ? "" : $('#searchcity').combobox('getText');
+        var country = $('#searchcountry').combobox('getText') == "请选择" ? "" : $('#searchcountry').combobox('getText');
+        $('#grid').datagrid('reload', { SearchText: value, Province: province, City: city, Country: country });
+    }
+    function ClickAdd() {
+        $("#serchText").searchbox('setValue', null);
+        $('#searchprovince').combobox('setValue', '请选择', '-1');
+        $('#searchcity').combobox('loadData', {}).combobox('setValue', null);
+        $('#searchcountry').combobox('loadData', {}).combobox('setValue', null);
+        $("#AddUp").val(1);
+        $('#Province').combobox('setValue', null);
+        $('#City').combobox('loadData', {}).combobox('setValue', null);
+        $('#Country').combobox('loadData', {}).combobox('setValue', null);
+        $('#OracleNO').textbox('setValue', null);
+        $('#OracleName').textbox('setValue', null);
+        $('#CustomerName').textbox('setValue', null);
+        $('#XSWNO').textbox('setValue', null);
+        $('#AddorUpdateWindow').dialog({ title: "新增客户" });
+        $('#AddorUpdateWindow').dialog('open');
+    }
+    function ClickModify() {
+        var row = $("#grid").datagrid("getSelected");
+        if (row == null) {
+            alert("您还没有选择客户信息，请选择！");
+            return;
+        }
+        $.post('@Url.Action("GetCustomer", "Customer")',
+                     { CustomerID: row.CustomerID },
+                         function (data, textStatus, jqXHR) {
+                             if (data.SubmitResult) {
+                                 $('#AddUp').val(2);
+                                 $('#CustomerID').val(data.Object.CustomerID);
+                                 $('#IsActive').val(data.Object.IsActive),
+                                 $('#DistributorID').val(data.Object.DistributorID),
+                                 $('#Province').combobox('setValue', data.Object.Province);
+                                 $('#City').combobox('setValue', data.Object.City);
+                                 $('#Country').combobox('setValue', data.Object.Country);
+                                 $('#OracleNO').textbox('setValue', data.Object.OracleNO);
+                                 $('#OracleName').textbox('setValue', data.Object.OracleName);
+                                 $('#CustomerName').textbox('setValue', data.Object.CustomerName);
+                                 $('#XSWNO').textbox('setValue', data.Object.XSWNO);
+                                 $('#AddorUpdateWindow').dialog({ title: "修改客户" });
+                                 $('#AddorUpdateWindow').dialog('open');
+                             }
+                             else {
+                                 alert(data.Message);
+                                 return;
+                             }
+                         }, "json");
+    }
+    function Save() {
+        if ($("#AddorUpdate").form('validate')) {
+            if ($('#AddUp').val() == 1) {
+                $.post(
+                 '@Url.Action("AddCustomer", "Customer")',
+                 {
+                     Province: $('#Province').combobox('getValue'),
+                     City: $('#City').combobox('getValue'),
+                     Country: $('#Country').combobox('getValue'),
+                     OracleNO: $('#OracleNO').textbox('getValue'),
+                     OracleName: $('#OracleName').textbox('getValue'),
+                     CustomerName: $('#CustomerName').textbox('getValue'),
+                     XSWNO: $('#XSWNO').textbox('getValue'),
+                 },
+                 function success(data, textStatus, jqXHR) {
+                     if (!data.SubmitResult) {
+                         alert(data.Message);
+                     }
+                     else {
+                         $('#AddorUpdateWindow').dialog('close');
+                         $('#grid').datagrid('clearSelections');
+                         $('#grid').datagrid('reload', { SearchText: null, Province: null, City: null, Country: null });
+                     }
+                 }, "json");
+            }
+            else {
+                $.post(
+                  '@Url.Action("UpdateCustomer", "Customer")',
+                  {
+                      CustomerID: $('#CustomerID').val(),
+                      Province: $('#Province').combobox('getValue'),
+                      City: $('#City').combobox('getValue'),
+                      Country: $('#Country').combobox('getValue'),
+                      OracleNO: $('#OracleNO').textbox('getValue'),
+                      OracleName: $('#OracleName').textbox('getValue'),
+                      CustomerName: $('#CustomerName').textbox('getValue'),
+                      XSWNO: $('#XSWNO').textbox('getValue'),
+                      IsActive: $('#IsActive').val(),
+                      DistributorID: $('#DistributorID').val(),
+                  },
+                  function success(data, textStatus, jqXHR) {
+                      if (!data.SubmitResult) {
+                          alert(data.Message);
+                      }
+                      else {
+                          $('#AddorUpdateWindow').dialog('close');
+                          $('#grid').datagrid('reload');
+                      }
+                  }, "json");
+            }
+        }
+    }
+    function ClickDel() {
+        var row = $("#grid").datagrid("getSelected");
+        if (row == null) {
+            alert("您还没有选择客户信息，请选择！");
+            return;
+        }
+        $.messager.confirm('提示', '是否删除选中数据?', function (data) {
+            if (!data) {
+                return;
+            }
+
+            $.post(
+            '@Url.Action("DeleteCustomer", "Customer")',
+            {
+                CustomerID: row.CustomerID
+            },
+            function success(data, textStatus, jqXHR) {
+                if (!data.SubmitResult) {
+                    alert(data.Message);
+                }
+                else {
+                    alert("删除成功！");
+                    $('#grid').datagrid('clearSelections');
+                    $('#grid').datagrid('reload');
+                }
+            }, "json");
+        });
+    }
+    function ClickActived() {
+        var row = $("#grid").datagrid("getSelected");
+        if (row == null) {
+            alert("您还没有选择客户信息，请选择！");
+            return;
+        }
+        if (row.IsActive) {
+            $('#NoActiveReason').textbox("setValue", null);
+            $('#StopWindow').dialog({ title: "停用原因" });
+            $('#StopWindow').dialog('open');
+        } else {
+            $.post(
+           '@Url.Action("ChangeStatusCustomer", "Customer")',
+           {
+               CustomerID: row.CustomerID
+           },
+           function success(data, textStatus, jqXHR) {
+               if (!data.SubmitResult) {
+                   alert(data.Message);
+               }
+               else {
+                   $('#grid').datagrid('clearSelections');
+                   $('#grid').datagrid('reload');
+               }
+           }, "json");
+        }
+
+    }
+    function StopActived() {
+        var row = $("#grid").datagrid("getSelected");
+        $.post(
+           '@Url.Action("ChangeStatusCustomer", "Customer")',
+           {
+               CustomerID: row.CustomerID,
+               NoActiveReason: $('#NoActiveReason').textbox('getValue')
+           },
+           function success(data, textStatus, jqXHR) {
+               if (!data.SubmitResult) {
+                   alert(data.Message);
+               }
+               else {
+                   $('#StopWindow').dialog('close')
+                   $('#grid').datagrid('reload');
+               }
+           }, "json");
+
+    }
+
+
+    // 导入
+    function ClickImport() {
+        $("#serchText").searchbox('setValue', null);
+        $('#searchprovince').combobox('setValue', '请选择', '-1');
+        $('#searchcity').combobox('loadData', {}).combobox('setValue', null);
+        $('#searchcountry').combobox('loadData', {}).combobox('setValue', null);
+        $('#CustomerFile').filebox("clear");
+        $('#ImportCustomer').dialog('open');
+    }
+    // 导出
+    function ClickExport() {
+        var province = $('#searchprovince').combobox('getText') == "请选择" ? "" : $('#searchprovince').combobox('getText');
+        var city = $('#searchcity').combobox('getText') == "请选择" ? "" : $('#searchcity').combobox('getText');
+        var country = $('#searchcountry').combobox('getText') == "请选择" ? "" : $('#searchcountry').combobox('getText');
+        $.post("@Url.Action("ExportCustomer", "Customer")", {
+            SearchText: $("#serchText").searchbox('getValue'),
+            Province: province,
+            City: city,
+            Country: country
+        }, function (data) {
+            if (data) {
+                window.location.href = "/Customer/DownloadCustomer?filename=" + data;
+            }
+            else {
+                alert("导出失败！");
+            }
+        })
+    }
+    function InitSearchProvince() {
+        $('#searchprovince').combobox({
+            url: '@Url.Action("GetSearchProvinceRegionList", "AreaRegion")',
+            queryParams: {},
+            valueField: 'RegionID',
+            textField: 'RegionName',
+            editable: false,
+            value: -1,
+            onSelect: function (row) {
+                $("#serchText").searchbox('setValue', null);
+                $('#searchcity').combobox('clear').combobox('loadData', {});
+                $('#searchcountry').combobox('clear').combobox('loadData', {});
+                $('#grid').datagrid({ url: '@Url.Action("GetCustomerList", "Customer")', queryParams: { Province: row.RegionName == "请选择" ? "" : row.RegionName } });
+                if (row.RegionName != "请选择") {
+                    $('#searchcity').combobox({
+                        url: '@Url.Action("GetSearchNextLevelRegionList", "AreaRegion")',
+                        queryParams: { RegionID: row.RegionID },
+                        valueField: 'RegionID',
+                        textField: 'RegionName',
+                        editable: false,
+                        onLoadSuccess: function () {
+                            $('#searchcity').combobox('setValue', '请选择', '-1')
+                        },
+                        onSelect: function (row1) {
+                            $("#serchText").searchbox('setValue', null);
+                            $('#searchcountry').combobox('clear').combobox('loadData', {});
+                            $('#grid').datagrid({ url: '@Url.Action("GetCustomerList", "Customer")', queryParams: { Province: row.RegionName == "请选择" ? "" : row.RegionName, City: row1.RegionName == "请选择" ? "" : row1.RegionName } });
+                            if (row1.RegionName != "请选择") {
+                                $('#searchcountry').combobox({
+                                    url: '@Url.Action("GetSearchNextLevelRegionList", "AreaRegion")',
+                                    queryParams: { RegionID: row1.RegionID },
+                                    valueField: 'RegionID',
+                                    textField: 'RegionName',
+                                    editable: false,
+                                    onLoadSuccess: function () {
+                                        $('#searchcountry').combobox('setValue', '请选择', '-1')
+                                    },
+                                    onSelect: function (row2) {
+                                        $("#serchText").searchbox('setValue', null);
+                                        $('#grid').datagrid({ url: '@Url.Action("GetCustomerList", "Customer")', queryParams: { Province: row.RegionName == "请选择" ? "" : row.RegionName, City: row1.RegionName == "请选择" ? "" : row1.RegionName, Country: row2.RegionName == "请选择" ? "" : row2.RegionName } });
+                                    }
+
+                                })
+
+                            }
+
+                        }
+
+                    })
+                }
+
+            }
+
+        })
+    }
+
+    function InitProvince() {
+        $.ajaxSetup({
+            async: false
+        });
+        $('#Province').combobox({
+            url: '@Url.Action("GetProvinceRegionList", "AreaRegion")',
+            queryParams: {},
+            valueField: 'RegionName',
+            textField: 'RegionName',
+            editable: false,
+            onSelect: function (row) {
+                $('#City').combobox('clear').combobox('loadData', {});
+                $('#Country').combobox('clear').combobox('loadData', {});
+                $.ajaxSetup({
+                    async: false
+                });
+                $('#City').combobox({
+                    url: '@Url.Action("GetNextLevelRegionList", "AreaRegion")',
+                    queryParams: { RegionID: row.RegionID },
+                    valueField: 'RegionName',
+                    textField: 'RegionName',
+                    editable: false,
+                    onSelect: function (row1) {
+                        $.ajaxSetup({
+                            async: false
+                        });
+                        $('#Country').combobox('clear').combobox('loadData', {});
+                        $('#Country').combobox({
+                            url: '@Url.Action("GetNextLevelRegionList", "AreaRegion")',
+                            queryParams: { RegionID: row1.RegionID },
+                            valueField: 'RegionName',
+                            textField: 'RegionName',
+                            editable: false,
+                        })
+                        $.ajaxSetup({
+                            async: true
+                        });
+                    }
+                })
+                $.ajaxSetup({
+                    async: true
+                });
+            }
+        })
+        $.ajaxSetup({
+            async: true
+        });
+    }
+</script>
+<div class="easyui-layout" style="height:100%;">
+    <div region="north" style="height:94px">
+        @Html.Partial("_Partialtool")
+    </div>
+    <div region="center">
+        <div id="BodyContentDiv">
+            <table id="grid" fit="true"></table>
+        </div>
+    </div>
+</div>
+
+
+@*客户新增/修改*@
+<div id="AddorUpdateWindow">
+    <div class="AddContent">
+        <input id="CustomerID" hidden="hidden" />
+        <input id="IsActive" hidden="hidden" />
+        <input id="DistributorID" hidden="hidden" />
+        <input id="AddUp" hidden="hidden" />
+        <form id="AddorUpdate">
+            <p>
+                <span class="cl100">省份：</span>
+                <input class="easyui-combobox txt150" style="width:150px;" id="Province" editable="false" required missingmessage="省份必须选择！" />
+            </p>
+            <p>
+                <span class="cl100">城市：</span>
+                <input class="easyui-combobox txt150" style="width:150px;" id="City" editable="false" required missingmessage="城市必须选择！" />
+            </p>
+            <p>
+                <span class="cl100">县区：</span>
+                <input class="easyui-combobox txt150" style="width:150px;" id="Country" editable="false" required missingmessage="县区必须选择！" />
+            </p>
+            <p>
+                <span class="cl100">Oracle号：</span>
+                <input class="easyui-textbox txt150" style="width:150px;" id="OracleNO" />
+            </p>
+            <p>
+                <span class="cl100">OracleName：</span>
+                <input class="easyui-textbox txt150" style="width:150px;" id="OracleName" />
+            </p>
+            <p>
+                <span class="cl100">客户名：</span>
+                <input class="easyui-textbox txt150" style="width:150px;" id="CustomerName" required missingmessage="客户名必须填写！" />
+            </p>
+            <p>
+                <span class="cl100">XSW编号：</span>
+                <input class="easyui-textbox txt150" style="width:150px;" id="XSWNO" required missingmessage="XSW编号必须填写！" />
+            </p>
+        </form>
+    </div>
+</div>
+
+@*停用原因*@
+<div id="StopWindow">
+    <div class="AddContent">
+        <form id="StopForm">
+            <p>
+                <span class="cl100">原因：</span>
+                <input class="easyui-textbox txt300" style="width:300px;" data-options="multiline:true" style="height:50px" id="NoActiveReason" />
+            </p>
+        </form>
+    </div>
+</div>
+
+@*//导入*@
+<div id="ImportCustomer">
+    <div class="AddContent">
+        <form id="CustomerFileform" method="post" enctype="multipart/form-data">
+            <p>
+                <input id="CustomerFile" class="easyui-filebox txt410" style="width:410px;" name="CustomerFile" data-options="prompt:'导入客户信息文件',accept:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel' ,buttonText:'选择导入文件'">
+            </p>
+            <br />
+            <p>
+                <a href="~/TempLate/IMP_CustomerInfo.xlsx">下载客户信息导入模板</a>
+            </p>
+        </form>
+    </div>
+</div>
+

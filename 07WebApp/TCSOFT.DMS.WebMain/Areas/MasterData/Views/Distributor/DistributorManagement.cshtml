@@ -1,0 +1,876 @@
+﻿@{
+    Layout = null;
+    ViewBag.SearchOption = "prompt:'支持经销商编号、经销商名称模糊查询',searcher:doSearch";
+    ViewBag.SearchCombination = "<select id='searchdistype' class='txt350 ' style='width:365px' editable='false' panelHeight='auto'  buttonText='经销商类别'></select>" +
+        "<select id='searchdisservicetype' class='txt450 ' style='width:500px' editable='false' panelHeight='auto'  buttonText='经销商服务类型'></select>";
+}
+
+<script type="text/javascript">
+    $(function () {
+        $('#file1').filebox({
+            buttonText: '选择文件',
+            buttonAlign: 'right'
+        })
+
+        $('#grid').datagrid({
+            url: '',
+            iconCls: 'icon-view',
+            width: function () { return document.body.clientWidth * 0.9 },
+            nowrap: true,
+            autoRowHeight: true,
+            striped: true,
+            collapsible: false,
+            pagination: true,
+            pageSize: 10,
+            pageList: [10, 20, 30],
+            rownumbers: true,
+            sortOrder: 'desc',
+            remoteSort: false,
+            singleSelect: true,
+            idField: 'DistributorID',
+            queryParams: {},
+            animate: true,
+            columns: [[
+            { title: 'DistributorID', field: 'DistributorID', hidden: true, width: 1, halign: 'center', align: 'center' },
+            { title: '状态', field: 'IsActivestr', width: 80, halign: 'center', align: 'center' },
+                 { title: '经销商编号', field: 'DistributorCode', width: 230, halign: 'center', align: 'left' },
+                { title: '经销商名称', field: 'DistributorName', width: 380, halign: 'center', align: 'left' },
+                { title: '经销商类别', field: 'DistributorTypeName', width: 250, halign: 'center', align: 'left' },
+                { title: '经销商服务类型', field: 'DistributorServiceTypeName', width: 200, halign: 'center', align: 'left' },
+                { title: '注册省份', field: 'RegionName', width: 150, halign: 'center', align: 'center' },
+                { title: '发票地址编号', field: 'InvoiceCode', width: 150, halign: 'center', align: 'center' },
+                { title: '送货地址编号', field: 'DeliverCode', width: 150, halign: 'center', align: 'center' },
+                { title: 'CSR用户名（试剂）', field: 'CSRNameReagent', width: 180, halign: 'center', align: 'center' },
+                { title: 'CSR用户名（维修D部）', field: 'CSRNameD', width: 180, halign: 'center', align: 'center' },
+                { title: 'CSR用户名（维修B部）', field: 'CSRNameB', width: 180, halign: 'center', align: 'center' },
+                { title: '办事处', field: 'Office', width: 180, halign: 'center', align: 'center' },
+                {
+                    title: '停用时间', field: 'NoActiveTime', width: 150, halign: 'center', align: 'center', formatter: function (value, row, index) {
+                        if (value != null) {
+                            return jsonDateFormat(value);
+                        }
+                    }
+                },
+                {
+                    title: '附件', field: 'IsAtt', width: 100, halign: 'center', align: 'center', formatter: function (value, row, index) {
+                        if (value != null && value == true) {
+                            return '<a href="/Distributor/DownloadAttachments?DistributorID=' + row.DistributorID + '">下载</a>';
+                        }
+                    }
+                }
+            ]]
+        });
+        $('#searchdistype').combobox({
+            url: '@Url.Action("GetSearchDistributorTypeList", "Distributor")',
+            valueField: 'DistributorTypeID',
+            textField: 'DistributorTypeName',
+            editable: false,
+            value: -1,
+            onSelect: function (row) {
+                $("#serchText").searchbox('setValue', null);
+                $('#grid').datagrid({
+                    url: '@Url.Action("GetDistributorList", "Distributor")', queryParams: {
+                        DistributorTypeID: row.DistributorTypeID == -1 ? null : row.DistributorTypeID,
+                        DistributorServiceTypeID: $('#searchdisservicetype').combobox("getValue") == -1 ? null : $('#searchdisservicetype').combobox("getValue")
+                    }
+                });
+            }
+        });
+        $('#searchdisservicetype').combobox({
+            url: '@Url.Action("GetSearchDistributorServiceTypeList", "Distributor")',
+            valueField: 'DistributorServiceTypeID',
+            textField: 'DistributorServiceTypeName',
+            editable: false,
+            value: -1,
+            onSelect: function (row) {
+                $("#serchText").searchbox('setValue', null);
+                $('#grid').datagrid("clearSelections");
+                $('#grid').datagrid({
+                    url: '@Url.Action("GetDistributorList", "Distributor")', queryParams: {
+                        DistributorServiceTypeID: row.DistributorServiceTypeID == -1 ? null : row.DistributorServiceTypeID,
+                        DistributorTypeID: $('#searchdistype').combobox("getValue") == -1 ? null : $('#searchdistype').combobox("getValue")
+                    }
+                });
+            }
+        });
+        $('#griddep').datagrid({
+            iconCls: 'icon-view',
+            width: 660,
+            nowrap: true,
+            autoRowHeight: true,
+            striped: true,
+            collapsible: false,
+            pagination: true,
+            pageSize: 10,
+            pageList: [10, 20, 30],
+            rownumbers: true,
+            sortOrder: 'desc',
+            remoteSort: false,
+            singleSelect: true,
+            idField: 'DistributorID',
+            animate: true,
+            columns: [[
+                 { title: 'DistributorID', field: 'DistributorID', hidden: true, width: 1, halign: 'center', align: 'center' },
+                 { title: '经销商编号', field: 'DistributorCode', width: 150, halign: 'center', align: 'center' },
+                 { title: '经销商', field: 'DistributorName', width: 150, halign: 'center', align: 'center' },
+                 { title: '注册省份', field: 'RegionName', width: 100, halign: 'center', align: 'center' },
+                 { title: '经销商类别', field: 'DistributorTypeName', width: 200, halign: 'center', align: 'center' },
+                 { title: '经销商服务类型', field: 'DistributorServiceTypeName', width: 100, halign: 'center', align: 'center' }
+            ]]
+        });
+        //新增/修改
+        $('#AddorUpdateWindow').dialog({
+            width: 'auto',
+            height: 'auto',
+            top: 10,
+            modal: true,
+            closed: true,
+            inline: true,
+            buttons: [{
+                text: '确定',
+                handler: function () {
+                    SaveInfo();
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    $('#AddorUpdateWindow').dialog('close');
+                }
+            }],
+            onOpen: function () {
+
+            },
+            onClose: function () {
+
+            }
+        });
+        //停用原因
+        $('#StopWindow').dialog({
+            width: 'auto',
+            height: 'auto',
+            top: 100,
+            modal: true,
+            closed: true,
+            inline: true,
+            buttons: [{
+                text: '确定',
+                handler: function () {
+                    Actived();
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    $('#StopWindow').dialog('close');
+                }
+            }],
+            onOpen: function () {
+
+            },
+            onClose: function () {
+
+            }
+        });
+
+        //更名
+        $('#ChangeNameWindow').dialog({
+            width: 'auto',
+            height: 'auto',
+            top: 20,
+            modal: true,
+            closed: true,
+            inline: true,
+            buttons: [{
+                text: '执行',
+                handler: function () {
+                    SaveinfoChangeName();
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    $('#ChangeNameWindow').dialog('close');
+                }
+            }],
+            onOpen: function () {
+
+            },
+            onClose: function () {
+
+            }
+        });
+        //选择经销商
+        $('#DistributorWindow').dialog({
+            title: "选择经销商",
+            width: 'auto',
+            height: 'auto',
+            top: 20,
+            modal: true,
+            closed: true,
+            inline: true,
+            buttons: [{
+                text: '确定',
+                handler: function () {
+                    SaveInfodep();
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    $('#DistributorWindow').dialog('close');
+                }
+            }],
+            onOpen: function () {
+
+            },
+            onClose: function () {
+
+            }
+        });
+        //上传附件
+        $('#UploadWindow').dialog({
+            title: "上传附件",
+            width: 'auto',
+            height: 'auto',
+            top: 50,
+            modal: true,
+            closed: true,
+            inline: true,
+            buttons: [{
+                text: '确定',
+                handler: function () {
+                    Upload();
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    $('#UploadWindow').dialog('close');
+                }
+            }],
+            onOpen: function () {
+
+            },
+            onClose: function () {
+
+            }
+        });
+        //导入
+        $('#ImportDistributor').dialog({
+            width: 'auto',
+            height: 'auto',
+            top: 100,
+            modal: true,
+            closed: true,
+            inline: true,
+            buttons: [{
+                text: '确定',
+                handler: function () {
+                    if ($('#DistributorFile').filebox('getValue') == "")
+                    { alert("请选择导入的文件！") }
+                    else {
+                        $('#DistributorFileform').submit();;
+                    }
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    $('#ImportDistributor').dialog('close');
+                }
+            }],
+            title: "导入经销商信息",
+            onOpen: function () {
+
+            },
+            onClose: function () {
+
+            }
+        });
+        //上传附件
+        $('#form0').ajaxForm({
+            dataType: 'json',
+            beforeSend: function () {
+            },
+            success: function () {
+            },
+            complete: function (data) {
+                var jsonObject = jQuery.parseJSON(data.responseText);
+                if (jsonObject) {
+                    alert("上传成功");
+                    $('#grid').datagrid("reload");
+                    $('#UploadWindow').dialog('close');
+                } else {
+                    alert("上传失败！");
+                }
+            }
+        });
+        //导入
+        $('#DistributorFileform').ajaxForm({
+            url: '@Url.Action("ImportDistributor", "Distributor")',
+            dataType: 'json',
+            beforeSend: function () {
+            },
+            success: function () {
+            },
+            complete: function (data) {
+                if (!data.responseJSON) {
+                    alert("导入成功！")
+                    $('#ImportDistributor').dialog('close');
+                    $('#grid').datagrid("clearSelections");
+                    $('#grid').datagrid("reload", { SearchText: null, DistributorTypeID: null, DistributorServiceTypeID: null });
+                }
+                else {
+                    if (data.responseJSON == "导入失败") {
+                        alert("导入失败！");
+                    }
+                    else {
+                        alert("导入失败，即将下载错误文件！");
+                        window.location.href = "/Distributor/DownloadDistributor?filename=" + data.responseJSON;
+                    }
+                }
+            }
+        });
+    })
+
+    function doSearch(value) {
+        var distype = null;
+        if ($('#searchdistype').combobox("getValue") != "-1") {
+            distype = $('#searchdistype').combobox("getValue");
+        }
+        var disservicetype = null;
+        if ($('#searchdisservicetype').combobox("getValue") != "-1") {
+            disservicetype = $('#searchdisservicetype').combobox("getValue");
+        }
+        $('#grid').datagrid("clearSelections");
+        $('#grid').datagrid('reload', { SearchText: value, DistributorTypeID: distype, DistributorServiceTypeID: disservicetype });
+    }
+
+    function ClickAdd() {
+        DistributorTypeName();
+        DistributorServiceTypeName();
+        RegionName();
+        $("#serchText").searchbox('setValue', null);
+        $('#searchdistype').combobox('setValue', '请选择', '-1');
+        $('#searchdisservicetype').combobox('setValue', '请选择', '-1');
+        $('#DistributorCode').textbox({ disabled: false });
+        $('#DistributorCode').textbox('setValue', null);
+        $('#DistributorName').textbox('setValue', null);
+        $('#DistributorTypeName').combobox('setValue', null);
+        $('#DistributorServiceTypeName').combobox('setValue', null);
+        $('#RegionName').combobox('setValue', null);
+        $('#InvoiceCode').textbox('setValue', null);
+        $('#DeliverCode').textbox('setValue', null);
+        $('#CSRNameReagent').textbox('setValue', null);
+        $('#CSRNameD').textbox('setValue', null);
+        $('#CSRNameB').textbox('setValue', null);
+        $('#Office').textbox('setValue', null);
+        $("#AddUp").val(0);
+        $('#AddorUpdateWindow').dialog({ title: "新增经销商" });
+        $('#AddorUpdateWindow').dialog('open');
+    }
+    function ClickModify() {
+        var row = $("#grid").datagrid("getSelected");
+        if (row == null) {
+            alert("您还没有选择经销商，请选择！");
+            return;
+        }
+        DistributorTypeName();
+        DistributorServiceTypeName();
+        RegionName();
+        $('#DistributorCode').textbox({ disabled: true });
+        $.post("@Url.Action("GetOneDistributor", "Distributor")", {
+            DistributorID: row.DistributorID
+        }, function (data) {
+            if (data.SubmitResult) {
+                $('#DistributorCode').textbox('setValue', data.Object.DistributorCode);
+                $('#DistributorName').textbox('setValue', data.Object.DistributorName);
+                $('#DistributorTypeName').combobox('setValue', data.Object.DistributorTypeID);
+                $('#DistributorServiceTypeName').combobox('setValue', data.Object.DistributorServiceTypeID);
+                $('#RegionName').combobox('setValue', data.Object.RegionID);
+                $('#InvoiceCode').textbox('setValue', data.Object.InvoiceCode);
+                $('#DeliverCode').textbox('setValue', data.Object.DeliverCode);
+                $('#CSRNameReagent').textbox('setValue', data.Object.CSRNameReagent);
+                $('#CSRNameD').textbox('setValue', data.Object.CSRNameD);
+                $('#CSRNameB').textbox('setValue', data.Object.CSRNameB);
+                $('#Office').textbox('setValue', data.Object.Office);
+                $("#AddUp").val(1);
+                $('#AddorUpdateWindow').dialog({ title: "修改经销商" });
+                $('#AddorUpdateWindow').dialog('open');
+            } else {
+                alert(data.Message);
+            }
+        });
+    }
+    function ClickDel() {
+        var row = $("#grid").datagrid("getSelected");
+        if (row == null) {
+            alert("您还没有选择经销商，请选择！");
+            return;
+        }
+        $.messager.confirm('提示', '是否删除选中数据?', function (data) {
+            if (!data) {
+                return;
+            }
+            $.post("@Url.Action("DeleteDistributor", "Distributor")", {
+                DistributorID: row.DistributorID
+            }, function (data) {
+                if (data.SubmitResult) {
+                    $('#grid').datagrid("clearSelections");
+                    $('#grid').datagrid("reload");
+                } else {
+                    alert(data.Message);
+                }
+            });
+        });
+    }
+    function SaveInfo() {
+        if ($("#AddorUpdate").form('validate')) {
+            if ($("#AddUp").val() == 0) {
+                $.post("@Url.Action("AddDistributor", "Distributor")", {
+                    DistributorCode: $('#DistributorCode').textbox('getValue'),
+                    DistributorName: $('#DistributorName').textbox('getValue'),
+                    DistributorTypeID: $('#DistributorTypeName').combobox('getValue'),
+                    DistributorServiceTypeID: $('#DistributorServiceTypeName').combobox('getValue'),
+                    RegionID: $('#RegionName').combobox('getValue'),
+                    InvoiceCode: $('#InvoiceCode').textbox('getValue'),
+                    DeliverCode: $('#DeliverCode').textbox('getValue'),
+                    CSRNameReagent: $('#CSRNameReagent').textbox('getValue'),
+                    CSRNameD: $('#CSRNameD').textbox('getValue'),
+                    CSRNameB: $('#CSRNameB').textbox('getValue'),
+                    Office: $('#Office').textbox('getValue')
+                }, function (data) {
+                    if (data.SubmitResult) {
+                        $('#grid').datagrid("clearSelections");
+                        $('#grid').datagrid("reload", { SearchText: null, DistributorTypeID: null, DistributorServiceTypeID: null });
+                        $('#AddorUpdateWindow').dialog('close')
+                    } else {
+                        alert(data.Message);
+                    }
+                });
+            } else {
+                var row = $('#grid').datagrid('getSelected');
+                $.post("@Url.Action("UpdateDistributor", "Distributor")", {
+                    DistributorID: row.DistributorID,
+                    DistributorCode: $('#DistributorCode').textbox('getValue'),
+                    DistributorName: $('#DistributorName').textbox('getValue'),
+                    DistributorTypeID: $('#DistributorTypeName').combobox('getValue'),
+                    DistributorServiceTypeID: $('#DistributorServiceTypeName').combobox('getValue'),
+                    RegionID: $('#RegionName').combobox('getValue'),
+                    InvoiceCode: $('#InvoiceCode').textbox('getValue'),
+                    DeliverCode: $('#DeliverCode').textbox('getValue'),
+                    CSRNameReagent: $('#CSRNameReagent').textbox('getValue'),
+                    CSRNameD: $('#CSRNameD').textbox('getValue'),
+                    CSRNameB: $('#CSRNameB').textbox('getValue'),
+                    Office: $('#Office').textbox('getValue')
+                }, function (data) {
+                    if (data.SubmitResult) {
+                        $('#grid').datagrid("reload");
+                        $('#AddorUpdateWindow').dialog('close')
+                    } else {
+                        alert(data.Message);
+                    }
+                });
+            }
+        }
+    }
+    function ClickChange() {
+        $('#OleDepID').val(null);
+        $('#OleDepName').textbox('setValue', null);
+        $('#OleDepCode').textbox('setValue', null);
+        $('#NewDepID').val(null);
+        $('#NewDepName').textbox('setValue', null);
+        $('#NewDepCode').textbox('setValue', null);
+        $("[name='chkModel']").removeAttr("checked");
+        $('#ChangeNameWindow').dialog({ title: "经销商更名" });
+        $('#ChangeNameWindow').dialog('open');
+    }
+    function ClickActived() {
+        var row = $('#grid').datagrid('getSelected');
+        if (row.length == 0) {
+            alert("您还没有选择用户，请选择！");
+            return;
+        }
+        $('#Reason').textbox('setValue', null);
+        if (row.IsActivestr == "启用") {
+            $('#StopWindow').dialog({ title: "停用原因" });
+            $('#StopWindow').dialog('open');
+        } else {
+            $.post("@Url.Action("StartOrStopDistributor", "Distributor")", {
+                DistributorID: row.DistributorID,
+                IsActive: true
+            }, function (data) {
+                if (data.SubmitResult) {
+                    $('#grid').datagrid("reload");
+                } else {
+                    alert(data.Message);
+                }
+            })
+        }
+    }
+    function Actived() {
+        var row = $('#grid').datagrid('getSelected');
+        if ($("#StopForm").form('validate')) {
+            $.post("@Url.Action("StartOrStopDistributor", "Distributor")", {
+                DistributorID: row.DistributorID,
+                IsActive: false,
+                NoActiveReason: $('#Reason').textbox('getValue')
+            }, function (data) {
+                if (data.SubmitResult) {
+                    $('#grid').datagrid("reload");
+                    $('#StopWindow').dialog('close');
+                } else {
+                    alert(data.Message);
+                }
+            })
+        }
+    }
+    function ChoiceDep(nuder) {
+        $("#OleNew").val(nuder);
+        $('#griddep').datagrid("clearSelections");
+        $('#griddep').datagrid({
+            url: '@Url.Action("GetDistributorList", "Distributor")'
+        });
+        $('#DistributorWindow').dialog('open');
+    }
+    function SaveInfodep() {
+        var row = $('#griddep').datagrid('getSelected');
+        if (row == null) {
+            alert("您还没有选择经销商，请选择！");
+            return;
+        }
+        if ($("#OleNew").val() == 1) {
+            $('#OleDepID').val(row.DistributorID);
+            $('#OleDepName').textbox('setValue', row.DistributorName);
+            $('#OleDepCode').textbox('setValue', row.DistributorCode);
+        } else {
+            $('#NewDepID').val(row.DistributorID);
+            $('#NewDepName').textbox('setValue', row.DistributorName);
+            $('#NewDepCode').textbox('setValue', row.DistributorCode);
+        }
+        $('#DistributorWindow').dialog('close');
+    }
+    function SaveinfoChangeName() {
+        if ($("#ChangeName").form('validate')) {
+            $.post("@Url.Action("ChangeNameDistributor", "Distributor")", {
+                OleDepID: $('#OleDepID').val(),
+                OleDepName: $('#OleDepName').textbox('getValue'),
+                OleDepCode: $('#OleDepCode').textbox('getValue'),
+                NewDepID: $('#NewDepID').val(),
+                NewDepName: $('#NewDepName').textbox('getValue'),
+                NewDepCode: $('#NewDepCode').textbox('getValue'),
+                Prediction: $("input[id='Prediction']").is(':checked'),
+                Messaging: $("input[id='Messaging']").is(':checked'),
+                Sales: $("input[id='Sales']").is(':checked'),
+                Information: $("input[id='Information']").is(':checked'),
+                Inventory: $("input[id='Inventory']").is(':checked'),
+                ProfileBulletin: $("input[id='ProfileBulletin']").is(':checked'),
+                GeneralContract: $("input[id='GeneralContract']").is(':checked'),
+                LeaseContract: $("input[id='LeaseContract']").is(':checked'),
+                OKCPrice: $("input[id='OKCPrice']").is(':checked'),
+                PriceStatus: $("input[id='PriceStatus']").is(':checked'),
+                MinimumOrderQuantity: $("input[id='MinimumOrderQuantity']").is(':checked'),
+                MinimumOrderAmount: $("input[id='MinimumOrderAmount']").is(':checked'),
+                ReactionCupBalance: $("input[id='ReactionCupBalance']").is(':checked'),
+                FOCBalance: $("input[id='FOCBalance']").is(':checked'),
+                InventoryInitialInventory: $("input[id='InventoryInitialInventory']").is(':checked'),
+            }, function (data) {
+                if (data.SubmitResult) {
+                    $('#grid').datagrid("reload");
+                    $('#ChangeNameWindow').dialog('close');
+                    alert("更名成功");
+                } else {
+                    alert(data.Message);
+                }
+            })
+        }
+    }
+    //经销商类别
+    function DistributorTypeName() {
+        $('#DistributorTypeName').combobox({
+            url: '@Url.Action("GetDistributorTypeList", "Distributor")',
+            valueField: 'DistributorTypeID',
+            textField: 'DistributorTypeName',
+            editable: false,
+            onLoadSuccess: function (data) {
+                return;
+            }
+        });
+    }
+    //经销商服务类型
+    function DistributorServiceTypeName() {
+        $('#DistributorServiceTypeName').combobox({
+            url: '@Url.Action("GetDistributorServiceTypeList", "Distributor")',
+            valueField: 'DistributorServiceTypeID',
+            textField: 'DistributorServiceTypeName',
+            editable: false,
+            onLoadSuccess: function (data) {
+                return;
+            }
+        });
+    }
+    //省份
+    function RegionName() {
+        $('#RegionName').combobox({
+            url: '@Url.Action("GetProvinceRegionList", "AreaRegion")',
+            valueField: 'RegionID',
+            textField: 'RegionName',
+            editable: false,
+            onLoadSuccess: function (data) {
+                return;
+            }
+        });
+    }
+    //获取json传来的时间格式化为YYYY-MM-DD HH:mm:ss
+    function jsonDateHMSFormat(jsonDate) {
+        var date = new Date(parseInt(jsonDate.replace("/Date(", "").replace(")/", ""), 10));
+        var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+        var day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+        var h = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+        var m = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+        var s = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+        return date.getFullYear() + "-" + month + "-" + day + " " + h + ":" + m + ":" + s;
+    }
+    //获取json传来的时间格式化为YYYY-MM-DD
+    function jsonDateFormat(jsonDate) {
+        if (jsonDate != null) {
+            var date = new Date(parseInt(jsonDate.replace("/Date(", "").replace(")/", ""), 10));
+            var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+            var day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+            return date.getFullYear() + "-" + month + "-" + day;
+        }
+    }
+    function ClickUpload() {
+        var row = $("#grid").datagrid("getSelected");
+        if (row == null) {
+            alert("您还没有选择经销商，请选择！");
+            return;
+        }
+        $("#DistributorID").val(row.DistributorID);
+        $('#file1').filebox("clear");
+        $('#UploadWindow').dialog('open');
+    }
+    function check() {
+        if ($("#impfilepath1").val() == '') {
+            alert('上传文件不能为空！');
+            return false;
+        }
+        return true;
+    }
+    function Upload() {
+        $('#form0').submit();
+    }
+    // 导出
+    function ClickExport() {
+        $.post("@Url.Action("ExportDistributor", "Distributor")", {
+            SearchText: $("#serchText").searchbox('getValue'),
+            DistributorTypeID: $('#searchdistype').combobox('getValue') == -1 ? null : $('#searchdistype').combobox('getValue'),
+            DistributorServiceTypeID: $('#searchdisservicetype').combobox('getValue') == -1 ? null : $('#searchdisservicetype').combobox('getValue')
+        }, function (data) {
+            if (data) {
+                window.location.href = "/Distributor/DownloadDistributor?filename=" + data;
+            } else {
+                alert("导出失败！");
+            }
+        })
+    }
+    // 导入
+    function ClickImport() {;
+        $('#DistributorFile').filebox("clear");
+        $('#ImportDistributor').dialog('open');
+    }
+</script>
+<div class="easyui-layout" data-options="fit:true" style="height:100%;">
+    <div region="north" style="height:94px">
+        @Html.Partial("_Partialtool")
+    </div>
+    <div region="center">
+        <div id="BodyContentDiv">
+            <table id="grid" fit="true"></table>
+        </div>
+    </div>
+</div>
+@*新增/修改*@
+<div id="AddorUpdateWindow">
+    <div class="AddContent">
+        <input id="AddUp" type="text" hidden="hidden" />
+        <form id="AddorUpdate">
+            <p id="Numberdiv">
+                <span class="cl120" style="width:150px">经销商编号：</span>
+                <input class="easyui-textbox txt150" style="width:150px;" id="DistributorCode" required missingmessage="经销商编号必须填写！" />
+            </p>
+            <p>
+                <span class="cl120" style="width:150px">经销商名称：</span>
+                <input class="easyui-textbox txt150" style="width:150px;" id="DistributorName" required missingmessage="经销商名称必须选择！" />
+            </p>
+            <p>
+                <span class="cl120" style="width:150px">经销商类别：</span>
+                <select class="easyui-combobox txt150" style="width:150px;" id="DistributorTypeName" editable="false" required missingmessage="经销商类别必须选择！"></select>
+            </p>
+            <p>
+                <span class="cl120" style="width:150px">经销商服务类型：</span>
+                <select class="easyui-combobox txt150" style="width:150px;" id="DistributorServiceTypeName" editable="false" required missingmessage="经销商服务类型必须选择！"></select>
+            </p>
+            <p>
+                <span class="cl120" style="width:150px">注册省份：</span>
+                <select class="easyui-combobox  txt150" style="width:150px;" id="RegionName" editable="false" required missingmessage="注册省份必须选择！"></select>
+            </p>
+            <p>
+                <span class="cl120" style="width:150px">发货地址编号：</span>
+                <input class="easyui-textbox txt150" style="width:150px;" id="InvoiceCode" required missingmessage="发货地址编号必须填写！" />
+            </p>
+            <p>
+                <span class="cl120" style="width:150px">送货地址编号：</span>
+                <input class="easyui-textbox txt150" style="width:150px;" id="DeliverCode" required missingmessage="送货地址编号必须填写！" />
+
+            </p>
+            <p>
+                <span class="cl120" style="width:150px">CSR用户名（试剂）：</span>
+                <input class="easyui-textbox txt150" style="width:150px;" id="CSRNameReagent" />
+
+            </p>
+            <p>
+                <span class="cl120" style="width:150px">CSR用户名(维修D部)：</span>
+                <input class="easyui-textbox txt150" style="width:150px;" id="CSRNameD" />
+
+            </p>
+            <p>
+                <span class="cl120" style="width:150px">CSR用户名(维修B部)：</span>
+                <input class="easyui-textbox txt150" style="width:150px;" id="CSRNameB" />
+            </p>
+            <p>
+                <span class="cl120" style="width:150px">办事处：</span>
+                <input class="easyui-textbox txt150" style="width:150px;" id="Office" />
+            </p>
+        </form>
+    </div>
+</div>
+
+@*停用原因*@
+<div id="StopWindow">
+    <div class="AddContent">
+        <form id="StopForm">
+            <p>
+                <span class="cl100">原因：</span>
+                <input class="easyui-textbox txt300" style="width:300px;height:50px" data-options="multiline:true" id="Reason" required missingmessage="停用原因必须填写！" />
+            </p>
+        </form>
+    </div>
+</div>
+
+@*经销商更名*@
+<div id="ChangeNameWindow">
+    <div class="AddContent">
+        <form id="ChangeName">
+            <p style="width:860px;">
+                <span>老经销商名称：</span>
+                <input class="easyui-textbox" style="width:200px;" id="OleDepName" required missingmessage="老经销商名称必须选择！" />
+                <a href="#" class="easyui-linkbutton" onclick="ChoiceDep(1)">选择</a>
+                <span>复制到</span>
+                <span>新经销商名称：</span>
+                <input class="easyui-textbox" style="width:200px;" id="NewDepName" required missingmessage="新经销商名称必须选择！" />
+                <a href="#" class="easyui-linkbutton" onclick="ChoiceDep(2)">选择</a>
+            </p>
+            <p>
+                <input type="text" id="OleDepID" hidden="hidden">
+                <span>老经销商编号：</span>
+                <input class="easyui-textbox" style="width:200px;" id="OleDepCode" required missingmessage="老经销商编号必须填写！" />
+                <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <input type="text" id="NewDepID" hidden="hidden">
+                <span>新经销商编号：</span>
+                <input class="easyui-textbox" style="width:200px;" id="NewDepCode" required missingmessage="新经销商编号必须填写！" />
+            </p>
+            <p>
+                勾选需要复制的模块数据
+            </p>
+            <div style="margin-left:200px">
+                <table>
+                    <tr>
+                        <td><input type="checkbox" name="chkModel" id="Prediction" disabled="disabled"></td>
+                        <td>预测数据</td>
+                        <td><input type="checkbox" name="chkModel" id="Messaging" disabled="disabled"></td>
+                        <td>即时消息</td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" name="chkModel" id="Sales"></td>
+                        <td>销售数据</td>
+                        <td><input type="checkbox" name="chkModel" id="Information" disabled="disabled"></td>
+                        <td>信息提示栏</td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" name="chkModel" id="Inventory"></td>
+                        <td>库存数据</td>
+                        <td><input type="checkbox" name="chkModel" id="ProfileBulletin"></td>
+                        <td>中文简介系统公告</td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" name="chkModel" id="GeneralContract"></td>
+                        <td>普通合同</td>
+                        <td><input type="checkbox" name="chkModel" id="LeaseContract"></td>
+                        <td>租赁合同</td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" name="chkModel" id="OKCPrice"></td>
+                        <td>OKC价</td>
+                        <td><input type="checkbox" name="chkModel" id="PriceStatus"></td>
+                        <td>价格启用/禁用状态</td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" name="chkModel" id="MinimumOrderQuantity"></td>
+                        <td>最低订货量</td>
+                        <td><input type="checkbox" name="chkModel" id="MinimumOrderAmount" disabled="disabled"></td>
+                        <td>最小订单金额</td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" name="chkModel" id="ReactionCupBalance"></td>
+                        <td>反应杯余额</td>
+                        <td><input type="checkbox" name="chkModel" id="FOCBalance"></td>
+                        <td>FOC余额</td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" name="chkModel" id="InventoryInitialInventory"></td>
+                        <td colspan="3">库存最后一个月的数据复制到新经销商的初期库存</td>
+                    </tr>
+                </table>
+            </div>
+        </form>
+    </div>
+</div>
+
+@*经销商*@
+<div id="DistributorWindow">
+    <div class="AddContent">
+        <input type="text" id="OleNew" hidden="hidden">
+        <form id="AddorUpdatedep">
+            <table id="griddep" style="height:255px;"></table>
+        </form>
+    </div>
+</div>
+
+@*上传附件*@
+<div id="UploadWindow">
+    @using (Ajax.BeginForm("UploadAttachments", "Distributor", new AjaxOptions { HttpMethod = "Post" }, new { enctype = "multipart/form-data", @onsubmit = "return check()" }))
+    {
+
+        @Html.Hidden("DistributorID", null)
+        <div id="ContentArea" class="AddContent">
+            <p><span class="DayAccount">选择上传附件：</span></p>
+            <p>
+                <input class="easyui-filebox txt350" style="width:350px;" name="file1" id="file1" data-options="prompt:'选择文件...'" />
+            </p>
+        </div>
+
+    }
+</div>
+
+
+
+@*导入*@
+<div id="ImportDistributor">
+    <div class="AddContent">
+        <form id="DistributorFileform" method="post" enctype="multipart/form-data">
+            <p>
+                <input id="DistributorFile" class="easyui-filebox txt410" style="width:410px;" name="DistributorFile" data-options="prompt:'导入经销商信息文件',accept:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel' ,buttonText:'选择导入文件'">
+            </p>
+            <br />
+            <p>
+                <a href="~/TempLate/IMP_Distributor.xlsx">下载经销商信息导入模板</a>
+            </p>
+        </form>
+    </div>
+</div>

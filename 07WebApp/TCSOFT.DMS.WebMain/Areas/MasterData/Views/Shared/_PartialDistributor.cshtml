@@ -1,0 +1,45 @@
+﻿<script type="text/javascript">
+    function PartialDistributor() {
+        $('#PartialDistributorgrid').datagrid({
+            url: '',
+            iconCls: 'icon-view',
+            width: function () { return document.body.clientWidth * 0.9 },
+            nowrap: true,
+            autoRowHeight: true,
+            striped: true,
+            collapsible: false,
+            pagination: true,
+            pageSize: 10,
+            pageList: [10, 20, 30],
+            rownumbers: true,
+            sortOrder: 'desc',
+            remoteSort: false,
+            singleSelect: true,
+            idField: 'ID',
+            queryParams: {},
+            animate: true,
+            columns: [[
+                { field: 'ck', checkbox: true },
+                 { title: 'ID', field: 'ID', hidden: true, width: 1, halign: 'center', align: 'center' },
+                 { title: '经销商编号', field: 'qq', width: 280, halign: 'center', align: 'center' },
+                { title: '经销商名称', field: 'qq', width: 280, halign: 'center', align: 'center' },
+                { title: '经销商类别', field: 'qq', width: 80, halign: 'center', align: 'center' },
+                { title: 'CSR用户名', field: 'qq', width: 280, halign: 'center', align: 'center' },
+                { title: '办事处', field: 'qq', width: 280, halign: 'center', align: 'center' }
+            ]]
+        });
+    }
+</script>
+
+
+<div style="height:100%;">
+    <div style="width: 100% ;height:80%;">
+        <table id="PartialDistributorgrid" style="height:100%;"></table>
+    </div>
+    
+    <div class="operatStyle">
+        <a href="#" class="easyui-linkbutton" >确定</a>
+        <a href="#" class="easyui-linkbutton"  onclick="CloseDistributor()">取消</a>
+    </div>
+   
+</div>

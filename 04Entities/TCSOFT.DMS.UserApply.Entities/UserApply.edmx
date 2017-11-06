@@ -1,0 +1,269 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="TCDMS_UserApplyModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="UserApply_ApplyBatch">
+          <Key>
+            <PropertyRef Name="BatchID" />
+          </Key>
+          <Property Name="BatchID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="BatchName" Type="nvarchar" MaxLength="50" />
+          <Property Name="ApplyUser" Type="nvarchar" MaxLength="50" />
+          <Property Name="ApplyUserPhone" Type="varchar" MaxLength="15" />
+          <Property Name="ApplyUserEamil" Type="varchar" MaxLength="50" />
+          <Property Name="AuditStatus" Type="smallint" />
+          <Property Name="ApplyTime" Type="datetime" />
+          <Property Name="DistributorID" Type="varchar" MaxLength="200" />
+          <Property Name="Status" Type="smallint" />
+          <Property Name="CreateUser" Type="nvarchar" MaxLength="50" />
+          <Property Name="CreateTime" Type="datetime" />
+          <Property Name="ModifyUser" Type="nvarchar" MaxLength="50" />
+          <Property Name="ModifyTime" Type="datetime" />
+        </EntityType>
+        <EntityType Name="UserApply_UserApplyAuthority">
+          <Key>
+            <PropertyRef Name="UserAppLyAuthorityID" />
+          </Key>
+          <Property Name="UserAppLyAuthorityID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserApplyID" Type="int" />
+          <Property Name="StructureID" Type="varchar" MaxLength="24" />
+          <Property Name="AppyUserButtonAuthority" Type="int" />
+          <Property Name="IsAdopt" Type="bit" />
+        </EntityType>
+        <EntityType Name="UserApply_UserApplyInfo">
+          <Key>
+            <PropertyRef Name="UserApplyID" />
+          </Key>
+          <Property Name="UserApplyID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BatchID" Type="uniqueidentifier" />
+          <Property Name="UserChangeID" Type="int" />
+          <Property Name="UserApplyName" Type="nvarchar" MaxLength="50" />
+          <Property Name="UserApplyTelNumber" Type="varchar" MaxLength="15" />
+          <Property Name="UserApplyEmail" Type="varchar" MaxLength="50" />
+          <Property Name="UserApplyType" Type="smallint" />
+          <Property Name="DistributorIDList" Type="varchar" MaxLength="200" />
+          <Property Name="UserApplyTime" Type="datetime" />
+          <Property Name="AuditStatus" Type="smallint" />
+          <Property Name="AuditRoleIDList" Type="varchar" MaxLength="100" />
+          <Property Name="AuditFalseReason" Type="nvarchar" MaxLength="3000" />
+          <Property Name="CreateUser" Type="nvarchar" MaxLength="50" />
+          <Property Name="CreateTime" Type="datetime" />
+          <Property Name="ModifyUser" Type="nvarchar" MaxLength="50" />
+          <Property Name="ModifyTime" Type="datetime" />
+        </EntityType>
+        <Association Name="FK_MASTER_U_REFERENCE_MASTER_U1">
+          <End Role="UserApply_UserApplyInfo" Type="Self.UserApply_UserApplyInfo" Multiplicity="0..1" />
+          <End Role="UserApply_UserApplyAuthority" Type="Self.UserApply_UserApplyAuthority" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserApply_UserApplyInfo">
+              <PropertyRef Name="UserApplyID" />
+            </Principal>
+            <Dependent Role="UserApply_UserApplyAuthority">
+              <PropertyRef Name="UserApplyID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_USERAPPL_REFERENCE_USERAPPL">
+          <End Role="UserApply_ApplyBatch" Type="Self.UserApply_ApplyBatch" Multiplicity="0..1" />
+          <End Role="UserApply_UserApplyInfo" Type="Self.UserApply_UserApplyInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserApply_ApplyBatch">
+              <PropertyRef Name="BatchID" />
+            </Principal>
+            <Dependent Role="UserApply_UserApplyInfo">
+              <PropertyRef Name="BatchID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="TCDMS_UserApplyModelStoreContainer">
+          <EntitySet Name="UserApply_ApplyBatch" EntityType="Self.UserApply_ApplyBatch" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserApply_UserApplyAuthority" EntityType="Self.UserApply_UserApplyAuthority" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserApply_UserApplyInfo" EntityType="Self.UserApply_UserApplyInfo" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_MASTER_U_REFERENCE_MASTER_U1" Association="Self.FK_MASTER_U_REFERENCE_MASTER_U1">
+            <End Role="UserApply_UserApplyInfo" EntitySet="UserApply_UserApplyInfo" />
+            <End Role="UserApply_UserApplyAuthority" EntitySet="UserApply_UserApplyAuthority" />
+          </AssociationSet>
+          <AssociationSet Name="FK_USERAPPL_REFERENCE_USERAPPL" Association="Self.FK_USERAPPL_REFERENCE_USERAPPL">
+            <End Role="UserApply_ApplyBatch" EntitySet="UserApply_ApplyBatch" />
+            <End Role="UserApply_UserApplyInfo" EntitySet="UserApply_UserApplyInfo" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="TCDMS_UserApplyModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="TCDMS_UserApplyEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="UserApply_ApplyBatch" EntityType="TCDMS_UserApplyModel.UserApply_ApplyBatch" />
+          <EntitySet Name="UserApply_UserApplyAuthority" EntityType="TCDMS_UserApplyModel.UserApply_UserApplyAuthority" />
+          <EntitySet Name="UserApply_UserApplyInfo" EntityType="TCDMS_UserApplyModel.UserApply_UserApplyInfo" />
+          <AssociationSet Name="FK_USERAPPL_REFERENCE_USERAPPL" Association="TCDMS_UserApplyModel.FK_USERAPPL_REFERENCE_USERAPPL">
+            <End Role="UserApply_ApplyBatch" EntitySet="UserApply_ApplyBatch" />
+            <End Role="UserApply_UserApplyInfo" EntitySet="UserApply_UserApplyInfo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MASTER_U_REFERENCE_MASTER_U1" Association="TCDMS_UserApplyModel.FK_MASTER_U_REFERENCE_MASTER_U1">
+            <End Role="UserApply_UserApplyInfo" EntitySet="UserApply_UserApplyInfo" />
+            <End Role="UserApply_UserApplyAuthority" EntitySet="UserApply_UserApplyAuthority" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="UserApply_ApplyBatch">
+          <Key>
+            <PropertyRef Name="BatchID" />
+          </Key>
+          <Property Name="BatchID" Type="Guid" Nullable="false" />
+          <Property Name="BatchName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ApplyUser" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ApplyUserPhone" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="ApplyUserEamil" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="AuditStatus" Type="Int16" />
+          <Property Name="ApplyTime" Type="DateTime" Precision="3" />
+          <Property Name="DistributorID" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="Status" Type="Int16" />
+          <Property Name="CreateUser" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CreateTime" Type="DateTime" Precision="3" />
+          <Property Name="ModifyUser" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ModifyTime" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="UserApply_UserApplyInfo" Relationship="TCDMS_UserApplyModel.FK_USERAPPL_REFERENCE_USERAPPL" FromRole="UserApply_ApplyBatch" ToRole="UserApply_UserApplyInfo" />
+        </EntityType>
+        <EntityType Name="UserApply_UserApplyAuthority">
+          <Key>
+            <PropertyRef Name="UserAppLyAuthorityID" />
+          </Key>
+          <Property Name="UserAppLyAuthorityID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserApplyID" Type="Int32" />
+          <Property Name="StructureID" Type="String" MaxLength="24" FixedLength="false" Unicode="false" />
+          <Property Name="AppyUserButtonAuthority" Type="Int32" />
+          <Property Name="IsAdopt" Type="Boolean" />
+          <NavigationProperty Name="UserApply_UserApplyInfo" Relationship="TCDMS_UserApplyModel.FK_MASTER_U_REFERENCE_MASTER_U1" FromRole="UserApply_UserApplyAuthority" ToRole="UserApply_UserApplyInfo" />
+        </EntityType>
+        <EntityType Name="UserApply_UserApplyInfo">
+          <Key>
+            <PropertyRef Name="UserApplyID" />
+          </Key>
+          <Property Name="UserApplyID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BatchID" Type="Guid" />
+          <Property Name="UserChangeID" Type="Int32" />
+          <Property Name="UserApplyName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="UserApplyTelNumber" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="UserApplyEmail" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="UserApplyType" Type="Int16" />
+          <Property Name="DistributorIDList" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="UserApplyTime" Type="DateTime" Precision="3" />
+          <Property Name="AuditStatus" Type="Int16" />
+          <Property Name="AuditRoleIDList" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="AuditFalseReason" Type="String" MaxLength="3000" FixedLength="false" Unicode="true" />
+          <Property Name="CreateUser" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CreateTime" Type="DateTime" Precision="3" />
+          <Property Name="ModifyUser" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ModifyTime" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="UserApply_ApplyBatch" Relationship="TCDMS_UserApplyModel.FK_USERAPPL_REFERENCE_USERAPPL" FromRole="UserApply_UserApplyInfo" ToRole="UserApply_ApplyBatch" />
+          <NavigationProperty Name="UserApply_UserApplyAuthority" Relationship="TCDMS_UserApplyModel.FK_MASTER_U_REFERENCE_MASTER_U1" FromRole="UserApply_UserApplyInfo" ToRole="UserApply_UserApplyAuthority" />
+        </EntityType>
+        <Association Name="FK_USERAPPL_REFERENCE_USERAPPL">
+          <End Type="TCDMS_UserApplyModel.UserApply_ApplyBatch" Role="UserApply_ApplyBatch" Multiplicity="0..1" />
+          <End Type="TCDMS_UserApplyModel.UserApply_UserApplyInfo" Role="UserApply_UserApplyInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserApply_ApplyBatch">
+              <PropertyRef Name="BatchID" />
+            </Principal>
+            <Dependent Role="UserApply_UserApplyInfo">
+              <PropertyRef Name="BatchID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MASTER_U_REFERENCE_MASTER_U1">
+          <End Type="TCDMS_UserApplyModel.UserApply_UserApplyInfo" Role="UserApply_UserApplyInfo" Multiplicity="0..1" />
+          <End Type="TCDMS_UserApplyModel.UserApply_UserApplyAuthority" Role="UserApply_UserApplyAuthority" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserApply_UserApplyInfo">
+              <PropertyRef Name="UserApplyID" />
+            </Principal>
+            <Dependent Role="UserApply_UserApplyAuthority">
+              <PropertyRef Name="UserApplyID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="TCDMS_UserApplyModelStoreContainer" CdmEntityContainer="TCDMS_UserApplyEntities">
+          <EntitySetMapping Name="UserApply_ApplyBatch">
+            <EntityTypeMapping TypeName="TCDMS_UserApplyModel.UserApply_ApplyBatch">
+              <MappingFragment StoreEntitySet="UserApply_ApplyBatch">
+                <ScalarProperty Name="ModifyTime" ColumnName="ModifyTime" />
+                <ScalarProperty Name="ModifyUser" ColumnName="ModifyUser" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="CreateUser" ColumnName="CreateUser" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="DistributorID" ColumnName="DistributorID" />
+                <ScalarProperty Name="ApplyTime" ColumnName="ApplyTime" />
+                <ScalarProperty Name="AuditStatus" ColumnName="AuditStatus" />
+                <ScalarProperty Name="ApplyUserEamil" ColumnName="ApplyUserEamil" />
+                <ScalarProperty Name="ApplyUserPhone" ColumnName="ApplyUserPhone" />
+                <ScalarProperty Name="ApplyUser" ColumnName="ApplyUser" />
+                <ScalarProperty Name="BatchName" ColumnName="BatchName" />
+                <ScalarProperty Name="BatchID" ColumnName="BatchID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserApply_UserApplyAuthority">
+            <EntityTypeMapping TypeName="TCDMS_UserApplyModel.UserApply_UserApplyAuthority">
+              <MappingFragment StoreEntitySet="UserApply_UserApplyAuthority">
+                <ScalarProperty Name="IsAdopt" ColumnName="IsAdopt" />
+                <ScalarProperty Name="AppyUserButtonAuthority" ColumnName="AppyUserButtonAuthority" />
+                <ScalarProperty Name="StructureID" ColumnName="StructureID" />
+                <ScalarProperty Name="UserApplyID" ColumnName="UserApplyID" />
+                <ScalarProperty Name="UserAppLyAuthorityID" ColumnName="UserAppLyAuthorityID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserApply_UserApplyInfo">
+            <EntityTypeMapping TypeName="TCDMS_UserApplyModel.UserApply_UserApplyInfo">
+              <MappingFragment StoreEntitySet="UserApply_UserApplyInfo">
+                <ScalarProperty Name="ModifyTime" ColumnName="ModifyTime" />
+                <ScalarProperty Name="ModifyUser" ColumnName="ModifyUser" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="CreateUser" ColumnName="CreateUser" />
+                <ScalarProperty Name="AuditFalseReason" ColumnName="AuditFalseReason" />
+                <ScalarProperty Name="AuditRoleIDList" ColumnName="AuditRoleIDList" />
+                <ScalarProperty Name="AuditStatus" ColumnName="AuditStatus" />
+                <ScalarProperty Name="UserApplyTime" ColumnName="UserApplyTime" />
+                <ScalarProperty Name="DistributorIDList" ColumnName="DistributorIDList" />
+                <ScalarProperty Name="UserApplyType" ColumnName="UserApplyType" />
+                <ScalarProperty Name="UserApplyEmail" ColumnName="UserApplyEmail" />
+                <ScalarProperty Name="UserApplyTelNumber" ColumnName="UserApplyTelNumber" />
+                <ScalarProperty Name="UserApplyName" ColumnName="UserApplyName" />
+                <ScalarProperty Name="UserChangeID" ColumnName="UserChangeID" />
+                <ScalarProperty Name="BatchID" ColumnName="BatchID" />
+                <ScalarProperty Name="UserApplyID" ColumnName="UserApplyID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="无" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

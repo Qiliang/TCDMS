@@ -1,0 +1,28 @@
+﻿<link href="~/Content/MasterData/CSS/_Partialtool.css" rel="stylesheet" />
+
+<div id="BodyContentTool" >
+    @if (ViewBag.CrruentAuthority != null)
+    {
+        <div id="btnButton">
+            @if (((List<TCSOFT.DMS.MasterData.DTO.ButtonDTO>)ViewBag.CrruentAuthority).Where(p => p.ButtonID == 2).FirstOrDefault() != null)
+            {
+                if (ViewBag.SearchCombination != null)
+                {
+                    <div class="comboelse" style="padding:5px 5px 5px 0;">@Html.Raw(ViewBag.SearchCombination)</div>
+                }
+            }
+            <ul>
+                @if (((List<TCSOFT.DMS.MasterData.DTO.ButtonDTO>)ViewBag.CrruentAuthority).Where(p => p.ButtonID == 2).FirstOrDefault() != null)
+                {
+                    <li><input id="serchText" class="easyui-searchbox search" style="height:32px;width:500px;" data-options="@ViewBag.SearchOption" /></li>
+                }
+
+                @foreach (var btn in (List<TCSOFT.DMS.MasterData.DTO.ButtonDTO>)ViewBag.CrruentAuthority)
+                {
+                    if (btn.ButtonID == 2) { continue; }
+                    <li><a href="#" class="easyui-linkbutton" id="@btn.ButtonName" onclick="@btn.ButtonJavascript">@btn.ButtonValue</a></li>
+                }
+            </ul>
+        </div>
+    }
+</div>

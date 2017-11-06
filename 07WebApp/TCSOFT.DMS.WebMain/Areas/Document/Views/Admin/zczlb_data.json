@@ -1,0 +1,12 @@
+{"total":10,"rows":[
+	{"id":"1","product_type":"产品类型1","product_num":"产品线1","goods_num":"货号1","title":"标题1","validity_date":"2017/10/01","release_person":"张三","release_time":"2017/09/01 00:00:00","update_time":"2017/09/01 00:00:00","readState":"0"},
+	{"id":"2","product_type":"产品类型2","product_num":"产品线2","goods_num":"货号2","title":"标题2","validity_date":"2017/10/01","release_person":"张三","release_time":"2017/09/01 00:00:00","update_time":"2017/09/01 00:00:00","readState":"0"},
+	{"id":"3","product_type":"产品类型3","product_num":"产品线3","goods_num":"货号3","title":"标题3","validity_date":"2017/10/01","release_person":"张三","release_time":"2017/09/01 00:00:00","update_time":"2017/09/01 00:00:00","readState":"0"},
+	{"id":"4","product_type":"产品类型1","product_num":"产品线1","goods_num":"货号1","title":"标题4","validity_date":"2017/10/01","release_person":"张三","release_time":"2017/09/01 00:00:00","update_time":"2017/09/01 00:00:00","readState":"0"},
+	{"id":"5","product_type":"产品类型2","product_num":"产品线2","goods_num":"货号2","title":"标题5","validity_date":"2017/10/01","release_person":"张三","release_time":"2017/09/01 00:00:00","update_time":"2017/09/01 00:00:00","readState":"0"},
+	{"id":"6","product_type":"产品类型3","product_num":"产品线3","goods_num":"货号3","title":"标题6","validity_date":"2017/10/01","release_person":"张三","release_time":"2017/09/01 00:00:00","update_time":"2017/09/01 00:00:00","readState":"0"},
+	{"id":"7","product_type":"产品类型1","product_num":"产品线1","goods_num":"货号1","title":"标题7","validity_date":"2017/10/01","release_person":"张三","release_time":"2017/09/01 00:00:00","update_time":"2017/09/01 00:00:00","readState":"0"},
+	{"id":"8","product_type":"产品类型2","product_num":"产品线2","goods_num":"货号2","title":"标题8","validity_date":"2017/10/01","release_person":"张三","release_time":"2017/09/01 00:00:00","update_time":"2017/09/01 00:00:00","readState":"1"},
+	{"id":"9","product_type":"产品类型3","product_num":"产品线3","goods_num":"货号3","title":"标题9","validity_date":"2017/10/01","release_person":"张三","release_time":"2017/09/01 00:00:00","update_time":"2017/09/01 00:00:00","readState":"1"},
+	{"id":"10","product_type":"产品类型1","product_num":"产品线1","goods_num":"货号1","title":"标题10","validity_date":"2017/10/01","release_person":"张三","release_time":"2017/09/01 00:00:00","update_time":"2017/09/01 00:00:00","readState":"1"}
+]}

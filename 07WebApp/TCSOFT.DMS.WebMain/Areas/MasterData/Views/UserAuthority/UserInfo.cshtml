@@ -1,0 +1,795 @@
+﻿@{
+    Layout = null;
+    ViewBag.SearchCombination = @"<select id='seltype' class='easyui-combobox txt300' editable='false' panelHeight='auto'  buttonText='用户类型' ><option value='请选择'>请选择</option></select>
+        <input class='easyui-datebox txt350' id='EffectiveTtime' editable='false'  buttonText='最后登陆日期'/>";
+
+    ViewBag.SearchOption = "prompt:'按用户编号、手机号、姓名、邮箱、经销商名称模糊搜索',searcher:doSearch";
+}
+
+<style type="text/css">
+    h2 {
+        color: #0084d9;
+    }
+
+    .btnButton datebox textbox-icon {
+        right: 19px;
+    }
+</style>
+<script type="text/javascript">
+    var strrole = "";
+    var vaL = null;
+    $.extend($.fn.validatebox.defaults.rules, {
+        phone: {
+            validator: function (value) {
+                var rex = /^1[3-8]+\d{9}$/;
+                if (rex.test(value)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            },
+            message: '请输入正确的手机格式'
+        }
+    });
+    var buttons = $.extend([], $.fn.datebox.defaults.buttons);
+    buttons.splice(1, 0, {
+        text: '清空',
+        handler: function (target) {
+            $("#EffectiveTtime").datebox("setValue", null);
+            $("#EffectiveTtime").datebox("hidePanel");
+            $("#serchText").searchbox('setValue', null);
+            var usertype = null;
+            if ($("#seltype").combotree("getValue") != "-1") {
+                usertype = $("#seltype").combotree("getValue");
+            }
+            $('#grid').datagrid({ ulr: '@Url.Action("GetUser", "UserAuthority")', queryParams: { EffectiveTtime: null, SearchText: null, DepartPath: $('#Did').val(), UserTypeID: usertype } });
+        }
+    });
+    $(function () {
+        $('#DepartmentName').combotree({
+            lines: true,
+            multiple: false
+        });
+        $('#grid').datagrid({
+            url: '',
+            pagination: true,
+            autoRowHeight: true,
+            pageSize: 20,
+            pageList: [20, 30, 50],
+            singleSelect: true,
+            queryParams: {},
+            idField: 'UserID',
+            fitColumns: false,
+            columns: [[
+                 { title: 'UserID', field: 'UserID', hidden: true, width: 1, halign: 'center', align: 'center' },
+                 { title: '状态', field: 'IsActivestr', width: 80, halign: 'center', align: 'center' },
+                 { title: '用户编号', field: 'UserCode', width: 180, halign: 'center', align: 'center' },
+                 { title: '用户名称', field: 'FullName', width: 200, halign: 'center', align: 'center' },
+                 { title: '手机号', field: 'PhoneNumber', width: 130, halign: 'center', align: 'center' },
+                 { title: '邮箱', field: 'Email', width: 200, halign: 'center', align: 'center' },
+                 { title: '部门', field: 'DepartName', width: 200, halign: 'center', align: 'left' },
+                 { title: '用户类型', field: 'UserTypeName', width: 150, halign: 'center', align: 'center' },
+                 { title: '经销商', field: 'UserDistributorstr', width: 280, halign: 'center', align: 'left' },
+                 {
+                     title: '到期日期', field: 'StopTime', width: 130, halign: 'center', align: 'center', formatter: function (value, row, index) {
+                         if (value != null) {
+                             return jsonDateFormat(value);
+                         }
+                     }
+                 },
+                 {
+                     title: '停用时间', field: 'NoActiveTime', width: 130, halign: 'center', align: 'center', formatter: function (value, row, index) {
+                         if (value != null) {
+                             return jsonDateFormat(value);
+                         }
+                     }
+                 },
+                  {
+                      title: '最后登陆日期', field: 'EffectiveTtime', width: 130, halign: 'center', align: 'center', formatter: function (value, row, index) {
+                          if (value != null) {
+                              return jsonDateFormat(value);
+                          }
+                      }
+                  }
+            ]]
+        });
+        $('#treejg').treegrid({
+            url: '@Url.Action("GetDepartmentList", "UserAuthority")',
+            idField: 'FictitiousID',
+            treeField: 'DepartName',
+            animate: true,
+            columns: [[
+                { title: 'DepartID', field: 'DepartID', hidden: true, width: 1 },
+                { title: 'FictitiousID', field: 'FictitiousID', hidden: true, width: 1 },
+                { title: 'DepartParentID', field: 'DepartParentID', hidden: true, width: 1 },
+                { title: '部门名称', field: 'DepartName', halign: 'left', align: 'left' },
+            ]], onLoadSuccess: function () {
+                Datagrid(null);
+            },
+            onSelect: function (rowIndex, rowData) {
+                if (rowIndex != null) {
+                    $('#grid').datagrid('clearSelections');
+                    $("#serchText").searchbox('setValue', null);
+                    $('#seltype').combobox('setValue', '请选择', '-1');
+                    $("#EffectiveTtime").datebox("setValue", null);
+                    Datagrid(rowIndex.DepartPath);
+                    $('#Did').val(rowIndex.DepartPath);
+                }
+            }
+        });
+        //新增/修改
+        $('#AddorUpdateWindow').dialog({
+            width: 'auto',
+            height: 'auto',
+            top: 1,
+            modal: true,
+            closed: true,
+            inline: true,
+            buttons: [{
+                id: 'confirm',
+                text: '确定',
+                handler: function () {
+                    SaveInfo();
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    $('#AddorUpdateWindow').dialog('close');
+                }
+            }],
+            onOpen: function () {
+                
+                $('#confirm').linkbutton({ disabled: false });
+                vaL = null;
+            },
+            onClose: function () {
+                
+            }
+        });
+        //停用原因
+        $('#DelReasonWindow').dialog({
+            width: 'auto',
+            height: 'auto',
+            top: 100,
+            modal: true,
+            closed: true,
+            inline: true,
+            buttons: [{
+                text: '确定',
+                handler: function () {
+                    DelUser();
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    $('#DelReasonWindow').dialog('close');
+                }
+            }],
+            onOpen: function () {
+                
+            },
+            onClose: function () {
+                
+            }
+        });
+        //导入
+        $('#ImportUser').dialog({
+            width: 'auto',
+            height: 'auto',
+            top: 100,
+            modal: true,
+            closed: true,
+            inline: true,
+            buttons: [{
+                text: '确定',
+                handler: function () {
+                    if ($('#UserFile').filebox("getValue") == "") {
+                        alert("请选择导入文件！")
+                    }
+                    else {
+                        $('#UserFileform').submit();
+                    }
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    $('#ImportUser').dialog('close');
+                }
+            }],
+            title: "导入用户信息",
+            onOpen: function () {
+                
+            },
+            onClose: function () {
+                
+            }
+        });
+
+        //导入
+        $('#UserFileform').ajaxForm({
+            url: '@Url.Action("ImportUser", "UserAuthority")',
+            dataType: 'json',
+            beforeSend: function () {
+            },
+            success: function () {
+            },
+            complete: function (data) {
+
+                if (!data.responseJSON) {
+                    alert("导入成功！");
+                    $('#ImportUser').dialog('close');
+                    $('#grid').datagrid('clearSelections');
+                    $('#grid').datagrid("reload", { SearchText: null, DepartID: null, UserTypeID: null });
+                }
+                else {
+                    if (data.responseJSON == "导入失败") {
+                        alert("导入失败！");
+                    }
+                    else {
+                        alert("导入失败，即将下载错误文件！");
+                        window.location.href = "/UserAuthority/DownloadUser?filename=" + data.responseJSON;
+                    }
+                }
+            }
+        });
+
+        $("#seltype").combobox({
+            valueField: 'TypeValue',
+            textField: 'TypeText',
+            data: [
+                { TypeValue: "-1", TypeText: '请选择' },
+                { TypeValue: "0", TypeText: '系统管理员' },
+                { TypeValue: "1", TypeText: '贝克曼' },
+                { TypeValue: "2", TypeText: '经销商' }
+            ],
+            onLoadSuccess: function (data) {
+                $(this).combobox('setValue', '请选择', '-1');
+                return;
+            },
+            onSelect: function (row) {
+                $("#serchText").searchbox('setValue', null);
+                $('#grid').datagrid('clearSelections');
+                $('#grid').datagrid({ url: '@Url.Action("GetUser", "UserAuthority")', queryParams: { UserTypeID: row.TypeValue == -1 ? null : row.TypeValue, DepartPath: $('#Did').val(),EffectiveTtime: $("#EffectiveTtime").val() } });
+            }
+        });
+        $('#RoleNames').combobox({
+            multiple: true,
+            url: '',
+            valueField: 'RoleID',
+            textField: 'RoleName',
+            editable: false,
+            queryParams: {},
+            formatter: function (row) { //formatter方法就是实现了在每个下拉选项前面增加checkbox框的方法
+                var opts = $(this).combobox('options');
+                return '<input type="checkbox" class="combobox-checkbox">' + row[opts.textField]
+            },
+        });
+
+        $("#CCustomertype").combobox({
+            valueField: 'value',
+            textField: 'text',
+            data: [
+                { value: "0", text: '系统管理员' },
+                { value: "1", text: '贝克曼' },
+                { value: "2", text: '经销商' }
+            ],
+            onSelect: function (record) {
+                switch (record.value) {
+                    case "0"://系统管理员
+                    case "1"://贝克曼
+                        $('#CCustomer').combobox({ required: false });
+                        $("#CCustomer").combobox('setValue', null);
+                        break;
+                    case "2"://经销商
+                        $('#CCustomer').combobox({ required: true });
+                        break;
+                }
+                if ($("#AddUp").val() == 0) {
+                    //根据类型显示权限
+                    GetAuthority(null, 0, record.value);
+                }
+                    //根据用户类型查询对应角色
+                Role(record.value);
+                
+                strrole = "";
+            }
+        });
+        $('#EffectiveTtime').datebox({
+            buttons: buttons
+        });
+        @*用户最后登陆日期查询*@
+        $("#EffectiveTtime").datebox({
+            onSelect: function () {
+                $("#serchText").searchbox('setValue', null);
+                $('#grid').datagrid('clearSelections');
+                var usertype = null;
+                if ($("#seltype").combotree("getValue") != "-1") {
+                    usertype = $("#seltype").combotree("getValue");
+                }
+                $('#grid').datagrid({ ulr: '@Url.Action("GetUser", "UserAuthority")', queryParams: { EffectiveTtime: $("#EffectiveTtime").val(), SearchText: null, DepartPath: $('#Did').val(), UserTypeID: usertype } });
+            }
+        });
+        $('#CCustomer').combobox({
+            multiple: true,
+            formatter: function (row) { //formatter方法就是实现了在每个下拉选项前面增加checkbox框的方法
+                var opts = $(this).combobox('options');
+                return '<input type="checkbox" class="combobox-checkbox">' + row[opts.textField]
+            },
+            onLoadSuccess: function () {  //下拉框数据加载成功调用
+                var opts = $(this).combobox('options');
+                var target = this;
+                var values = $(target).combobox('getValues');//获取选中的值的values
+                $.map(values, function (value) {
+                    var el = opts.finder.getEl(target, value);
+                    el.find('input.combobox-checkbox')._propAttr('checked', true);
+                })
+            },
+            onSelect: function (row) { //选中一个选项时调用
+                var opts = $(this).combobox('options');
+                //获取选中的值的values
+                $('#ProductLine').val($(this).combobox('getValues'));
+
+                //设置选中值所对应的复选框为选中状态
+                var el = opts.finder.getEl(this, row[opts.valueField]);
+                el.find('input.combobox-checkbox')._propAttr('checked', true);
+            },
+            onUnselect: function (row) {//不选中一个选项时调用
+                var opts = $(this).combobox('options');
+                //获取选中的值的values
+                $('#ProductLine').val($(this).combobox('getValues'));
+
+                var el = opts.finder.getEl(this, row[opts.valueField]);
+                el.find('input.combobox-checkbox')._propAttr('checked', false);
+            }
+        });
+
+        Depart();
+        CCustomer();
+    })
+
+    function doSearch(value) {
+        var usertype = null;
+        if ($("#seltype").combotree("getValue") != "-1") {
+            usertype = $("#seltype").combotree("getValue");
+        }
+        $('#grid').datagrid('clearSelections');
+        $('#grid').datagrid('reload', { SearchText: value, DepartPath: $('#Did').val(), UserTypeID: usertype, EffectiveTtime: $("#EffectiveTtime").val() });
+    }
+
+    function ClickAdd() {
+        $("#AddUp").val(0);
+        $('#Authoritygrid').treegrid('loadData', { total: 0, rows: [] });
+        strrole = "";
+
+        $('#treejg').treegrid("unselectAll");
+        $('#Did').val(null);
+        $('#seltype').combobox('setValue', '请选择', '-1');
+        $("#serchText").searchbox('setValue', null);
+        $("#userzdyck").prop("checked", false);
+        $("#CCustomer").combobox({ disabled: false });
+        $("#UserName").textbox('setValue', null);
+        $("#youxiaoTime").textbox("setValue", null);
+        $("#UserCode").textbox('setValue', null);
+        $("#PhoneName").textbox("setValue", null);
+        $("#Email").textbox('setValue', null);
+        $("#DepartmentName").combotree("setValue", null);
+        $("#CCustomertype").combobox('setValue', null);
+        $("#RoleNames").combobox('loadData', {});
+        $("#RoleNames").combobox("setValue", null);
+        $("#CCustomer").textbox('setValue', null);
+
+        $('#AddorUpdateWindow').dialog({ title: "新增用户" });
+        $('#AddorUpdateWindow').dialog('open');
+        vaL = null;
+    }
+    function ClickModify() {
+        $("#AddUp").val(1);
+        $("#CCustomertype").combobox('setValue', null);
+        $('#Authoritygrid').treegrid('loadData', { total: 0, rows: [] });
+        strrole = "";
+        var row = $('#grid').datagrid('getSelected');
+        if (row == null) {
+            alert("您还没有选择用户，请选择！");
+            return;
+        }
+
+        $.post("@Url.Action("GetOneUser", "UserAuthority")", {
+            id: row.UserID
+        }, function (data) {
+            if (data.SubmitResult) {
+                $('#UserID').val(data.Object.UserID),
+                $('#UserName').textbox('setValue', data.Object.FullName);
+                $("#youxiaoTime").datebox("setValue", jsonDateFormat(data.Object.StopTime));
+                $('#UserCode').textbox('setValue', data.Object.UserCode);
+                $("#PhoneName").textbox("setValue", data.Object.PhoneNumber);
+                $('#Email').textbox('setValue', data.Object.Email);
+                $("#DepartmentName").combotree("setValue", data.Object.DepartID);
+                $('#CCustomertype').combobox('setValue', data.Object.UserType);
+                $("#RoleNames").combobox("setValues", data.Object.UserRolelist);
+                $('#CCustomer').combobox('setValues', data.Object.UserDistributorid);
+                if (data.Object.UserRolelist.length == 0) {
+                    $("#userzdyck").prop("checked", true);
+                } else {
+                    $("#userzdyck").prop("checked", false);
+                }
+                $('#AddorUpdateWindow').dialog({ title: "修改用户" });
+                $('#AddorUpdateWindow').dialog('open');
+                vaL = 1;
+            } else {
+                alert(data.Message);
+            }
+        })
+    }
+    function ClickDel() {
+        var row = $('#grid').datagrid('getSelected');
+        if (!row) {
+            alert("您还没有选择用户，请选择！");
+            return;
+        }
+        $.messager.confirm('提示', '是否删除选中数据?', function (data) {
+            if (!data) {
+                return;
+            }
+            $('#Reason').textbox('setValue', null);
+            $('#DelReasonWindow').dialog({ title: "删除原因" });
+
+            $('#DelReasonWindow').dialog('open');
+        })
+    }
+    function DelUser() {
+        var row = $('#grid').datagrid('getSelected');
+        $.post("@Url.Action("DeleteUser", "UserAuthority")", {
+            UserID: row.UserID
+        }, function (data) {
+            if (data.SubmitResult) {
+                $('#grid').datagrid("reload");
+                $('#grid').datagrid('clearSelections');
+                $('#DelReasonWindow').dialog('close');
+            } else {
+                alert(data.Message);
+            }
+        })
+    }
+    function checkselected(root) {
+        for (var i = 0; i < root.children.length; i++) {
+            $("input[name='" + root.children[i].StructureID + "']").each(function () {
+                if ($(this).prop("checked")) {
+                    for (var j = 0; j < root.children[i].ButtonAuthorityList.length; j++) {
+                        if (root.children[i].ButtonAuthorityList[j].ButtonID == $(this).val()) {
+                            root.children[i].ButtonAuthorityList[j].IsChecked = true;
+                        }
+                    }
+                } else {
+                    for (var j = 0; j < root.children[i].ButtonAuthorityList.length; j++) {
+                        if (root.children[i].ButtonAuthorityList[j].ButtonID == $(this).val()) {
+                            root.children[i].ButtonAuthorityList[j].IsChecked = false;
+                        }
+                    }
+                }
+            })
+            checkselected(root.children[i]);
+        }
+    }
+    //用户保存
+    function SaveInfo() {
+        if ($("#AddorUpdate").form('validate')) {
+            var ppdata = $('#Authoritygrid').treegrid('getData');
+            for (var i = 0; i < ppdata.length; i++) {
+                $("input[name='" + ppdata[i].StructureID + "']").each(function () {
+                    if ($(this).prop("checked")) {
+                        for (var j = 0; j < ppdata[i].ButtonAuthorityList.length; j++) {
+                            if (ppdata[i].ButtonAuthorityList[j].ButtonID == $(this).val()) {
+                                ppdata[i].ButtonAuthorityList[j].IsChecked = true;
+                            }
+                        }
+                    } else {
+                        for (var j = 0; j < ppdata[i].ButtonAuthorityList.length; j++) {
+                            if (ppdata[i].ButtonAuthorityList[j].ButtonID == $(this).val()) {
+                                ppdata[i].ButtonAuthorityList[j].IsChecked = false;
+                            }
+                        }
+                    }
+                })
+                checkselected(ppdata[i]);
+            }
+            $('#confirm').linkbutton({ disabled: true });
+            if (vaL == null) {
+                $.post("@Url.Action("AddUser", "UserAuthority")", {
+                    FullName: $('#UserName').textbox('getValue'),
+                    StopTime: $("#youxiaoTime").datebox("getValue"),
+                    UserCode: $('#UserCode').textbox('getValue'),
+                    PhoneNumber: $("#PhoneName").textbox("getValue"),
+                    Email: $('#Email').textbox('getValue'),
+                    DepartID: $("#DepartmentName").combotree("getValue"),
+                    UserType: $('#CCustomertype').combobox('getValue'),
+                    UserRole: $("#RoleNames").combobox("getValues"),
+                    UserDistributor: $('#CCustomer').combobox('getValues'),
+                    UserAuthorityModel: ppdata,
+                    //IsCustom: $("input[name='userck']").is(':checked')
+                }, function (data) {
+                    if (data.SubmitResult) {
+                        $('#confirm').linkbutton({ disabled: false });
+                        $('#grid').datagrid("reload", { SearchText: null, DepartID: null, UserTypeID: null });
+                        $('#AddorUpdateWindow').dialog('close')
+
+                    } else {
+                        $('#confirm').linkbutton({ disabled: false });
+                        alert(data.Message);
+                    }
+                })
+            } else {
+                $.post("@Url.Action("UpdateStopEnableUser", "UserAuthority")", {
+                    UserID: $('#UserID').val(),
+                    FullName: $('#UserName').textbox('getValue'),
+                    StopTime: $("#youxiaoTime").datebox("getValue"),
+                    UserCode: $('#UserCode').textbox('getValue'),
+                    PhoneNumber: $("#PhoneName").textbox("getValue"),
+                    Email: $('#Email').textbox('getValue'),
+                    DepartID: $("#DepartmentName").combotree("getValue"),
+                    UserType: $('#CCustomertype').combobox('getValue'),
+                    UserRole: $("#RoleNames").combobox("getValues"),
+                    UserDistributor: $('#CCustomer').combobox('getValues'),
+                    UserAuthorityModel: ppdata,
+                    //IsCustom: $("input[name='userck']").is(':checked')
+                }, function (data) {
+                    if (data.SubmitResult) {
+                        $('#grid').datagrid("reload");
+                        $('#confirm').linkbutton({ disabled: false });
+                        $('#AddorUpdateWindow').dialog('close')
+                    } else {
+                        $('#confirm').linkbutton({ disabled: false });
+                        alert(data.Message);
+                    }
+                })
+            }
+        }
+    }
+    function ClickActived() {
+        var row = $('#grid').datagrid('getSelected');
+        if (row.length == 0) {
+            alert("您还没有选择用户，请选择！");
+            return;
+        }
+        var isac = false;
+        if (row.IsActivestr == "启用") {
+            isac = false;
+        } else {
+            isac = true;
+        }
+        $.post("@Url.Action("UpdateStopEnableUser", "UserAuthority")", {
+            UserID: row.UserID,
+            IsActive: isac
+        }, function (data) {
+            if (data.SubmitResult) {
+                $('#grid').datagrid("reload");
+            } else {
+                alert(data.Message);
+            }
+        })
+    }
+    // 导出
+    function ClickExport() {
+        $.post("@Url.Action("ExportUser", "UserAuthority")", {
+            SearchText: $("#serchText").searchbox('getValue'),
+            DepartPath: $('#Did').val(),
+            UserTypeID: $('#seltype').combobox('getValue') == -1 ? null : $('#seltype').combobox('getValue'),
+        }, function (data) {
+            if (data) {
+                window.location.href = "/UserAuthority/DownloadUser?filename=" + data;
+            } else {
+                alert("导出失败！");
+            }
+        })
+    }
+    // 导入
+    function ClickImport() {;
+        $('#UserFile').filebox("clear");
+        $('#ImportUser').dialog('open');
+    }
+    function Datagrid(id) {
+        $('#grid').datagrid('clearSelections');
+        $('#grid').datagrid({ url: '@Url.Action("GetUser", "UserAuthority")', queryParams: { SearchText: null, DepartPath: id } });
+        $('#Did').val(id);
+    }
+    function Depart() {
+        $.ajaxSetup({
+            async: false
+        });
+        $.post("@Url.Action("GetDepartmentTree", "UserAuthority")", {}, function (data) {
+            $('#DepartmentName').combotree('loadData', data);
+        })
+        $.ajaxSetup({
+            async: true
+        });
+    }
+
+    function CCustomer() {
+        $('#CCustomer').combobox({
+            url: '@Url.Action("GetDistributorList", "UserAuthority")',
+            valueField: 'DistributorID',
+            textField: 'DistributorName',
+            editable: false,
+            onLoadSuccess: function (data) {
+                return;
+            }
+        });
+    }
+    function Role(id) {
+        $('#RoleNames').combobox({
+            url: '@Url.Action("GetAllRoleList", "UserAuthority")',
+            queryParams: { id: id },
+            onLoadSuccess: function () {  //下拉框数据加载成功调用
+                var opts = $(this).combobox('options');
+                var target = this;
+                var values = $(target).combobox('getValues');//获取选中的值的values
+                $.map(values, function (value) {
+                    var el = opts.finder.getEl(target, value);
+                    el.find('input.combobox-checkbox')._propAttr('checked', true);
+                })
+
+                if ($("#AddUp").val() == 1) {
+                    GetAuthorityuser($('#UserID').val(), 1, $('#CCustomertype').combobox('getValue'));
+                }
+            },
+            onSelect: function (row) { //选中一个选项时调用
+
+                var opts = $(this).combobox('options');
+                //获取选中的值的values
+                $('#ProductLine').val($(this).combobox('getValues'));
+
+                //设置选中值所对应的复选框为选中状态
+                var el = opts.finder.getEl(this, row[opts.valueField]);
+                el.find('input.combobox-checkbox')._propAttr('checked', true);
+
+                $("#userzdyck").prop("checked", false);
+
+                if (strrole == "") {
+                    strrole += "|" + row.RoleID + "|";
+                } else {
+                    strrole += row.RoleID + "|";
+                }
+                if ($("#AddUp").val() == 0) {
+                    GetAuthority(strrole, 2, $("#CCustomertype").combobox("getValue"));
+                }
+            },
+            onUnselect: function (row) {//不选中一个选项时调用
+                var opts = $(this).combobox('options');
+                //获取选中的值的values
+                $('#ProductLine').val($(this).combobox('getValues'));
+
+                var el = opts.finder.getEl(this, row[opts.valueField]);
+                el.find('input.combobox-checkbox')._propAttr('checked', false);
+
+                $("#userzdyck").prop("checked", false);
+
+                strrole = strrole.replace("|" + row.RoleID + "|", "|");
+                if ($("#AddUp").val() == 0) {
+                    GetAuthority(strrole, 2, $("#CCustomertype").combobox("getValue"));
+                }
+            }
+        });
+
+    }
+    function GetAuthority(urid, type, ustype, isup) {
+
+        $("#Authoritygrid").treegrid({
+            url: '@Url.Action("GetAllAuth", "UserAuthority")',
+            queryParams: { userid: urid, type: type, showroletype: ustype },
+            onLoadSuccess: function () {
+            },
+        })
+    }
+    function GetAuthorityuser(urid, type, ustype) {
+        $("#Authoritygrid").treegrid({
+            url: '@Url.Action("GetAllAuth", "UserAuthority")',
+            queryParams: { userid: urid, type: type, showroletype: ustype },
+            onLoadSuccess: function () {
+                $("#AddUp").val(0);
+            },
+        })
+    }
+    //function iscustom() {
+    //    if ($("input[name='userck']").is(':checked') == false) {
+    //        $('#Authority .datagrid-btable').attr("disabled", true);
+    //    } else {
+    //        $('#Authority .datagrid-btable').attr("disabled", false);
+    //    }
+    //}
+    //获取json传来的时间格式化为YYYY-MM-DD HH:mm:ss
+    function jsonDateHMSFormat(jsonDate) {
+        var date = new Date(parseInt(jsonDate.replace("/Date(", "").replace(")/", ""), 10));
+        var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+        var day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+        var h = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+        var m = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+        var s = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+        return date.getFullYear() + "-" + month + "-" + day + " " + h + ":" + m + ":" + s;
+    }
+    //获取json传来的时间格式化为YYYY-MM-DD
+    function jsonDateFormat(jsonDate) {
+        if (jsonDate != null) {
+            var date = new Date(parseInt(jsonDate.replace("/Date(", "").replace(")/", ""), 10));
+            var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+            var day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+            return date.getFullYear() + "-" + month + "-" + day;
+        }
+    }
+</script>
+<div class="easyui-layout" style="height:100%;">
+    <div region="north" style="height:94px">
+        @Html.Partial("_Partialtool")
+    </div>
+    <div region="west" style="width:200px;border-right:1px solid #CCC; overflow:hidden;">
+        <input type="text" id="Did" hidden="hidden" />
+
+        <table id="treejg" fit="true"></table>
+    </div>
+    <div region="center">
+        <table id="grid" style="border:1px solid #808080;" fit="true"></table>
+    </div>
+</div>
+@*用户新增/修改*@
+<div id="AddorUpdateWindow">
+    <div class="AddContent">
+        <h2>基本信息</h2>
+        <input id="AddUp" type="text" hidden="hidden" />
+        <form id="AddorUpdate">
+            <p>
+                <input id="UserID" type="text" hidden="hidden" />
+                <span class="lb80">用户名：</span><input class="easyui-textbox txt150" style="width:150px;" id="UserName" required missingmessage="用户名必须填写！" />
+                <span class="cl100right">到期日期：</span><input id="youxiaoTime" class="easyui-datebox txt150" style="width:150px;" />
+            </p>
+            <p>
+                <span class="lb80">用户编号：</span><input class="easyui-textbox txt150" style="width:150px;" id="UserCode" required missingmessage="用户编号名必须填写！" />
+                <span class="cl100right">手机号：</span><input class="easyui-textbox txt150" style="width:150px;" id="PhoneName" data-options="validType:'phone'" placeholder="手机号格式不正确" required missingmessage="手机号必须填写！" />
+            </p>
+            <p>
+                <span class="lb80">邮箱：</span><input class="easyui-textbox txt150" style="width:150px;" id="Email" validtype="Email" data-options="validType:'email'" placeholder="邮箱格式不正确" required missingmessage="邮箱必须填写！" />
+                <span class="cl100">部门：</span>
+                <select id="DepartmentName" class="easyui-tree txt150" style="width:150px;" editable="false" required missingmessage="部门必须选择！"></select>
+            </p>
+            <p>
+                <span class="lb80">用户类型：</span>
+                <select id="CCustomertype" class="easyui-combobox txt150" style="width:150px;" editable="false" required missingmessage="用户类型必须选择！"></select>
+                <span class="cl100">模板：</span>
+                <select id="RoleNames" class="easyui-combobox txt150" style="width:150px;" editable="false"></select>
+                @*<input type="checkbox" name="userck" id="userzdyck" onclick="iscustom()">自定义权限*@
+            </p>
+            <p>
+                <span class="lb80">所属经销商：</span>
+                <select id="CCustomer" class="easyui-combobox" style=" width: 413px; height: 20px;" editable="false" required missingmessage="所属经销商必须选择！"></select>
+            </p>
+        </form>
+        <div><h2>权限设置</h2> </div>
+    </div>
+
+    <div id="Authority" style="height:200px;">
+        @Html.Partial("_PartialAuthority")
+    </div>
+</div>
+@*导入*@
+<div id="ImportUser">
+    <div class="AddContent">
+        <form id="UserFileform" method="post" enctype="multipart/form-data">
+            <p>
+                <input id="UserFile" class="easyui-filebox txt410" style="width:410px;" name="UserFile" data-options="prompt:'导入用户信息文件',accept:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel' ,buttonText:'选择导入文件'">
+            </p>
+            <br />
+            <p>
+                <a href="~/TempLate/IMP_User.xlsx">下载用户信息导入模板</a>
+            </p>
+        </form>
+    </div>
+</div>
+
+@*停用原因*@
+<div id="DelReasonWindow">
+    <div class="AddContent">
+        <form id="DelReasonForm">
+            <p>
+                <span class="cl100">原因：</span>
+                <input class="easyui-textbox txt300" data-options="multiline:true" style="width:300px;height:50px" id="Reason" />
+            </p>
+        </form>
+    </div>
+</div>

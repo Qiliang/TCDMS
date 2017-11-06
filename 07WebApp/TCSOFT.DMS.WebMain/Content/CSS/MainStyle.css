@@ -1,0 +1,229 @@
+﻿body {
+    overflow: hidden;
+    margin: 0 auto;
+}
+
+#bodyDiv {
+    width: 100%;
+    height: 109px;
+    padding: 10px 60px 0 40px;
+}
+
+#ImgDiv {
+    margin-bottom: 30px;
+}
+
+#logoDiv1 {
+    width: 242px;
+    height: 109px;
+    overflow: hidden;
+}
+
+.logout {
+    background: url('../MasterData/Image/logout.png') center center no-repeat;
+    width: 56px;
+    height: 109px;
+    display: block;
+}
+
+    .logout:hover {
+        background: url('../MasterData/Image/logout_hover.png') center center no-repeat;
+    }
+
+#tbnMain_Div {
+    overflow: hidden;
+    width: 56px;
+    height: 109px;
+}
+
+#titleDiv1 {
+    text-align: center;
+    overflow: hidden;
+    line-height: 109px;
+    height: 109px;
+}
+
+#XSWPT1 {
+    color: #0241a9;
+    letter-spacing: 6px;
+    font-size: 42px;
+    font-weight: 700;
+    font-family: "微软雅黑 Bold","微软雅黑";
+}
+
+#ContentDiv1 {
+    width: 710px;
+    height: 425px;
+    overflow: auto;
+    padding: 30px 0 0 20px;
+}
+
+    #ContentDiv1 ul li {
+        list-style: none;
+        float: left;
+        margin: 8px 12px;
+        position: relative;
+    }
+
+        #ContentDiv1 ul li img {
+            width: 120px;
+            height: 120px;
+        }
+
+#tabsContent .tabs-first .tabs-inner {
+    border-top: 0 !important;
+}
+
+#tabsContent .tabs-last .tabs-inner {
+    border-bottom: 0 !important;
+}
+
+#tabsContent .tabs-inner {
+    line-height: 19px !important;
+}
+#tabsContent .tabs li a.tabs-inner{
+    padding:8px 2px 8px 8px;
+}
+
+#footDIV {
+    text-align: center;
+    height: 40px;
+    background-color: #666666;
+}
+
+    #footDIV ul li {
+        list-style: none;
+        display: inline-block;
+        border-right: 1px solid #FFF;
+        margin: 6px 0;
+        padding:0 12px;
+    }
+
+        #footDIV ul li a {
+            text-decoration: none;
+            color: #FFF;
+            font-size:14pt;
+        }
+
+#tabsContent {
+    box-shadow: 5px 5px 5px rgba(204,204,204,0.35);
+    border-radius: 10px;
+    border: 1px solid #CCC;
+    border-left: 0;
+}
+#tabsContent .tabs-title {
+    font-size:14pt!important;
+}
+#reportBoard {
+    padding: 20px 20px 0 20px;
+    list-style:none;
+}
+
+.reportBoard li {
+    height: 50px;
+    color: #666;
+    font-size: 14pt;
+    margin-left:20px;
+}
+    .reportBoard li a {
+    color: #666;
+        
+}
+
+.AddContentMain {
+    position: relative;
+    top: 10px;
+    left: 10px;
+}
+
+.AddMain {
+    position: relative;
+    top: 20px;
+    left: 30px;
+}
+
+.operatStylecss {
+    position: relative;
+    text-align: center;
+    top: 30px;
+    padding: 5px;
+}
+
+    .operatStylecss a {
+        margin-left: 20px;
+        width: 100px;
+        height: 25px;
+    }
+
+#AddMain {
+    position: relative;
+    top: 20px;
+    margin-left: 30px;
+}
+
+    #AddMain p {
+        margin-left: 10px;
+        margin-bottom: 10px;
+    }
+
+#spanColor {
+    color: #559fd5;
+    margin-left: 180px;
+    top: 20px;
+}
+
+
+#btn_MainMessageInfoOne {
+    top: 160px;
+    height: 200px;
+    width: 300px;
+    font-size: 15px;
+}
+
+
+
+#btn_MainMessageInfoTwo {
+    margin-left: 150px;
+    top: 370px;
+    width: 300px;
+    color: #ffffff;
+    font-size: 15px;
+}
+
+    #btn_MainMessageInfoTwo div {
+        height: 18px;
+        background-color: #60a9de;
+        margin-bottom: 8px;
+        padding-top: 7px;
+    }
+
+.Btn_More {
+    margin-left: 160px;
+    text-decoration: none;
+    color: #666666;
+}
+
+#btn_Content {
+     height:300px;
+     width:285px;
+     font-size: 18px;
+     list-style:none;
+}
+
+.btn_Content p {
+    position:absolute;
+    margin-bottom: 5px;
+    background-color: #60a9de;
+}
+
+#Btnmore {
+     position:absolute;
+   margin-left: 70px;
+    top: 370px;
+}
+#btn_MainMessageInfoTwo .btn_Content {
+    position: absolute;
+    height: 150px;
+    width: 300px;
+    background-color: #60a9de;
+}

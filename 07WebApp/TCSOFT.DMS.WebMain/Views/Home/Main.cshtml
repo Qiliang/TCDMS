@@ -1,0 +1,648 @@
+﻿@model List<TCSOFT.DMS.MasterData.DTO.StructureDTO>
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link href="~/Content/EasyUI/themes/lanssion/easyui.css" rel="stylesheet" />
+    <script src="~/Content/EasyUI/jquery.min.js"></script>
+    <script src="~/Content/EasyUI/jquery.easyui.min.js"></script>
+    <script src="~/Content/EasyUI/locale/easyui-lang-zh_CN.js"></script>
+    <script src="~/Content/JS/jquery.form.min.js"></script>
+    <link href="~/Content/CSS/MainStyle.css" rel="stylesheet" />
+    <link href="~/Content/CSS/CommonS.css" rel="stylesheet" />
+    <title>携手网平台主界面</title>
+    <script type="text/javascript">
+        window.history.forward(-1);
+        var datas;//所有信息
+        $(function () {
+            $("#LXFS").parent().parent().click(function(){
+                LXInfo();
+            });
+            $('#FeedAttach').filebox({
+                onChange : function(e) {
+                    if(e.length>0)
+                    {
+                        // file对象
+                        var file = $(this).next().find('input[id^="filebox_file_id_"]');
+                        // 上传的文件大小
+                        var fileSize = file[0].files[0].size;
+                        if(fileSize>20*1024*1024)
+                        {
+                            alert("文件超过20M");
+                            $('#FeedAttach').filebox('clear');
+                        }
+                    }
+                }
+            });
+            WarningMoreInfo();//消息列表
+            MessInfo();//消息提示框
+            InitModel();
+            $('#Authority').datagrid({
+                nowrap: true,
+                autoRowHeight: true,
+                striped: true,
+                collapsible: false,
+                rownumbers: true,
+                sortName: '',
+                sortOrder: 'desc',
+                remoteSort: false,
+                singleSelect: false,
+                idField: 'ID',
+                columns: [[
+                     { title: '权限申请', field: 'IsChecked', checkbox: true },
+                     { title: 'ID', field: 'ID', hidden: true, width: 1, halign: 'center', align: 'center' },
+                     { title: '模块', field: 'LevelOneDes', width: 150, halign: 'center', align: 'center' },
+                     { title: '功能', field: 'LevelTWODes', width: 150, halign: 'center', align: 'center' },
+                     { title: '功能描述', field: 'Description', width: 200, halign: 'center', align: 'center' }
+                ]],
+                onLoadSuccess:function(data){
+                    if(data){
+                        $.each(data.rows, function(index, item){
+                            if(item.IsChecked){
+                                $('#Authority').datagrid('checkRow', index);
+                            }
+                        });
+                    }
+                }
+            });
+            //更多消息
+            $('#grid').datagrid({
+                nowrap: true,
+                autoRowHeight: true,
+                pagination: true,
+                pageSize: 10,
+                pageList: [10, 20, 30],
+                striped: true,
+                collapsible: false,
+                rownumbers: true,
+                sortName: '',
+                sortOrder: 'desc',
+                remoteSort: false,
+                singleSelect: true,
+                idField: 'WarningID',
+                queryParams: {},
+                animate: true,
+                columns: [[
+                { title: 'WarningID', field: 'WarningID', hidden: true, width: 1, halign: 'center', align: 'center' },
+                { title: '所属模块', field: 'BelongModule', width: 180, halign: 'center', align: 'center' },
+                { title: '提醒信息', field: 'WarningInfostr', width: 440, halign: 'center', align: 'left',formatter: function (value, row, index) {
+                    return "<a href='#' onclick='checkInfo(\""+row.WarningID+ "\")'>"+row.WarningInfostr+"</a>";
+                }
+                }
+                ]]
+            })
+            $('#UpdateApplyModelWindow').dialog({
+                title: "用户申请权限变更",
+                width: 'auto',
+                height: 'auto',
+                top: 50,
+                modal: true,
+                closed: true,
+                maximizable: false,
+                minimizable: false,
+                collapsible: false,
+                resizable: false,
+                inline: true,
+                buttons: [{
+                    text: '确定',
+                    handler: function () {
+                        SaveUpdateApply();
+                    }
+                }, {
+                    text: '取消',
+                    handler: function () {
+                        $('#UpdateApplyModelWindow').dialog('close');
+                    }
+                }],
+            });
+            $('#SoftwareFeedbackWindow').dialog({
+                title: "问题反馈",
+                width: 'auto',
+                height: 'auto',
+                top: 50,
+                modal: true,
+                closed: true,
+                maximizable: false,
+                minimizable: false,
+                collapsible: false,
+                resizable: false,
+                inline: true,
+                buttons: [{
+                    text: '提交',
+                    handler: function () {
+                        Upload();
+                    }
+                }, {
+                    text: '再想想',
+                    handler: function () {
+                        $('#SoftwareFeedbackWindow').dialog('close');
+                    }
+                }],
+            });
+            $('#AboutWindow').dialog({
+                title: "关于携手网",
+                width: 570,
+                height: 500,
+                left: 500,
+                top: 50,
+                modal: true,
+                closed: true,
+                maximizable: false,
+                minimizable: false,
+                collapsible: false,
+                resizable: false,
+                inline: true,
+            });
+            $('#CJWindow').dialog({
+                title: "常见问题",
+                width: 300,
+                height: 220,
+                left:540,
+                top: 50,
+                modal: true,
+                closed: true,
+                maximizable: false,
+                minimizable: false,
+                collapsible: false,
+                resizable: false,
+                inline: true,
+            });
+            $('#LXWindow').dialog({
+                title: "联系我们",
+                width: 850,
+                height:540,
+                top: 50,
+                modal: true,
+                closed: true,
+                maximizable: false,
+                minimizable: false,
+                collapsible: false,
+                resizable: false,
+                inline: true,
+            });
+            $('#WarningWindow').dialog({
+                title: "消息查看",
+                width: 'auto',
+                height: 'auto',
+                top: 100,
+                left:400,
+                modal: true,
+                closed: true,
+                maximizable: false,
+                minimizable: false,
+                collapsible: false,
+                resizable: false,
+                inline: true,
+                buttons: [{
+                    text: '取消',
+                    handler: function () {
+                        $('#WarningWindow').dialog('close');
+                    }
+                }],
+            });
+            $('#WarningMoreWindow').dialog({
+                title: "消息",
+                width: 'auto',
+                height: 'auto',
+                top: 50,
+                left:300,
+                modal: true,
+                closed: true,
+                maximizable: false,
+                minimizable: false,
+                collapsible: false,
+                resizable: false,
+                inline: true,
+                buttons: [{
+                    text: '取消',
+                    handler: function () {
+                        $('#WarningMoreWindow').dialog('close');
+                    }
+                }],
+            });
+
+            $('#forms').ajaxForm({
+                dataType: 'json',
+                beforeSend: function () {
+                },
+                success: function () {
+                },
+                complete: function (data) {
+                    var jsonObject = jQuery.parseJSON(data.responseText);
+                    if (jsonObject) {
+                        alert("感谢你的反馈！")
+                        $('#SoftwareFeedbackWindow').dialog('close');
+                    } else {
+                        alert("反馈失败！");
+                    }
+                }
+            });
+
+
+            $('#tabsContent').tabs({
+                border:false,
+                onSelect:function(title,index){
+                    if(index==2)
+                    {
+                        DownWord();
+                    }
+                }
+            });
+
+            $(".MainA").mouseover(function(){
+                $this=$(this).find("img");
+                var imgsrc=$this[0].src;
+                imgsrc=imgsrc.replace("-1","-2");
+                $this[0].src=imgsrc;
+            });
+            $(".MainA").mouseout(function(){
+                $this=$(this).find("img");
+                var imgsrc=$this[0].src;
+                imgsrc=imgsrc.replace("-2","-1");
+                $this[0].src=imgsrc;
+            });
+        })
+        //用户权限变更
+        function UpdateUserAuthority() {
+            $('#Authority').datagrid({ url: '@Url.Action("GetUserAuthorityInfo", "Home")', queryParams: {}, });
+            if (@ViewBag.UserType==1){
+                $("#chkbkm").attr('checked', true);
+            }
+            else{
+                $("#chkbkm").attr('checked', false);
+            }
+            $('#UpdateApplyModelWindow').dialog({ title: "用户申请权限变更" });
+            $('#UpdateApplyModelWindow').dialog('open');
+        }
+        // 用户申请变更保存
+        function SaveUpdateApply() {
+            var checkrowlist = $('#Authority').datagrid("getChecked");
+            if (checkrowlist.length == 0) {
+                alert("请勾选权限");
+                return;
+            }
+            var rowlist = $('#Authority').datagrid("getData");
+            for (var i = 0; i < rowlist.rows.length; i++) {
+                rowlist.rows[i].IsChecked = false;
+            }
+            for (var i = 0; i < checkrowlist.length; i++) {
+                checkrowlist[i].IsChecked = true;
+            }
+            var ppdata = $('#Authority').datagrid("getData");
+            if ($("#UpdateApplyModelWindow").form('validate')) {
+                $.post("@Url.Action("ChangeAuthority", "Home")", {
+                    UserApplyName: $("#Name").val(),
+                    DistributorIDList: $("#DistriName").val(),
+                    UserApplyTelNumber: $("#Phone").val(),
+                    UserApplyEmail: $("#email").val(),
+                    UserApplyType:@ViewBag.UserType,
+                    ApplyAuth: ppdata.rows
+                }, function (data) {
+                    if (data.SubmitResult) {
+                        $('#UpdateApplyModelWindow').dialog('close')
+                    }
+
+                    alert(data.Message);
+                });
+            }
+        }
+        function SoftwareFeedback() {
+            $('#FeedbackSystem').combobox('clear');
+            $('#FeedbackModel').combobox('clear').combobox('loadData', {});
+            $('#FeedbackContent').textbox("setValue",null);
+            $('#FeedAttach').filebox("clear");
+            $('#SoftwareFeedbackWindow').dialog('open');
+        }
+        function AboutInfo() {
+            $('#AboutWindow').dialog({ title: "关于携手网" });
+            $('#AboutWindow').dialog('open');
+        }
+        function CJInfo() {
+            $('#CJWindow').dialog({ title: "常见问题" });
+            $('#CJWindow').dialog('open');
+        }
+        function LXInfo() {
+            $('#LXWindow').dialog({ title: "联系我们" });
+            $('#LXWindow').dialog('open');
+        }
+        function InitModel() {
+            $('#FeedbackSystem').combobox({
+                url: '@Url.Action("GetAllModule", "Home")',
+                valueField: 'StructureName',
+                textField: 'StructureName',
+                editable: false,
+                onSelect: function (row) {
+                    $('#FeedbackModel').combobox('clear').combobox('loadData', {});
+                    $('#FeedbackModel').combobox({
+                        url: '@Url.Action("GetSecondLevelModule", "Home")',
+                        valueField: 'StructureName',
+                        textField: 'StructureName',
+                        queryParams: {  ParentStructureID:row.StructureID},
+                        editable: false,
+                    })
+                }
+            });
+        }
+
+        //及时消息
+        var datas;//所有信息
+        var idx = -1;//当前信息ID
+        var s;
+        function MessInfo() {
+            $.post('@Url.Action("GetWarningOneInfo", "Home")', {},
+                function (data, textStatus, jqXHR) {
+                    if (data.rows && data.rows.length > 0) {
+                        datas = data;
+                        idx = 0;
+                        $.messager.show({
+                            title: '消息提示框',
+                            msg: '<div id="titlecneter" style="height:20px;font-weight:bold;text-align:center"> 最新消息 </div><div id="infocenter"><a href="#" onclick="UrlBelongModule()">' + datas.rows[0].WarningInfostr+ '</a><input id="warnID" type="text" hidden="hidden" value="'+datas.rows[0].WarningID+'"/><input id="WarnContents" type="text" hidden="hidden" value="'+datas.rows[0].WarningInfo+'"/></div>',
+                            timeout: 50000,
+                            height: 150,
+                            width: 300,
+                            showType: 'show'
+                        });
+                    }
+                }, "json");
+            s = setTimeout("MessInfo()", 36000000);
+        };
+        //跳转模块后删除该条信息
+        function UrlBelongModule() {
+            $("#warnID").val();
+            $('#WarningContent').textbox("setValue", $("#WarnContents").val());
+            //先弹出再删除
+            var window=  $('#WarningWindow').dialog('open');
+            if(window[0].id=="WarningWindow"){
+                $.post('@Url.Action("DeleteWarningInfo", "Home")', { WarningID: $("#warnID").val() },
+                function (data, textStatus, jqXHR) {
+                    MessInfo();
+                    //删除之后，需要刷新pop和及时消息栏
+                    $("#btn_Content").empty();//清空DIV
+                    WarningMoreInfo();
+                }, "json");
+            }
+        }
+        //更多信息显示
+        function WarningMore(){
+            $('#grid').datagrid("clearSelections");
+            $('#grid').datagrid({ url: '@Url.Action("GetWarningAllInfo", "Home")', queryParams: { SearchText: null },});
+            $('#WarningMoreWindow').dialog('open');
+        }
+        //信息显示6条
+        function WarningMoreInfo(){
+            $.post('@Url.Action("GetWarningInfo", "Home")', { WarningID: $("#warnID").val() },
+                        function (data, textStatus, jqXHR) {
+                            datas = data.rows;
+                            for (var i = 0; i < datas.length; i++) {
+                                conlist(i);
+                            }
+                        }, "json");
+        }
+        //信息显示5条
+        function conlist(idx) {
+            $("#reportBoard").append("<li><a href='#' style='text-decoration:none;' onclick='CheckWarnMoreInfo(\""+datas[idx].WarningID+ "\");'>" + datas[idx].WarningInfostr + "</a></li>");
+        }
+        //查看及时消息的详细信息
+        function CheckWarnMoreInfo(wid){
+            $.post('@Url.Action("GetWarningOneInfo", "Home")', { WarningID: wid },
+               function (data, textStatus, jqXHR) {
+                   $('#WarningContent').textbox("setValue", data.rows[0].WarningInfo);
+                   var windows =  $('#WarningWindow').dialog('open');
+                   if(windows[0].id=="WarningWindow"){
+                       $.post('@Url.Action("DeleteWarningInfo", "Home")', { WarningID: wid },
+                       function (data, textStatus, jqXHR) {
+                           //删除之后，需要刷新及时消息栏
+                           $("#reportBoard").empty();//清空DIV
+                           WarningMoreInfo();
+                       }, "json");
+                   }
+               }, "json");
+        }
+        function checkInfo(index){
+            $.post('@Url.Action("GetWarningOneInfo", "Home")', { WarningID: index },
+               function (data, textStatus, jqXHR) {
+                   $('#WarningContent').textbox("setValue", data.rows[0].WarningInfo);
+                   var windows =  $('#WarningWindow').dialog('open');
+                   if(windows[0].id=="WarningWindow"){
+                       $.post('@Url.Action("DeleteWarningInfo", "Home")', { WarningID: index },
+                       function (data, textStatus, jqXHR) {
+                           //删除之后，需要刷新及时消息栏
+                           $("#btn_Content").empty();//清空DIV
+                           WarningMoreInfo();
+                       }, "json");
+                   }
+                   $('#grid').datagrid("reload", { SearchText: null});
+               }, "json");
+        }
+        //更多 按钮
+        function WarnMoreInfo(){
+            WarningMore();
+        }
+        function Upload() {
+            if($('#FeedbackContent').textbox("getValue").length>500)
+            {
+                alert('超过500字！');
+                return;
+            }
+            $('#forms').submit();
+        }
+        function DownWord()
+        {
+            window.location.href = "/Home/Download";
+        }
+    </script>
+</head>
+<body>
+    <div id="bjDiv" class="easyui-layout" fit="true" border="false">
+        <div id="bodyDiv" region="north" border="false">
+            <div class="easyui-layout" fit="true">
+                <div id="logoDiv1" region="west" border="false">
+                    <img src="~/Content/Image/Main/Main_logo.png" style="width:100%;height:100%;" />
+                </div>
+                <div id="tbnMain_Div" region="east" border="false">
+                    <a href="@Url.Action("Logout","Home")" class="logout"></a>
+                </div>
+                <div id="titleDiv1" region="center" border="false">
+                    <p id="XSWPT1">
+                        携手网平台
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div id="ContentDiv2" region="west" style="width:40%;overflow:hidden;padding: 10% 0px 0px 30%;" border="false">
+            <div id="tabsContent" class="easyui-tabs" style="width:360px; height:388px;" tabposition="left" headerwidth="40" tabheight="98" writing-mode>
+                <div id="dvCont" title="<p style='padding-top:22px;'>公<br>告</p>" style="padding:20px;display:none; ">   
+                    <ul id="reportBoard" class="reportBoard"></ul>
+
+                    <p id="Btnmore" style="text-align:center;"><a class="easyui-linkbutton" href="#" style="background:#0241a9;color:#FFF;padding:3px 50px;" onclick="WarnMoreInfo();">更多</a></p>
+                </div>
+                <div title="<p style='padding-top:13px;'>注<br>册<br>证</p>" style="overflow:auto;padding:15px 20px 15px 20px;display:none;">
+                    <ul id="reportBoardGG" class="reportBoard">
+                        <li><span>公告标题内容</span><span class="fr">2017-6-9</span></li>
+                        <li><span>公告标题内容</span><span class="fr">2017-6-9</span></li>
+                        <li><span>公告标题内容</span><span class="fr">2017-6-9</span></li>
+                        <li><span>公告标题内容</span><span class="fr">2017-6-9</span></li>
+                        <li><span>公告标题内容</span><span class="fr">2017-6-9</span></li>
+                    </ul>
+                    <p style="text-align:center;position: absolute;margin-left: 70px;top: 370px;"><a class="easyui-linkbutton" href="#" style="background:#0241a9;color:#FFF;padding:3px 50px;">更多</a></p>
+                </div>
+                <div id="DownWord" title="<p >常<br>见<br>问<br>题</p>" style="padding:20px;display:none">
+
+                </div>
+                <div title="<p id='LXFS'>联<br>系<br>方<br>式</p>" style="padding:20px;display:none;">
+                </div>
+            </div>
+
+            @*<div id="btn_MainMessageInfoOne">
+                    <div>
+                        <span style="margin-left:40px;"><a>即时消息</a> </span>
+                        <span><a href="#" class="Btn_More" id="WarnMore" onclick="WarnMoreInfo(); ">更多</a></span>
+                    </div>
+                    <div style="margin-top:-10px;height:1px"></div>
+                    <div class="btn_Content">
+                    </div>
+                </div>
+                <div id="btn_MainMessageInfoTwo">
+                    <div>
+                        <span style="margin-left:40px;"><a>注册证</a> </span>
+                        <span><a href="#" class="Btn_More">更多</a></span>
+                    </div>
+                    <div style="margin-top:-10px;height:1px"></div>
+                    <div class="btn_Content">
+                       <p><a href="#">1</a></p>
+                            <p><a href="#">2</a></p>
+                            <p><a href="#">3</a></p>
+                            <p><a href="#">4</a></p>
+                            <p><a href="#">5</a></p>
+                            <p><a href="#">6</a></p>
+                    </div>
+                </div>*@
+        </div>
+        <div id="ContentDiv1" region="center" border="false">
+            <ul>
+                @foreach (var p in this.Model)
+                {
+                    <li><a class="MainA" href="@p.URL" target="_blank"><img src="~/Content/Image/MainNew/@p.DesImage" /></a></li>
+                }
+            </ul>
+        </div>
+        <div id="footDIV" region="south" border="false">
+            <ul>
+                <li style="border-left:1px solid #FFF;"><a href="javascript:AboutInfo()">关于携手网</a></li>
+                <li><a href="javascript:LXInfo()">联系我们</a></li>
+                <li><a href="javascript:SoftwareFeedback()">问题反馈</a></li>
+            </ul>
+        </div>
+    </div>
+    @*新用户申请对话框*@
+    <div id="UpdateApplyModelWindow">
+        <p>
+            <span class="cl60">姓名：</span><input class="easyui-textbox txt100" disabled="disabled" id="Name" type="text" required missingmessage="姓名必须填写" value="@ViewBag.FullName" /><span class="MustRequre">*</span>
+            <span class="cl60">经销商：</span><input class="easyui-textbox txt150" disabled="disabled" id="DistriName" type="text" required missingmessage="经销商必须填写" value="@ViewBag.Distributorstr" /><span class="MustRequre">*</span>
+            <input type="checkbox" name="chkbkm" id="chkbkm" disabled="disabled" style="margin-left:10px;" />贝克曼
+        </p>
+        <p>
+            <span class="cl60">手机号：</span><input class="easyui-textbox txt100" disabled="disabled" id="Phone" type="text" value="@ViewBag.PhoneNumber" required missingmessage="手机号必须填写" /><span class="MustRequre">*</span>
+            <span class="cl60">邮箱：</span><input class="easyui-textbox txt150" disabled="disabled" validtype="Email" value="@ViewBag.Email" id="email" type="text" required missingmessage="邮箱必须填写" /><span class="MustRequre">*</span>
+        </p>
+        <div id="bkmDiv" style="margin-left:8px;">
+            <table id="Authority" style="width:620px;height:350px;"></table>
+            <p> <label style="color:red;margin-left:30px;">请在需要申请的功能前打“√”。</label></p>
+        </div>
+    </div>
+    @*软件反馈*@
+    <div id="SoftwareFeedbackWindow" style="overflow:hidden;">
+        <div class="AddContent">
+            <div class="AddContentMain">
+                @{
+                    var user = (TCSOFT.DMS.MasterData.DTO.UserLoginDTO)Session["UserLoginInfo"];
+                    <p style="margin-left:20px">@user.FullName ,您好！</p>
+                }
+                <p style="margin-left:20px">感谢您对携手网提出的宝贵意见和建议，我们会对定期的整理大家的反馈信息，贝克曼会根据建议的</p>
+                <p style="margin-left:20px">优先级统一安排进行优化</p>
+            </div>
+            <form id="forms" action="@Url.Action("SubmitFeedback", "Home")" method="post">
+                <div id="AddMain">
+                    <p>
+                        <span class="cl100">&nbsp;&nbsp;要反馈的系统&nbsp;&nbsp;</span>
+
+                        <select id="FeedbackSystem" name="FeedbackSystem" class="easyui-combobox txt410" editable="false"></select>
+                    </p>
+                    <p>
+                        <span class="cl100">&nbsp;&nbsp;要反馈的模块&nbsp;&nbsp;</span>
+                        <select id="FeedbackModel" name="FeedbackModel" class="easyui-combobox txt410" editable="false"></select>
+                    </p>
+                    <p>
+                        <span class="cl110" style="text-align:left;">反馈内容(限500字)</span>
+                        <input id="FeedbackContent" name="FeedbackContent" class="easyui-textbox" data-options="multiline:true" style="width:410px;height:150px;display:inline-block;" />
+                    </p>
+
+                    <p>
+                        <span class="cl100">附件（限20M）</span>
+                        <input id="FeedAttach" class="easyui-filebox txt410" name="FeedAttach" data-options="prompt:'',buttonText:'上传附件'">
+                    </p>
+                    <p>
+                        <span id="spanColor">如果想上传多个文件,请事先压缩成一个文件进行上传</span>
+                    </p>
+                </div>
+            </form>
+        </div>
+    </div>
+    @*关于携手网*@
+    <div id="AboutWindow">
+        @{
+            var pp = (TCSOFT.DMS.WebMain.Models.Model.AboutWebSiteModel)ViewBag.Version;
+            if (pp.CurrentAboutVerInfo.Count() > 0)
+            {
+                var ss = pp.CurrentAboutVerInfo;
+                for (int i = 0; i < ss.Count; i++)
+                {
+                    if (i > 0)
+                    {
+                        <hr width="99%" color=#edf4ff size=3 />
+                    }
+                    <font size="2" face="微软雅黑">
+                        <p>
+                            <br />
+                            <span style="margin-left:20px">版本号：</span> @ss[i].Version
+                            <span style="margin-left:230px">更新时间：</span> @ss[i].updatetime
+                        </p>
+                        <p>
+                            @Html.Raw(ss[i].data.Replace("\r\n", "<br/>&nbsp;&nbsp;&nbsp;&nbsp;"))
+                        </p>
+                    </font>
+                }
+            }
+        }
+    </div>
+
+    @*联系我们*@
+    <div id="LXWindow">
+        <div class="AddContent">
+            @Html.Partial("_PartialContact")
+        </div>
+    </div>
+    @*消息框查看*@
+    <div id="WarningWindow">
+        <div class="AddContent">
+            <p>
+                <span class="cl100">消息内容：</span>
+                <input id="WarningContent" name="WarningContent" class="easyui-textbox" data-options="multiline:true" style="width:410px;height:150px" />
+            </p>
+        </div>
+    </div>
+
+
+    @*消息框更多*@
+    <div id="WarningMoreWindow">
+        <table id="grid" style="width:700px;height:410px;"></table>
+    </div>
+
+
+</body>
+</html>

@@ -1,0 +1,34 @@
+﻿
+@{
+    Layout = null;
+}
+
+<div icon="icon-save" style="padding: 5px; padding-left: 20px;" class="flex flex-v">
+    <form id="uf-form" method="post" enctype="multipart/form-data">
+        <div class="flex flex-align-center" style="padding: 10px">
+            <div style="margin:0 10px 0 10px;width: 110px;text-align: right;"><span style="color: red;margin-right: 2px">*</span>经销商:</div>
+            <input id="upfile-company" name="DistributorID" editable='false' class='easyui-combobox txt200' style="width: 407px;" data-options="valueField:'DistributorID',textField:'DistributorName'"/>
+        </div>
+        <div class="flex flex-align-center" style="padding: 10px">
+            <div style="margin:0 10px 0 10px;width: 110px;text-align: right;"><span style="color: red;margin-right: 2px">*</span>组织架构图:</div>
+            <input id="upfile-figure" name="OrgMap" type="text" style="width: 407px;"/>
+        </div>
+        <div class="flex flex-align-center" style="padding: 10px">
+            <div style="margin:0 10px 0 10px;width: 110px;text-align: right;"><span style="color: red;margin-right: 2px">*</span>培训人员名单上传:</div>
+            <input id="upfile-persoon" name="Trains" type="text" style="width: 407px;"/>
+        </div>
+        <div class="flex flex-align-center" style="padding: 10px">
+            <div style="margin:0 10px 0 10px;width: 110px;text-align: right;"></div>
+            <div style="width: 407px;height: 22px;">请下载最新的FCPA培训人员名单模板</div>
+        </div>
+        <div class="flex flex-align-center" style="padding: 10px">
+            <div style="margin:0 10px 0 10px;width: 110px;text-align: right;"></div>
+            <div style="width: 407px;height: 22px;">（模板中姓名，部门，职位必须填写)</div>
+        </div>
+        <div class="flex flex-align-center" style="padding: 10px">
+            <div style="margin:0 10px 0 10px;width: 110px;text-align: right;">所属领域:</div>
+            <input type="checkbox" name="Domain1" value="true" style="margin: 0 10px; margin-left: 0px"/>临床诊断
+            <input type="checkbox" name="Domain2" value="true" style="margin: 0 10px;margin-left: 20px"/>生命科学
+        </div>
+    </form>
+</div>

@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<root>
+  <verinfo ver="v201705.01" updatetime="2017/5/11">
+    <![CDATA[
+    1.禁用经销商证书完成日期的修改功能
+    2.证书完成日期修正
+    3.FCPA2月需求
+    ]]>
+  </verinfo>
+  <verinfo ver="v201702.02" updatetime="2017/2/27">
+    <![CDATA[
+    1.海尔施反应杯隐藏
+    2.客户申请上海地区修正
+    3.经销商管理数据加载问题
+    ]]>
+  </verinfo>
+  <verinfo ver="v201702.01" updatetime="2017/2/8">
+    <![CDATA[
+    1.FCPA培训名单上传下载及右上角显示调整
+    ]]>
+  </verinfo>
+</root>

@@ -1,0 +1,194 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{C055BAFE-86E7-4203-9175-F9458F8C80C2}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>TCSOFT.DMS.MasterData.DTO</RootNamespace>
+    <AssemblyName>TCSOFT.DMS.MasterData.DTO</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'LocalPublish|AnyCPU'">
+    <OutputPath>bin\LocalPublish\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AccountDate\AccountDateOperateDTO.cs" />
+    <Compile Include="AccountDate\AccountDateResultDTO.cs" />
+    <Compile Include="AccountDate\AccountDateSearchDTO.cs" />
+    <Compile Include="Area\AreaOperateDTO.cs" />
+    <Compile Include="Area\AreaResultDTO.cs" />
+    <Compile Include="Area\AreaSearchDTO.cs" />
+    <Compile Include="ButtonDTO.cs" />
+    <Compile Include="Common\AdminDTO.cs" />
+    <Compile Include="Common\AttachFileDTO.cs" />
+    <Compile Include="Common\DepartmentDTO.cs" />
+    <Compile Include="Common\FeedbackDTO.cs" />
+    <Compile Include="Common\LogDTO.cs" />
+    <Compile Include="Common\OperateDTO.cs" />
+    <Compile Include="Common\PagingDTO.cs" />
+    <Compile Include="Common\RegionDTO.cs" />
+    <Compile Include="Common\ResultDTO.cs" />
+    <Compile Include="Common\WarningDTO.cs" />
+    <Compile Include="CustomerAudit\CustomerAuditOperateDTO.cs" />
+    <Compile Include="CustomerAudit\CustomerAuditResultDTO.cs" />
+    <Compile Include="CustomerAudit\CustomerAuditSearchDTO.cs" />
+    <Compile Include="Customer\CustomerOperateDTO.cs" />
+    <Compile Include="Customer\CustomerResultDTO.cs" />
+    <Compile Include="Customer\CustomerSearchDTO.cs" />
+    <Compile Include="Distributor\DistributorAuthority\DistributorAuthorityOperateDTO.cs" />
+    <Compile Include="Distributor\DistributorAuthority\DistributorAuthorityResultDTO.cs" />
+    <Compile Include="Distributor\DistributorAuthority\DistributorAuthoritySearchDTO.cs" />
+    <Compile Include="Distributor\DistributorAnnounceAuthority\DistributorAnnounceAuthorityOperateDTO.cs" />
+    <Compile Include="Distributor\DistributorAnnounceAuthority\DistributorAnnounceAuthorityResultDTO.cs" />
+    <Compile Include="Distributor\DistributorAnnounceAuthority\DistributorAnnounceAuthoritySearchDTO.cs" />
+    <Compile Include="Distributor\DistributorPriceAuthority\DistributorPriceAuthorityOperateDTO.cs" />
+    <Compile Include="Distributor\DistributorPriceAuthority\DistributorPriceAuthorityResultDTO.cs" />
+    <Compile Include="Distributor\DistributorPriceAuthority\DistributorPriceAuthoritySearchDTO.cs" />
+    <Compile Include="Distributor\DistributorServiceType\DistributorServiceTypeOperateDTO.cs" />
+    <Compile Include="Distributor\DistributorServiceType\DistributorServiceTypeResultDTO.cs" />
+    <Compile Include="Distributor\DistributorServiceType\DistributorServiceTypeSearchDTO.cs" />
+    <Compile Include="Distributor\DistributorType\DistributorTypeOperateDTO.cs" />
+    <Compile Include="Distributor\DistributorType\DistributorTypeResultDTO.cs" />
+    <Compile Include="Distributor\DistributorType\DistributorTypeSearchDTO.cs" />
+    <Compile Include="Distributor\Distributor\DistributorBaseDTO.cs" />
+    <Compile Include="Distributor\Distributor\DistributorChangeNameDTO.cs" />
+    <Compile Include="Distributor\Distributor\DistributorOperateDTO.cs" />
+    <Compile Include="Distributor\Distributor\DistributorResultDTO.cs" />
+    <Compile Include="Distributor\Distributor\DistributorSearchDTO.cs" />
+    <Compile Include="ImportExcel\ExcelDistributorADAuthorityDTO.cs" />
+    <Compile Include="ImportExcel\ExcelDistributorAuthorityDTO.cs" />
+    <Compile Include="ImportExcel\ExcelDistributorDTO.cs" />
+    <Compile Include="ImportExcel\ExcelCustomerInfoDTO.cs" />
+    <Compile Include="ImportExcel\ExcelImportDataDTO.cs" />
+    <Compile Include="ImportExcel\ExcelInstrumentModelDTO.cs" />
+    <Compile Include="ImportExcel\ExcelProductSmallClassDTO.cs" />
+    <Compile Include="ImportExcel\ExcelProductSpecialDTO.cs" />
+    <Compile Include="ImportExcel\ExcelReagentPriceDTO.cs" />
+    <Compile Include="ImportExcel\ExcelReagentProductDTO.cs" />
+    <Compile Include="ImportExcel\ExcelRepairPriceDTO.cs" />
+    <Compile Include="ImportExcel\ExcelRepairProductDTO.cs" />
+    <Compile Include="ImportExcel\ExcelUser.cs" />
+    <Compile Include="ImportExcel\ExclCloseDataDTO.cs" />
+    <Compile Include="Message\MessageOperateDTO.cs" />
+    <Compile Include="Message\MessageResultDTO.cs" />
+    <Compile Include="Message\MessageSearchDTO.cs" />
+    <Compile Include="Payment\PaymentOperateDTO.cs" />
+    <Compile Include="Payment\PaymentResultDTO.cs" />
+    <Compile Include="Payment\PaymentSearchDTO.cs" />
+    <Compile Include="Product\ProductInfo\ProductInfoBaseDTO.cs" />
+    <Compile Include="Product\ProductLine\ProductLineBaseDTO.cs" />
+    <Compile Include="Product\ProductModel\ProductModelOperateDTO.cs" />
+    <Compile Include="Product\ProductModel\ProductModelResultDTO.cs" />
+    <Compile Include="Product\ProductModel\ProductModelSearchDTO.cs" />
+    <Compile Include="Product\InstrumentType\InstrumentTypeOperateDTO.cs" />
+    <Compile Include="Product\InstrumentType\InstrumentTypeResultDTO.cs" />
+    <Compile Include="Product\InstrumentType\InstrumentTypeSearchDTO.cs" />
+    <Compile Include="Product\MaintenanceInfo\MaintenanceInfoOperateDTO.cs" />
+    <Compile Include="Product\MaintenanceInfo\MaintenanceInfoResultDTO.cs" />
+    <Compile Include="Product\MaintenanceInfo\MaintenanceInfoSearchDTO.cs" />
+    <Compile Include="Product\OKCPriceInfo\OKCPriceInfoOperateDTO.cs" />
+    <Compile Include="Product\OKCPriceInfo\OKCPriceInfoResultDTO.cs" />
+    <Compile Include="Product\OKCPriceInfo\OKCPriceInfoSearchDTO.cs" />
+    <Compile Include="Product\ProductDTO.cs" />
+    <Compile Include="Product\ProductInfo\ProductInfoOperateDTO.cs" />
+    <Compile Include="Product\ProductInfo\ProductInfoResultDTO.cs" />
+    <Compile Include="Product\ProductInfo\ProductInfoSearchDTO.cs" />
+    <Compile Include="Product\ProductLine\ProductLineOperateDTO.cs" />
+    <Compile Include="Product\ProductLine\ProductLineResultDTO.cs" />
+    <Compile Include="Product\ProductLine\ProductLineSearchDTO.cs" />
+    <Compile Include="Product\ProductPriceInfo\ProductPriceInfoOperateDTO.cs" />
+    <Compile Include="Product\ProductPriceInfo\ProductPriceInfoResultDTO.cs" />
+    <Compile Include="Product\ProductPriceInfo\ProductPriceInfoSearchDTO.cs" />
+    <Compile Include="Product\ProductSmallType\ProductSmallTypeBaseDTO.cs" />
+    <Compile Include="Product\ProductSmallType\ProductSmallTypeOperateDTO.cs" />
+    <Compile Include="Product\ProductSmallType\ProductSmallTypeResultDTO.cs" />
+    <Compile Include="Product\ProductSmallType\ProductSmallTypeSearchDTO.cs" />
+    <Compile Include="Product\ProductType\ProductTypeBaseDTO.cs" />
+    <Compile Include="Product\ProductType\ProductTypeOperateDTO.cs" />
+    <Compile Include="Product\ProductType\ProductTypeResultDTO.cs" />
+    <Compile Include="Product\ProductType\ProductTypeSearchDTO.cs" />
+    <Compile Include="Product\ReagentInfo\ReagentInfoOperateDTO.cs" />
+    <Compile Include="Product\ReagentInfo\ReagentInfoResultDTO.cs" />
+    <Compile Include="Product\ReagentInfo\ReagentInfoSearchDTO.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Rate\RateOperateDTO.cs" />
+    <Compile Include="Rate\RateResultDTO.cs" />
+    <Compile Include="Rate\RateSearchDTO.cs" />
+    <Compile Include="Role\RoleOperateDTO.cs" />
+    <Compile Include="Role\RoleResultDTO.cs" />
+    <Compile Include="Role\RoleSearchDTO.cs" />
+    <Compile Include="StructureDTO.cs" />
+    <Compile Include="System\ModularSysEmail\ModularOperateDTO.cs" />
+    <Compile Include="System\ModularSysEmail\ModularResultDTO.cs" />
+    <Compile Include="System\ModularSysEmail\ModularSearchDTO.cs" />
+    <Compile Include="System\OperationSysEmail\OperationOperateDTO.cs" />
+    <Compile Include="System\OperationSysEmail\OperationResultDTO.cs" />
+    <Compile Include="System\OperationSysEmail\OperationSearchDTO.cs" />
+    <Compile Include="Transport\TransportOperateDTO.cs" />
+    <Compile Include="Transport\TransportResultDTO.cs" />
+    <Compile Include="Transport\TransportSearchDTO.cs" />
+    <Compile Include="UserLoginDTO.cs" />
+    <Compile Include="UsersStat\UsersStatOperateDTO.cs" />
+    <Compile Include="UsersStat\UsersStatResultDTO.cs" />
+    <Compile Include="UsersStat\UsersStatSearchDTO.cs" />
+    <Compile Include="User\UserApply\UserApplyOperateDTO.cs" />
+    <Compile Include="User\UserApply\UserApplyResultDTO.cs" />
+    <Compile Include="User\UserApply\UserApplySearchDTO.cs" />
+    <Compile Include="User\UserDTO.cs" />
+    <Compile Include="User\UsersByAuthoritedDTO.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

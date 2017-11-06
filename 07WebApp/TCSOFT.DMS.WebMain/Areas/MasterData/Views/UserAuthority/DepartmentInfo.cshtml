@@ -1,0 +1,209 @@
+﻿@{
+    Layout = null;
+}
+<style type="text/css">
+    /*分页只显示总页数*/
+    .pagination {
+        height: 30px;
+    }
+
+        .pagination table {
+            display: none;
+        }
+
+    .pagination-info {
+        display: none;
+    }
+</style>
+<script type="text/javascript">
+    $(function () {
+        $('#AddPID').combotree({
+            lines: true,
+            multiple: false
+        });
+        $('#tree').treegrid({
+            url: '@Url.Action("GetDepartmentList", "UserAuthority")',
+            iconCls: 'icon-view',
+            width: function () { return document.body.clientWidth * 0.9 },
+            rownumbers: true,
+            pagination: true,
+            pageSize: 1000,
+            pageList: [1000],
+            idField: 'DepartID',
+            treeField: 'DepartName',
+            animate: true,
+            columns: [[
+                { title: 'ID', field: 'DepartID', hidden: true, width: 1 },
+                { title: '父部门ID', field: 'DepartParentID', hidden: true, width: 1 },
+                { title: '部门名称', field: 'DepartName', width: 800, halign: 'center', align: 'left' },
+            ]],
+
+        });
+
+        //新增/修改
+        $('#AddorUpdateWindow').dialog({
+            width: 'auto',
+            height: 'auto',
+            top: 100,
+            modal: true,
+            closed: true,
+            inline: true,
+            buttons: [{
+                text: '确定',
+                handler: function () {
+                    SaveInfo();
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    $('#AddorUpdateWindow').dialog('close');
+                }
+            }],
+            onOpen: function () {
+                
+            },
+            onClose: function () {
+                
+            }
+        });
+
+    })
+
+    function ClickAdd() {
+        InitDepart();
+        $('#AddPID').combobox({ disabled: false });
+        $('#AddID').val('');
+        $('#DepartName').textbox('setValue', null);
+        $('#AddPID').combotree('setValue', null);
+        $('#AddUp').val(1);
+        $('#AddorUpdateWindow').dialog({ title: "添加部门" });
+        $('#AddorUpdateWindow').dialog('open');
+    }
+    function ClickModify() {
+        InitDepart();
+        var row = $("#tree").datagrid("getSelected");
+        if (row == null) {
+            alert("您还没有选择部门信息，请选择！");
+            return;
+        }
+        $('#AddPID').combobox({ disabled: true });
+        $.post('@Url.Action("GetDepartment", "UserAuthority")',
+                      { id: row.DepartID },
+                          function (data, textStatus, jqXHR) {
+                              if (data.SubmitResult) {
+                                  $('#AddUp').val(2);
+                                  $('#AddID').val(data.Object.DepartID);
+                                  $('#DepartName').textbox('setValue', data.Object.DepartName);
+                                  $('#AddPID').combotree('setValue', data.Object.DepartParentID);
+                              }
+                              else {
+                                  alert(data.Message);
+                                  return;
+                              }
+                          }, "json");
+        $('#AddorUpdateWindow').dialog({ title: "修改部门" });
+        $('#AddorUpdateWindow').dialog('open');
+    }
+    function ClickDel() {
+        var row = $("#tree").datagrid("getSelected");
+        if (row == null) {
+            alert("您还没有选择部门信息，请选择！");
+            return;
+        }
+        $.messager.confirm('提示', '是否删除选中数据?', function (data) {
+            if (!data) {
+                return;
+            }
+            $.post(
+            '@Url.Action("DeleteDepartment", "UserAuthority")',
+            {
+                DepartID: row.DepartID
+            },
+            function success(data, textStatus, jqXHR) {
+                if (!data.SubmitResult) {
+                    alert(data.Message);
+                }
+                else {
+                    alert("删除成功！");
+                    $('#tree').treegrid('reload');
+                    $('#tree').treegrid('clearSelections');
+                }
+            }, "json");
+        });
+    }
+    //部门保存
+    function SaveInfo() {
+        if ($("#AddorUpdate").form('validate')) {
+            if ($('#AddUp').val() == 1) {
+                $.post(
+                 '@Url.Action("AddDepartment", "UserAuthority")',
+                 {
+                     DepartParentID: $('#AddPID').combotree('getValue'),
+                     DepartName: $('#DepartName').textbox('getValue'),
+                     DepartPath: $('#AddPID').combotree('tree').tree('getSelected').path
+                 },
+                 function success(data, textStatus, jqXHR) {
+                     if (!data.SubmitResult) {
+                         alert(data.Message);
+                     }
+                     else {
+                         $('#AddorUpdateWindow').dialog('close');
+                         $('#tree').treegrid('reload');
+                         $('#tree').treegrid('clearSelections');
+                     }
+                 }, "json");
+            }
+            else {
+                $.post(
+                  '@Url.Action("UpdateDepartment", "UserAuthority")',
+                  {
+                      DepartID: $('#AddID').val(),
+                      DepartParentID: $('#AddPID').combotree('getValue'),
+                      DepartName: $('#DepartName').textbox('getValue'),
+                  },
+                  function success(data, textStatus, jqXHR) {
+                      if (!data.SubmitResult) {
+                          alert(data.Message);
+                      }
+                      else {
+                          $('#AddorUpdateWindow').dialog('close');
+                          $('#tree').treegrid('reload');
+                      }
+                  }, "json");
+            }
+        }
+    }
+    //初始化上级部门
+    function InitDepart() {
+        $.ajaxSetup({
+            async: false
+        });
+        $.post("@Url.Action("GetDepartmentTree", "UserAuthority")", {}, function (data) {
+            $('#AddPID').combotree('loadData', data);
+        })
+        $.ajaxSetup({
+            async: true
+        });
+    }
+</script>
+
+<div class="easyui-layout" style="height:100%;">
+    <div region="north" style="height:94px">
+        @Html.Partial("_Partialtool")
+    </div>
+    <div region="center">
+        <table id="tree" style="width:100% ;height:100%;"></table>
+    </div>
+</div>
+
+@*部门新增/修改*@
+<div id="AddorUpdateWindow">
+    <div class="AddContent">
+        <input id="AddID" hidden="hidden" />
+        <input id="AddUp" hidden="hidden" />
+        <form id="AddorUpdate">
+            <p> <span>部门名称：</span><input class="easyui-textbox txt150" style="width:150px;" id="DepartName" required missingmessage="部门名称必须填写！" /> </p>
+            <p><span>上级部门：</span><select id="AddPID" class="easyui-tree txt150" style="width:150px;" editable="false" required missingmessage="上级部门必须选择！"></select></p>
+        </form>
+    </div>
+</div>

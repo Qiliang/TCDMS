@@ -1,0 +1,204 @@
+﻿
+@{
+    Layout = null;
+}
+
+<div class="easyui-layout" style="height:100%;">
+    <div region="north" style="height:64px">
+        <link href="~/Content/Fpca/CSS/_Partialtool.css" rel="stylesheet" />
+        <div id="BodyContentTool" style="height: 64px">
+            <div id="btnButton">
+                <ul>
+                    <li>
+                        <input id="serchText" class="easyui-searchbox search" style="height:32px;width:500px;"
+                               data-options="prompt:'支持经销商名,姓名模糊查询',searcher:function(){}" />
+                    </li>
+                    <li><a href="#" class="easyui-linkbutton" id="btnFind">搜索</a></li>
+                    <li><a href="#" class="easyui-linkbutton" id="btnSearch">高级查询</a></li>
+                    <li><a href="#" class="easyui-linkbutton" id="btnExport">导出</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div region="center">
+        <div id="BodyContentDiv">          
+            <table id="detailGrid" class="easyui-datagrid"
+                   data-options="
+                   iconCls:'icon-view' ,
+                   width:function () { return document.body.clientWidth * 0.9 },
+                   nowrap:true,
+                   autoRowHeight:true,
+                   striped:true,
+                   collapsible:false,
+                   pagination:true,
+                   pageSize:20,
+                   pageList:[10, 20, 30, 40, 50],
+                   rownumbers:true,
+                   sortOrder:'desc',
+                   remoteSort:false,
+                   singleSelect:true,
+                   queryParams:{},
+                   animate:true,
+                   method:'POST',
+                   idField:'ID',
+                   fit:true">
+                <thead>
+                    <tr>                    
+                        <th data-options="field:'ID',checkbox:true"></th>
+                        <th data-options="field:'DistributorName',width:280,align:'left',sortable:true">经销商</th>
+                        <th data-options="field:'Certificate',width:80,align:'center',sortable:true,formatter:formatterAttachment">证书</th>
+                        <th data-options="field:'StatusDesc',width:80,align:'center',sortable:true">状态</th>
+                        <th data-options="field:'Name',width:120,align:'center',sortable:true">姓名</th>
+                        <th data-options="field:'Department',width:120,align:'center',sortable:true">部门</th>
+                        <th data-options="field:'Title',width:120,align:'center',sortable:true">职位</th>
+                        <th data-options="field:'CompletedDate',width:120,align:'center',sortable:true,formatter:function(v){return v ? v.substr(0,10): ''}">培训完成日期</th>
+                        <th data-options="field:'OffWorkDesc',width:220,align:'left',sortable:true">在职状态</th>
+                        <th data-options="field:'DomainDesc',width:160,align:'left',sortable:true">所属领域</th>
+                        <th data-options="field:'UpdateDate',width:120,align:'center',sortable:true,formatter:function(v){ return v ? v.substr(0,10): ''}">更新日期</th>
+                        <th data-options="field:'ExpireDate',width:120,align:'center',sortable:true,formatter:function(v){ return v ? v.substr(0,10): ''}">过期日期</th>
+                        <th data-options="field:'Remark',width:120,align:'center'">备注</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        var obj = $('#dashForm').toJSON();
+        $('#dashForm input[name=Status]').val(null);
+        $('#detailGrid').datagrid({
+            url: '@Url.Action("Query", "Details")',
+            queryParams:obj
+        });
+        $('#btnFind').click(function(){
+            var searchText = $("#serchText").textbox('getText');
+            $('#detailGrid').datagrid('load',{
+                "Name":searchText
+            });
+        });
+        $('#btnSearch').click(function () {
+            $('<div/>').dialog({
+                title:'高级搜索',
+                collapsible:false,
+                minimizable:false,
+                maximizable:false,
+                resizable:false,
+                modal:true,
+                id:'dialogFindDetail',
+                width : 700,
+                height : 640,
+                closed : false,
+                cache : false,
+                href: '../Dialog/FindDetail',
+                onLoad: function () {
+                    $.ajax({
+                        "async": true,
+                        //"crossDomain": true,
+                        "url":'@Url.Action("Distributors", "Credentials")',
+                        "method": "GET"
+                    }).done(function (response) {
+                        $('#finddetail-company').combobox('loadData',response);
+                        $('#finddetail-area').combotree('loadData',[
+                            {
+                                id:"99",
+                                text:'全部',
+                                children:[
+                                    {"id":"东","text":"东"},
+                                    {"id":"西","text":"西"},
+                                    {"id":"南","text":"南"},
+                                    {"id":"北","text":"北"},
+                                    {"id":"中","text":"中"},
+                                    {"id":"直销","text":"直销"}
+                                ]
+                            }
+                        ]);
+                        $('#finddetail-status').combotree('loadData',[
+                            {
+                                id:"99",
+                                text:'全部',
+                                children:[
+                                    {"id":"0","text":"已完成"},
+                                    {"id":"1","text":"新更新"},
+                                    {"id":"2","text":"快过期"},
+                                    {"id":"3","text":"未完成"},
+                                    {"id":"4","text":"已过期"},
+                                    {"id":"5","text":"不更新"}
+                                ]
+                            }
+                        ]);
+                        var options = $('#detailGrid').datagrid('options');
+                        var data = $.extend(true,{}, options.queryParams);
+                        data.Area = data.Area ? data.Area.split(',') : [];
+                        data.Status = data.Status ? data.Status.split(',') : [];
+                        $('#fc-form').form('load',data);
+                    });
+                },
+                buttons:[{
+                    text:'确定',
+                    iconCls:'icon-ok',
+                    handler:function(){
+                        var data = $('#fc-form').toJSON();
+                        data.Area = $.isArray(data.Area) ? data.Area.join(',') : data.Area;
+                        data.Status = $.isArray(data.Status) ? data.Status.join(',') : data.Status;
+                        $('#detailGrid').datagrid('load',data);
+                        $('#dialogFindDetail').dialog('destroy');
+                    }
+                },{
+                    text:'取消',
+                    handler:function(){
+                        $('#dialogFindDetail').dialog('destroy');
+                    }
+                }]
+            });
+        });
+        $('#btnExport').click(function () {
+            $('<div/>').dialog({
+                title:'导出',
+                collapsible:false,
+                minimizable:false,
+                maximizable:false,
+                resizable:false,
+                id : 'dialogExport',
+                width : 400,
+                height : 200,
+                closed : false,
+                cache : false,
+                href:'../Dialog/Export',
+                modal:true,
+                buttons:[{
+                    text:'确定',
+                    iconCls:'icon-ok',
+                    handler: function () {                      
+                        var options = $('#detailGrid').datagrid('options');
+                        var extJson = $('#ext-form').toJSON();
+                        var params = '?token='+window.token;
+                        if(extJson.current == 'true'){
+                            params += '&'+$.param(options.queryParams);
+                        }
+                        window.location.href='@Url.Action("Export", "Details")'+params;
+                        $('#dialogExport').dialog('destroy');
+                    }
+                },{
+                    text:'取消',
+                    handler:function(){
+                        $('#dialogExport').dialog('destroy');
+                    }
+                }]
+            });
+        });
+    });
+    function rowStyler(index,row){
+        if(row.readState=="0"){
+            return 'font-weight:bold;';
+        }
+    }
+    function formatterAttachment(value,row,index){
+        if(value) {
+            return "<a target='_blank' href='" + window.apiHost + '/api/Credentials/Download?id=' + value + "'>下载</a>"
+        }
+        else{
+            return "";
+        }
+    }
+</script>

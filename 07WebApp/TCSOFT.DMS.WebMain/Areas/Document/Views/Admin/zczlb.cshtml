@@ -1,0 +1,300 @@
+﻿@{
+    Layout = null;
+}
+
+<div class="easyui-layout" style="height:100%;">
+    <div region="north" style="height:94px">
+        <link href="~/Content/Document/CSS/_Partialtool.css" rel="stylesheet" />    
+        <div id="BodyContentTool">
+            <div id="btnButton">
+                <div class="comboelse" style="padding:5px 5px 5px 0;">
+                    <input id="searchproductline" class="easyui-combobox txt250" name="productType" buttonText="类型" panelHeight="auto" editable="false"
+                           data-options="valueField:'ProductTypeID',textField:'ProductTypeName',url:'@Url.Action("ProductType", "Register")'">                  
+                    <input class='easyui-datebox txt350' id='ValidDate1' editable='false' buttonText='发布日期起'/>
+                    <input class='easyui-datebox txt350' id='ValidDate2' editable='false' buttonText='发布日期止'/>
+                </div>
+                <ul>
+                    <li><input id="serchText" class="easyui-searchbox search" style="height:32px;width:500px;"
+                               data-options="prompt:'支持标题、货号、发布人模糊查询',searcher:function(){}"/></li>
+                    <li><a href="#" class="easyui-linkbutton" id="btnAdd" onclick="addDialog();">添加</a></li>
+                    <li><a href="#" class="easyui-linkbutton" id="btnModify" onclick="updateDialog();">修改</a></li>
+                    <li><a href="#" class="easyui-linkbutton" id="btnDel" onclick="del();">删除</a></li>
+                    <li><a href="#" class="easyui-linkbutton" id="btnExport" onclick="">导出</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div region="west" style="width:200px;border-right:1px solid #CCC; overflow:hidden;">
+        <ul id="product_tree" class="easyui-tree"
+            data-options="url:'@Url.Action("ProductLine", "Register")',method:'get',animate:true,fit:true"></ul>
+    </div>
+
+    <div region="center">
+        <div id="BodyContentDiv">
+            <table id="grid" class="easyui-datagrid"
+                   data-options="
+                    iconCls: 'icon-view',
+                    width: function () { return document.body.clientWidth * 0.9 },
+                    nowrap: true,
+                    autoRowHeight: true,
+                    striped: true,
+                    collapsible: false,
+                    pagination: true,
+                    pageSize: 10,
+                    pageList: [10, 20, 30],
+                    rownumbers: true,
+                    sortOrder: 'desc',
+                    remoteSort: false,
+                    singleSelect: false,
+                    queryParams: {},
+                    animate: true,                    
+                    idField:'id',
+                    fit:true">
+                <thead>
+                <tr>
+             
+                    <th data-options="field:'RegisterID',checkbox:true"></th>
+                    <th data-options="field:'Attachments',width:80,align:'center',formatter:formatterAttachment">附件</th>
+                    <th data-options="field:'ProductTypeName',width:100,sortable:true,align:'center'">产品类型</th>
+                    <th data-options="field:'ProductLineName',width:120,align:'center',sortable:true">产品线</th>
+                    <th data-options="field:'ProductNo',width:120,align:'center',sortable:true">货号</th>
+                    <th data-options="field:'Title',width:250,align:'center'">标题</th>
+                    <th data-options="field:'ValidDate',width:100,align:'center'">有效期</th>
+                    <th data-options="field:'Publisher',width:100,align:'center'">发布人</th>
+                    <th data-options="field:'PublishDate',width:160,align:'center'">发布日期</th>
+                    <th data-options="field:'UpdateDate',width:160,align:'center'">更新日期</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="easyui-dialog" id="downloadDialog" title="下载附件" style="padding:10px" data-options="closed: true,modal:true,
+            buttons:[{
+				text:'下载',
+				handler:gotoDownload
+			}],
+            onResize:function(){
+                $(this).dialog('center');
+            }">
+    <div class="easyui-panel" style="width:400px;padding:20px 60px">
+        <div style="margin-bottom:10px">
+            <input type="checkbox" name="downloadUrl"/>&nbsp;&nbsp;附件1
+        </div>
+        <div style="margin-bottom:10px">
+            <input type="checkbox" name="downloadUrl"/>&nbsp;&nbsp;附件2
+        </div>
+    </div>
+</div>
+
+<script>
+    var searchOps = {}
+
+    $(function () {
+        $('#grid').datagrid({
+            url: '@Url.Action("Query", "Register")',
+        });
+
+        $('#product_tree').tree({
+            onSelect: function (node) {               
+                searchOps.ProductLineID = node.ProductLineID;
+                $('#grid').datagrid('load', searchOps);
+            }
+        });
+
+        $('#searchproductline').combobox({
+            onSelect: function (record) {
+                console.log(record);
+                searchOps.ProductTypeID = record.ProductTypeID;
+                $('#grid').datagrid('load', searchOps);
+            }
+        });
+
+
+
+        $('#btnFind').click(function () {
+            var searchText = $("#serchText").textbox('getText');
+
+        });
+
+    });
+
+
+    //添加
+    function addDialog() {      
+        $('<div/>').dialog({
+            title: '注册证 添加新项',
+            width: 500,
+            height: 600,
+            id: 'addDialog',
+            top: 20,
+            modal: true,
+            closed: false,
+            href: '@Url.Action("AddRegister", "Dialog")',
+            buttons: [{
+                text: '确定',
+                handler: function () {
+                    addSubmit();
+                }
+            }, {
+                text: '取消',
+                handler: function () {                   
+                    $('#addDialog').dialog('close');
+                }
+            }],
+            onLoad: function () {                
+               
+                $('#add_productLine').combotree({
+                    url: '@Url.Action("ProductLine", "Register")',                   
+                    required: true,
+                    onBeforeSelect: function (node) {                      
+                        if (node.children) return false;
+                        return true;
+                    }
+                });
+                $('#add_productType').combobox({
+                    url: '@Url.Action("ProductType", "Register")',
+                    valueField: 'ProductTypeID',
+                    textField: 'ProductTypeName'
+                });
+            }
+        });
+    }
+
+
+    //修改
+    function updateDialog() {
+        var record = $('#grid').datagrid('getSelected');
+        if (record == null) {
+            alert('请选择一行再操作');
+            return;
+        }
+        $('<div/>').dialog({
+            title: '注册证 更新信息',
+            width: 500,
+            height: 600,
+            id: 'addDialog',
+            top: 20,
+            modal: true,
+            closed: false,
+            href: '@Url.Action("AddRegister", "Dialog")',
+            buttons: [{
+                text: '确定',
+                handler: function () {
+                    addSubmit();
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    $('#addDialog').dialog('close');
+                }
+            }],
+            onLoad: function () {
+
+                $('#add_productLine').combotree({
+                    url: '@Url.Action("ProductLine", "Register")',
+                    required: true,
+                    onBeforeSelect: function (node) {
+                        if (node.children) return false;
+                        return true;
+                    }
+                });
+                $('#add_productType').combobox({
+                    url: '@Url.Action("ProductType", "Register")',
+                    valueField: 'ProductTypeID',
+                    textField: 'ProductTypeName'
+                });
+                
+                record
+
+            }
+        });
+    }
+
+    function addSubmit() {
+        var data = $('#ac-form').toJSON();
+        if (!data.ProductLineID) {
+            alert('产品线不能为空');
+            return;
+        }
+        if (!data.ProductTypeID) {
+            alert('产品类型不能为空');
+            return;
+        }
+        //var v = $('#ac-form input[name=Certificate]').val();
+        //if (v == null || v == '') {
+        //    alert('证书不能为空');
+        //    return;
+        //}
+        if (data.Title == null || data.Name == '') {
+            alert('标题不能为空');
+            return;
+        }
+        if (!data.ProductNo) {
+            alert('部门不能为空');
+            return;
+        }
+        if (!data.ValidDate) {
+            alert('有效期不能为空');
+            return;
+        }
+
+        var form = new FormData($('#ac-form')[0]);
+        var settings = {
+            "async": true,           
+            "url": '@Url.Action("Add", "Register")',
+            "method": "POST",
+            "processData": false,
+            "contentType": false,
+            "mimeType": "multipart/form-data",
+            "data": form
+        }
+     
+        $.ajax(settings).done(function (response) {
+            var obj = JSON.parse(response);
+            if (!obj.success) {
+                alert(obj.message);
+                return;
+            }
+            $('#addDialog').dialog('destroy');
+            $('#grid').datagrid('reload');
+        }).fail(function (response) {
+            var obj = JSON.parse(response.responseText);
+            alert(obj.Message);
+        });
+    }
+
+
+    function search() {
+        console.log(searchOps)
+
+    }
+
+
+
+
+    function updateFile() {
+        document.getElementById("fileInput").click();
+    }
+
+    function formatterAttachment(value, row, index) {
+        return "<a href='javascript:void(0);' onclick='downloadAttachment();'>下载</a>"
+    }
+    function downloadAttachment() {
+        $("#downloadDialog").dialog('open');
+    }
+
+    function gotoDownload() {
+
+    }
+    function del() {
+        $.messager.confirm('删除', '是否确认删除?', function (r) {
+            if (r) {
+                alert('删除成功！');
+            }
+        });
+    }
+</script>

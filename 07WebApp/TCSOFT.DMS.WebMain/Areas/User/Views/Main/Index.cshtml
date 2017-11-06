@@ -1,0 +1,118 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link href="~/Content/EasyUI/themes/lanssion/easyui.css" rel="stylesheet" />
+    <link href="~/Content/EasyUI/themes/icon.css" rel="stylesheet" />
+    <link href="~/Content/CSS/CommonS.css" rel="stylesheet" />
+    <link href="~/Content/User/CSS/Main.css" rel="stylesheet" />
+    <link href="~/Content/MasterData/CSS/_LayoutDetails.css" rel="stylesheet" />
+    <script src="~/Content/EasyUI/jquery.min.js"></script>
+    <script src="~/Content/JS/jquery.form.min.js"></script>
+    <script src="~/Content/EasyUI/jquery.easyui.min.js"></script>
+    <script src="~/Content/JS/EasyUIExtentions.js"></script>
+    <script src="~/Content/EasyUI/locale/easyui-lang-zh_CN.js"></script>
+    <title>用户管理</title>
+
+    <script type="text/javascript">
+        $(function () {
+            // 初始化默认首页
+            $(".submenu li").css("color", "#FFF");
+            $(".submenu li").css("background-color", "#0033CC");
+            var $ww = $("#uloneli li").first().find("a").first();
+            $ww.parent().css("background-color", "#a7a8aa");
+            $(".imgcd").hide();
+            $ww.prev().show();
+            $ww.removeClass("hover");
+            var url = $ww.attr("value");
+            $("#ContentArea").panel({ href: '@Url.Action("CreateUser", "User")' });
+        })
+        function ShowContent(contenturl, seleid) {
+            SelectedL(seleid);
+            $("#ContentArea").panel({ href: contenturl });
+        }
+        function SelectedL(seleid) {
+            $(".submenu li").css("color", "#0033CC");
+            $(".submenu li").css("background-color", "#0033CC");
+            $(".imgcd").hide();
+            $("#" + seleid).prev().show();
+            $("#" + seleid).parent().css("background-color", "#a7a8aa");
+            $("#" + seleid).removeClass("hover");
+        }
+        //退出
+        function Exit() {
+            window.opener = null;
+            window.open('', '_self');
+            window.close();
+        }
+    </script>
+    
+</head>
+<body class="easyui-layout">
+    <div data-options="region:'west'" id="Header">
+        <div class="easyui-layout" data-options="fit:true">
+            <div data-options="region:'north'" id="HeaderImg" style="height: 150px;width:250px;">
+                <a href="#">
+                    <img src="~/Content/MasterData/Image/logo-BCI.png" />
+                </a>
+            </div>
+            <div data-options="region:'center'" style="height:100%; overflow-x:hidden;border-top:1px solid #F2F2F2;">
+                <div id="lstSty" style="height:100%;">
+                    <div id="ListMenuOne">
+                        <ul id="uloneli" class="submenu">
+                            <li>
+                                <img class="imgcd" src="~/Content/MasterData/Image/Menu.png" style="float:left;width:32px;height:40px;display:none" />
+                                <a href="#" id="NewAppliuser" onclick="ShowContent('/User/User/CreateUser', 'NewAppliuser')">新申请用户</a>
+                            </li>
+                            <li>
+                                <img class="imgcd" src="~/Content/MasterData/Image/Menu.png" style="float:left;width:32px;height:40px;display:none" />
+                                <a href="#" id="OldUser" onclick="ShowContent('/User/User/ExistingUser', 'OldUser')">已有用户</a>
+                            </li>
+                            <li>
+                                <img class="imgcd" src="~/Content/MasterData/Image/Menu.png" style="float:left;width:32px;height:40px;display:none" />
+                                <a href="#" id="BlockUser" onclick="ShowContent('/User/User/DisableUser', 'BlockUser')">停用用户</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div data-options="region:'center'" style="overflow: hidden;">
+        <div class="easyui-layout" data-options="fit:true">
+            <div data-options="region:'north'" id="TitleTop">
+                <div id="TitleContent" class="easyui-layout" fit="true">
+                    <div region="west" border="false" style="width:400px;font-size:26px;color:#0241a9;font-weight:700;padding:0 0 0 45px;line-height:56px;overflow:hidden;">
+                        用户管理
+                    </div>
+                    <div region="center">
+                        @{
+                            var user = (TCSOFT.DMS.MasterData.DTO.UserLoginDTO)Session["UserLoginInfo"];
+                            <div id="tipname">
+                                <p id="spanA">@user.PhoneNumber</p>
+                                <p style="border-bottom:1px solid #0096D6;width:204px;"></p>
+                                <p id="spanB">@user.FullName</p>
+                            </div>
+                        }
+                    </div>
+                    <div region="east" style="width:144px;overflow: hidden;padding-left:4px;" border="false">
+                        <a href="#" class="areaUser"></a>
+                        <a href="#" id="spanOut" onclick="Exit();" class="areaLogout"></a>
+                    </div>
+                </div>
+            </div>
+            <div region="center">
+                <div id="ContentArea" style="height:100%;width:100%;">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

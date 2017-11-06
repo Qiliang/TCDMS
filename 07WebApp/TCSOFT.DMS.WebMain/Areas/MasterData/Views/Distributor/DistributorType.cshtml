@@ -1,0 +1,178 @@
+﻿@{
+    Layout = null;
+}
+
+<script type="text/javascript">
+    $(function () {
+        $('#grid').datagrid({
+            url: '@Url.Action("GetDistributorTypeList", "Distributor")',
+            iconCls: 'icon-view',
+            width: function () { return document.body.clientWidth * 0.9 },
+            nowrap: true,
+            autoRowHeight: true,
+            striped: true,
+            collapsible: false,
+            pagination: true,
+            pageSize: 1000,
+            pageList: [1000],
+            rownumbers: true,
+            sortOrder: 'desc',
+            remoteSort: false,
+            singleSelect: true,
+            idField: 'DistributorTypeID',
+            queryParams: {},
+            animate: true,
+            columns: [[
+                 { title: 'ID', field: 'DistributorTypeID', hidden: true, width: 1, halign: 'center', align: 'center' },
+                 { title: '经销商类别名称', field: 'DistributorTypeName', width: 280, halign: 'center', align: 'left' }
+            ]]
+        });
+        //新增/修改
+        $('#AddorUpdateWindow').dialog({
+            width: 'auto',
+            height: 'auto',
+            top: 100,
+            modal: true,
+            closed: true,
+            inline: true,
+            buttons: [{
+                id:'disType',
+                text: '确定',
+                handler: function () {
+                    Save();
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    $('#AddorUpdateWindow').dialog('close');
+                }
+            }],
+            onOpen: function () {
+                
+                $('#disTypeg').linkbutton({ disabled: false });
+            },
+            onClose: function () {
+                
+            }
+        });
+    })
+    function ClickAdd() {
+        $('#AddUp').val(1);
+        $('#DistributorTypeName').textbox('setValue', null);
+        $('#AddorUpdateWindow').dialog({ title: "新增经销商类别" });
+        $('#AddorUpdateWindow').dialog('open');
+    }
+    function ClickModify() {
+        var row = $("#grid").datagrid("getSelected");
+        if (row == null) {
+            alert("您还没有选择经销商类别信息，请选择！");
+            return;
+        }
+        $.post('@Url.Action("GetDistributorType", "Distributor")',
+                      { DistributorTypeID: row.DistributorTypeID },
+                          function (data, textStatus, jqXHR) {
+                              if (data.SubmitResult) {
+                                  $('#AddUp').val(2);
+                                  $('#DistributorTypeID').val(data.Object.DistributorTypeID);
+                                  $('#DistributorTypeName').textbox('setValue', data.Object.DistributorTypeName);
+
+                                  $('#AddorUpdateWindow').dialog({ title: "修改经销商类别" });
+                                  $('#AddorUpdateWindow').dialog('open');
+                              }
+                              else {
+                                  alert(data.Message);
+                                  return;
+                              }
+                          }, "json");
+    }
+    function ClickDel() {
+        var row = $("#grid").datagrid("getSelected");
+        if (row == null) {
+            alert("您还没有选择经销商类别信息，请选择！");
+            return;
+        }
+        $.messager.confirm('提示', '是否删除选中数据?', function (data) {
+            if (!data) {
+                return;
+            }
+
+            $.post(
+            '@Url.Action("DeleteDistributorType", "Distributor")',
+            {
+                DistributorTypeID: row.DistributorTypeID
+            },
+            function success(data, textStatus, jqXHR) {
+                if (!data.SubmitResult) {
+                    alert(data.Message);
+                }
+                else {
+                    alert("删除成功！");
+                    $('#grid').datagrid('clearSelections');
+                    $('#grid').datagrid('reload');
+                }
+            }, "json");
+        });
+    }
+    function Save() {
+        if ($("#AddorUpdate").form('validate')) {
+            $('#disTypeg').linkbutton({disabled: true});
+            if ($('#AddUp').val() == 1) {
+                $.post(
+                 '@Url.Action("AddDistributorType", "Distributor")',
+                 {
+                     DistributorTypeName: $('#DistributorTypeName').textbox('getValue'),
+                 },
+                 function success(data, textStatus, jqXHR) {
+                     if (!data.SubmitResult) {
+                         alert(data.Message);
+                     }
+                     else {
+                         $('#AddorUpdateWindow').dialog('close');
+                         $('#grid').datagrid('clearSelections');
+                         $('#grid').datagrid('reload');
+                     }
+                 }, "json");
+            }
+            else {
+                $.post(
+                  '@Url.Action("UpdateDistributorType", "Distributor")',
+                  {
+                      DistributorTypeID: $('#DistributorTypeID').val(),
+                      DistributorTypeName: $('#DistributorTypeName').textbox('getValue'),
+                  },
+                  function success(data, textStatus, jqXHR) {
+                      if (!data.SubmitResult) {
+                          alert(data.Message);
+                      }
+                      else {
+                          $('#AddorUpdateWindow').dialog('close');
+                          $('#grid').datagrid('reload');
+                      }
+                  }, "json");
+            }
+        }
+    }
+</script>
+<div class="easyui-layout" style="height:100%;">
+    <div region="north">
+        @Html.Partial("_Partialtool")
+    </div>
+    <div region="center">
+        <div id="BodyContentDiv" class="DivPage">
+            <table id="grid" style="width:100%;height:100%;"></table>
+        </div>
+    </div>
+</div>
+
+@*经销商类别新增/修改*@
+<div id="AddorUpdateWindow">
+    <div class="AddContent">
+        <input id="DistributorTypeID" hidden="hidden" />
+        <input id="AddUp" hidden="hidden" />
+        <form id="AddorUpdate">
+            <p>
+                <span class="cl100">经销商类别名称：</span><input class="easyui-textbox txt200" style="width:200px;" id="DistributorTypeName" required missingmessage="经销商类别名称必须填写！" />
+            </p>
+        </form>
+    </div>
+</div>

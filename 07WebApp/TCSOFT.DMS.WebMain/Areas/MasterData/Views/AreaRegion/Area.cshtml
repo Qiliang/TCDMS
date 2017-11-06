@@ -1,0 +1,469 @@
+﻿@{
+    Layout = null;
+}
+<style type="text/css">
+    /*分页只显示总页数*/
+    .pagination {
+        height: 30px;
+    }
+
+        .pagination table {
+            display: none;
+        }
+
+    .pagination-info {
+        display: none;
+    }
+</style>
+<script type="text/javascript">
+    $(function () {
+        $('#grid').treegrid({
+            url: '',
+            iconCls: 'icon-view',
+            //width: function () { return document.body.clientWidth * 0.9 },
+            rownumbers: true,
+            pagination: true,
+            pageSize: 1000,
+            pageList: [1000],
+            idField: 'FictitiousID',
+            treeField: 'AreaName',
+            animate: true,
+            queryParams: {},
+            columns: [[
+            { title: 'ID', field: 'AreaID', hidden: true, width: 1, halign: 'center', align: 'center' },
+            { title: 'FID', field: 'FictitiousID', hidden: true, width: 1, halign: 'center', align: 'center' },
+            { title: 'PID', field: 'AreaPID', hidden: true, width: 1, halign: 'center', align: 'center' },
+            { title: '名称', field: 'AreaName', width: 700, halign: 'center', align: 'left' },
+            ]]
+        });
+        $('#tree').treegrid({
+            url: '@Url.Action("GetDepartmentList", "UserAuthority")',
+            width: function () { return document.body.clientWidth * 0.9 },
+            idField: 'FictitiousID',
+            treeField: 'DepartName',
+            striped:false,
+            fitColumns:false ,
+            animate: true,
+            columns: [[
+                { title: 'DepartID', field: 'DepartID', hidden: true, width: 1 },
+                { title: 'FictitiousID', field: 'FictitiousID', hidden: true, width: 1 },
+                { title: 'DepartParentID', field: 'DepartParentID', hidden: true, width: 1 },
+                { title: '部门名称', field: 'DepartName', halign: 'left', align: 'left' },
+            ]], onLoadSuccess: function () {
+                $('#tree').treegrid('selectRow', 1);
+                var row = $('#tree').treegrid('getSelected');
+                $('#DepartID').val(row.DepartID);
+            },
+            onSelect: function (rowIndex, rowData) {
+                if (rowIndex != null) {
+                    $('#grid').treegrid("clearSelections");
+                    Datagrid(rowIndex.DepartID);
+                    $('#DepartID').val(rowIndex.DepartID);
+                }
+            }
+        });
+
+        //新增/修改
+        $('#AddorUpdateWindow').dialog({
+            width: 'auto',
+            height: 'auto',
+            top: 100,
+            modal: true,
+            closed: true,
+            inline: true,
+            buttons: [{
+                text: '确定',
+                handler: function () {
+                    SaveArea();
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    $('#AddorUpdateWindow').dialog('close');
+                }
+            }]
+        });
+
+        //省份单选
+        $('#ProvinceWindow').dialog({
+            width: 'auto',
+            height: 'auto',
+            top: 100,
+            modal: true,
+            closed: true,
+            inline: true,
+            buttons: [{
+                text: '确定',
+                handler: function () {
+                    SaveRegion();
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    $('#ProvinceWindow').dialog('close');
+                }
+            }]
+        });
+        //省份多选
+        $('#ProvinceselectionsWindow').dialog({
+            width: 'auto',
+            height: 'auto',
+            top: 100,
+            modal: true,
+            closed: true,
+            inline: true,
+            buttons: [{
+                text: '确定',
+                handler: function () {
+                    SaveManyRegion();
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    $('#ProvinceselectionsWindow').dialog('close');
+                }
+            }]
+        });
+        GetProvince();
+        $('#ManyRegionName').combobox({
+            multiple: true,
+            formatter: function (row) { //formatter方法就是实现了在每个下拉选项前面增加checkbox框的方法
+                var opts = $(this).combobox('options');
+                return '<input type="checkbox" class="combobox-checkbox">' + row[opts.textField]
+            },
+            onLoadSuccess: function () {  //下拉框数据加载成功调用
+                var opts = $(this).combobox('options');
+                var target = this;
+                var values = $(target).combobox('getValues');//获取选中的值的values
+                $.map(values, function (value) {
+                    var el = opts.finder.getEl(target, value);
+                    el.find('input.combobox-checkbox')._propAttr('checked', true);
+                })
+            },
+            onSelect: function (row) { //选中一个选项时调用
+                var opts = $(this).combobox('options');
+
+                //设置选中值所对应的复选框为选中状态
+                var el = opts.finder.getEl(this, row[opts.valueField]);
+                el.find('input.combobox-checkbox')._propAttr('checked', true);
+
+            },
+            onUnselect: function (row) {//不选中一个选项时调用
+                var opts = $(this).combobox('options');
+
+                var el = opts.finder.getEl(this, row[opts.valueField]);
+                el.find('input.combobox-checkbox')._propAttr('checked', false);
+            }
+        });
+
+    })
+    function ClickAdd() {
+        $('#AreaName').textbox('setValue', null);
+        $('#ShortName').textbox('setValue', null);
+        $('#RegionName').textbox('setValue', null);
+        $("#AddUp").val(0);
+
+        var row = $("#grid").treegrid("getSelected");
+        if (row) {
+            var getLevel = $('#grid').treegrid('getLevel', row.FictitiousID)
+            if (getLevel == 1) {
+                //新增小区
+                $("#AreaPID").val(row.AreaID);
+                $("#spanname").html("小区名称：");
+                $('#AddorUpdateWindow').dialog({ title: "新增小区" });
+                $('#AddorUpdateWindow').dialog('open');
+            }
+            else if (getLevel == 2) {
+                GetManyProvince();
+                //选择省市
+                $("#AreaID").val(row.AreaID);
+                $('#ProvinceselectionsWindow').dialog({ title: "新增省份" });
+                $('#ProvinceselectionsWindow').dialog('open');
+            }
+            else if (getLevel == 3) {
+                alert('请先选择大区小区再新增！');
+                return;
+            }
+        } else {
+            //新增大区
+            $("#AreaPID").val(null);
+            $("#spanname").html("大区名称：");
+            $('#AddorUpdateWindow').dialog({ title: "新增大区" });
+            $('#AddorUpdateWindow').dialog('open');
+        }
+    }
+    function ClickModify() {
+        var row = $("#grid").treegrid("getSelected");
+        if (!row) {
+            alert("请选择要修改的数据！");
+            return;
+        }
+        var strAreaID = null;
+        var strAreaPID = null;
+        var strAreaRegionID = null;
+        var getLevel = $('#grid').treegrid('getLevel', row.FictitiousID)
+        if (getLevel == 1 || getLevel == 2) {
+            strAreaID = row.AreaID;
+            strAreaPID = row.AreaPID;
+        }
+        if (getLevel == 3) {
+            strAreaPID = row.AreaPID;
+            strAreaRegionID = row.AreaID;
+
+        }
+        $.post('@Url.Action("GetOneArea", "AreaRegion")', {
+            AreaID: strAreaID,
+            AreaPID: strAreaPID,
+            AreaRegionID: strAreaRegionID
+        }, function (data) {
+            if (data.SubmitResult) {
+                $("#AddUp").val(1);
+                $("#AreaID").val(data.Object.AreaID);
+                $('#AreaName').textbox('setValue', data.Object.AreaName);
+                $("#RegionName").combobox("setValue", data.Object.RegionID);
+
+                var getLevel = $('#grid').treegrid('getLevel', row.FictitiousID)
+                if (getLevel == 1) {
+                    //修改大区
+                    $("#spanname").html("大区名称：");
+                    $('#AddorUpdateWindow').dialog({ title: "修改大区" });
+                    $('#AddorUpdateWindow').dialog('open');
+                }
+                if (getLevel == 2) {
+                    //修改小区
+                    $("#spanname").html("小区名称：");
+                    $('#AddorUpdateWindow').dialog({ title: "修改小区" });
+                    $('#AddorUpdateWindow').dialog('open');
+                }
+                if (getLevel == 3) {
+                    //修改选择省市
+                    $('#ProvinceWindow').dialog({ title: "修改省份" });
+                    $('#ProvinceWindow').dialog('open');
+                }
+            } else {
+                alert(data.Message);
+            }
+        }, "json");
+    }
+    function ClickDel() {
+        var row = $("#grid").treegrid("getSelected");
+        if (!row) {
+            alert("您还没有选择信息，请选择！");
+            return;
+        }
+        $.messager.confirm('提示', '是否删除选中数据?', function (data) {
+            if (!data) {
+                return;
+            }
+            var strAreaID = null;
+            var strAreaRegionID = null;
+            var getLevel = $('#grid').treegrid('getLevel', row.FictitiousID)
+            if (getLevel == 1 || getLevel == 2) {
+                strAreaID = row.AreaID;
+            }
+            if (getLevel == 3) {
+                strAreaRegionID = row.AreaID;
+            }
+            $.post("@Url.Action("DeleteArea", "AreaRegion")", {
+                AreaID: strAreaID,
+                AreaRegionID: strAreaRegionID
+            }, function (data) {
+                if (data.SubmitResult) {
+                    $('#grid').treegrid("reload");
+                    $('#grid').treegrid("clearSelections");
+                } else {
+                    alert(data.Message);
+                }
+            })
+        })
+    }
+    function SaveArea() {
+        if ($("#AddorUpdate1").form('validate')) {
+            if ($("#AddUp").val() == 0) {
+                $.post("@Url.Action("AddArea","AreaRegion")", {
+                    AreaPID: $("#AreaPID").val(),
+                    DepartID: $("#DepartID").val(),
+                    AreaName: $("#AreaName").textbox('getValue'),
+                    AreaShortName: ''  //暂时没有
+                }, function (data) {
+                    if (data.SubmitResult) {
+                        $('#grid').treegrid("clearSelections");
+                        $('#grid').treegrid("reload");
+                        $('#AddorUpdateWindow').dialog('close')
+                    } else {
+                        alert(data.Message);
+                    }
+                });
+            }
+            else {
+                $.post("@Url.Action("UpdateArea","AreaRegion")", {
+                    AreaID: $("#AreaID").val(),
+                    AreaName: $("#AreaName").textbox('getValue'),
+                    AreaShortName: ''   //暂时没有
+                }, function (data) {
+                    if (data.SubmitResult) {
+                        $('#grid').treegrid("reload");
+                        $('#AddorUpdateWindow').dialog('close')
+                    } else {
+                        alert(data.Message);
+                    }
+                });
+            }
+        }
+    }
+    function SaveRegion() {
+        var row = $("#grid").treegrid("getSelected");
+        if ($("#AddorUpdate2").form('validate')) {
+            if ($("#AddUp").val() == 0) {
+                $.post("@Url.Action("AddArea","AreaRegion")", {
+                    AreaID: row.AreaID,
+                    RegionID: $("#RegionName").combobox("getValue"),
+                }, function (data) {
+                    if (data.SubmitResult) {
+                        $('#grid').treegrid("clearSelections");
+                        $('#grid').treegrid("reload");
+                        $('#ProvinceWindow').dialog('close')
+                    } else {
+                        alert(data.Message);
+                    }
+                });
+            }
+            else {
+                $.post("@Url.Action("UpdateArea","AreaRegion")", {
+                    AreaRegionID: row.AreaID,
+                    AreaID: row.AreaPID,
+                    RegionID: $("#RegionName").combobox("getValue")
+                }, function (data) {
+                    if (data.SubmitResult) {
+                        $('#grid').treegrid("reload");
+                        $('#ProvinceWindow').dialog('close')
+                    } else {
+                        alert(data.Message);
+                    }
+                });
+            }
+        }
+    }
+    function GetProvince() {
+        $.ajaxSetup({
+            async: false
+        });
+        $("#RegionName").combobox({
+            url: '@Url.Action("GetProvinceRegionList", "AreaRegion")',
+            valueField: 'RegionID',
+            textField: 'RegionName',
+            editable: false,
+            onLoadSuccess: function (data) {
+                $.ajaxSetup({
+                    async: true
+                });
+                return;
+            }
+        });
+    }
+    function GetManyProvince() {
+        $.ajaxSetup({
+            async: false
+        });
+        $("#ManyRegionName").combobox({
+            url: '@Url.Action("GetProvinceRegionList", "AreaRegion")',
+            valueField: 'RegionID',
+            textField: 'RegionName',
+            editable: false,
+            onLoadSuccess: function (data) {
+                $.ajaxSetup({
+                    async: true
+                });
+                return;
+            }
+        });
+    }
+    function Datagrid(id) {
+        $('#grid').treegrid({ url: '@Url.Action("GetArea", "AreaRegion")', queryParams: { DepartID: id }, });
+        $('#DepartID').val(id);
+    }
+    function SaveManyRegion() {
+        var row = $("#grid").treegrid("getSelected");
+        if ($("#AddorUpdate3").form('validate')) {
+            if ($("#AddUp").val() == 0) {
+                $.post("@Url.Action("AddArea","AreaRegion")", {
+                    AreaID: row.AreaID,
+                    RegionIDList: $("#ManyRegionName").combobox("getValues")
+                }, function (data) {
+                    if (data.SubmitResult) {
+                        $('#grid').treegrid("clearSelections");
+                        $('#grid').treegrid("reload");
+                        $('#ProvinceselectionsWindow').dialog('close')
+                    } else {
+                        alert(data.Message);
+                    }
+                });
+            }
+            else {
+                $.post("@Url.Action("UpdateArea","AreaRegion")", {
+                    AreaRegionID: row.AreaID,
+                    AreaID: row.AreaPID,
+                    RegionID: $("#RegionName").combobox("getValue")
+                }, function (data) {
+                    if (data.SubmitResult) {
+                        $('#grid').treegrid("reload");
+                        $('#ProvinceWindow').dialog('close')
+                    } else {
+                        alert(data.Message);
+                    }
+                });
+            }
+        }
+    }
+</script>
+<div class="easyui-layout" style="height:100%;">
+    <div region="north" style="height:94px">
+        @Html.Partial("_Partialtool")
+    </div>
+    <div region="west" style="width:200px;height:100%;border-right:1px solid #CCC;">
+        <table id="tree" fit="true"></table>
+    </div>
+    <div region="center">
+        <table id="grid" style="border:1px solid #808080;" fit="true"></table>
+    </div>
+</div>
+@*新增/修改*@
+<div id="AddorUpdateWindow" class="AddContent">
+        <form id="AddorUpdate1">
+            <input type="hidden" id="DepartID" />
+            <input type="hidden" id="AreaPID" />
+            <input type="hidden" id="AreaID" />
+            <input type="hidden" id="AddUp" />
+            <p>
+                <span id="spanname" class="cl100">名称：</span>
+                <input class="easyui-textbox" style="width:200px;" id="AreaName" required missingmessage="名称必须填写！" />
+            </p>
+        </form>
+</div>
+    
+@*省份单选 修改*@
+<div id="ProvinceWindow" class="AddContent">
+    <div id="Provincegrid">
+        <form id="AddorUpdate2">
+            <p>
+                <span class="cl100">省份：</span>
+                <input class="easyui-combobox" style="width:200px;" id="RegionName" required missingmessage="省份必须选择！" />
+            </p>
+        </form>
+    </div>
+</div>
+        
+
+
+@*省份多选  新增*@
+<div id="ProvinceselectionsWindow" class="AddContent">
+    <div id="Provincegrid">
+        <form id="AddorUpdate3">
+            <p>
+                <span class="cl100">省份：</span>
+                <input class="easyui-combobox" style="width:200px;" id="ManyRegionName" required missingmessage="省份必须选择！" />
+            </p>
+        </form>
+    </div>
+</div>
+

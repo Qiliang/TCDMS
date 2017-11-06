@@ -1,0 +1,275 @@
+﻿@{
+    Layout = null;
+}
+<style type="text/css">
+    .tree-folder {
+        background: none;
+    }
+
+    .tree-folder-open {
+        background: none;
+    }
+
+    .tree-file {
+        background: none;
+    }
+    /*分页只显示总页数*/
+    .pagination {
+        height: 30px;
+    }
+
+        .pagination table {
+            display: none;
+        }
+
+    .pagination-info {
+        display: none;
+    }
+</style>
+<script type="text/javascript">
+    $(function () {
+        $('#tree').treegrid({
+            url: '@Url.Action("GetFirstLevelRegionList", "AreaRegion")',
+            iconCls: 'icon-view',
+            rownumbers: true,
+            pagination: true,
+            pageSize: 1000,
+            pageList: [1000],
+            idField: 'RegionID',
+            treeField: 'RegionName',
+            animate: false,
+            columns: [[
+                 { title: 'PID', field: 'RegionPID', width: 1, hidden: 'true', halign: 'center', align: 'center' },
+                 { title: 'ID', field: 'RegionID', width: 1, hidden: 'true', halign: 'center', align: 'left' },
+                 { title: '名称', field: 'RegionName', width: 500, halign: 'center', align: 'left' },
+                 { title: '编号', field: 'RegionCode', width: 500, halign: 'center', align: 'center' },
+                 { title: '等级', field: 'RegionLevel', width: 400, hidden: 'true', halign: 'center', align: 'center' }
+            ]],
+            onClickRow: function (node) {
+                $.post("@Url.Action("GetNextLevelRegionList", "AreaRegion")", {
+                    RegionID: node.RegionID
+                }, function (json) {
+                    var ss = $('#tree').treegrid('getChildren', node.RegionID);
+                    for (var i = 0; i < ss.length; i++) {
+                        if (ss[i].RegionPID == node.RegionID) {
+                            $('#tree').treegrid('remove', ss[i].RegionID);
+                        }
+                    }
+                    if (json.length > 0) {
+                        $('#tree').treegrid('append', {
+                            parent: node.RegionID,
+                            data: json
+                        });
+                    }
+                }, "json");
+            }
+        });
+        //新增/修改
+        $('#AddorUpdateWindow').dialog({
+            width: 'auto',
+            height: 'auto',
+            top: 100,
+            modal: true,
+            closed: true,
+            inline: true,
+            buttons: [{
+                text: '确定',
+                handler: function () {
+                    Save();
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    $('#AddorUpdateWindow').dialog('close');
+                }
+            }]
+        });
+
+    })
+    function ClickAdd() {
+        $('#AddID').val('');
+        $('#AddPID').val('');
+        $('#AddLevel').val('');
+        $('#Number').textbox('setValue', null)
+        $('#Name').textbox('setValue', null)
+        var row = $("#tree").datagrid("getSelected");
+        if (row == null) {
+            alert("请选择需要新增的子区域！");
+            return;
+        }
+        if (row.RegionLevel >= 3) {
+            alert("县区级行政区划不可以新增下级行政区域！");
+            return;
+        }
+        $('#FlushID').val(row.RegionID);
+        $('#AddUp').val(1);
+        $('#AddLevel').val(row.RegionLevel + 1);
+        $('#AddPID').val(row.RegionID);
+        $('#AddorUpdateWindow').dialog({ title: "行政区域信息" });
+        $('#AddorUpdateWindow').dialog('open');
+    }
+    function ClickModify() {
+        var row = $("#tree").datagrid("getSelected");
+        if (row == null) {
+            alert("您还没有选择行政区域信息，请选择！");
+            return;
+        }
+        $('#AddID').val('');
+        $('#AddPID').val('');
+        $('#AddLevel').val('');
+        $('#Number').textbox('setValue', null);
+        $('#Name').textbox('setValue', null);
+        $.post('@Url.Action("GetRegion", "AreaRegion")',
+                      { RegionID: row.RegionID },
+                          function (data, textStatus, jqXHR) {
+                              if (data) {
+                                  $('#AddUp').val(2);
+                                  $('#AddID').val(data.RegionID);
+                                  $('#AddPID').val(data.RegionPID);
+                                  $('#AddLevel').val(data.RegionLevel);
+                                  $('#Number').textbox('setValue', data.RegionCode);
+                                  $('#Name').textbox('setValue', data.RegionName);
+                              }
+                              else {
+                                  alert('数据不存在！');
+                                  return;
+                              }
+                          }, "json");
+        if (row.RegionLevel == 0) {
+            $('#FlushID').val(row.RegionID);
+        }
+        else {
+            $('#FlushID').val(row.RegionPID);
+        }
+        $('#AddorUpdateWindow').dialog({ title: "行政区域信息" });
+        $('#AddorUpdateWindow').dialog('open');
+    }
+    function ClickDel() {
+        var row = $("#tree").datagrid("getSelected");
+        if (row == null) {
+            alert("您还没有行政区域信息，请选择！");
+            return;
+        }
+        $.messager.confirm('提示', '是否删除选中数据?', function (data) {
+            if (!data) {
+                return;
+            }
+            if (row.RegionLevel == 0) {
+                alert("当前数据不允许删除！");
+                return;
+            }
+            else {
+                $('#FlushID').val(row.RegionPID);
+            }
+            $.post(
+            '@Url.Action("DeleteRegion", "AreaRegion")',
+            {
+                RegionID: row.RegionID
+            },
+            function success(data, textStatus, jqXHR) {
+                if (!data.SubmitResult) {
+                    alert(data.Message);
+                }
+                else {
+                    alert("删除成功！");
+                    flush($('#FlushID').val());
+                    $('#tree').treegrid('clearSelections');
+                }
+            }, "json");
+        });
+    }
+    function Save() {
+        if ($("#AddorUpdate").form('validate')) {
+            if ($('#AddUp').val() == 1) {
+                $.post(
+                 '@Url.Action("AddRegion", "AreaRegion")',
+                 {
+                     RegionPID: $('#AddPID').val(), RegionCode: $('#Number').textbox('getValue'), RegionName: $('#Name').textbox('getValue'), RegionLevel: $('#AddLevel').val()
+                 },
+                 function success(data, textStatus, jqXHR) {
+                     if (!data.SubmitResult) {
+                         alert(data.Message);
+                     }
+                     else {
+                         $('#AddorUpdateWindow').dialog('close');
+                         flush($('#FlushID').val());
+                         $('#tree').treegrid('clearSelections');
+                     }
+                 }, "json");
+            }
+            else {
+                $.post(
+                  '@Url.Action("UpdateRegion", "AreaRegion")',
+                  {
+                      RegionID: $('#AddID').val(), RegionPID: $('#AddPID').val(), RegionCode: $('#Number').textbox('getValue'), RegionName: $('#Name').textbox('getValue'), RegionLevel: $('#AddLevel').val()
+                  },
+                  function success(data, textStatus, jqXHR) {
+                      if (!data.SubmitResult) {
+                          alert(data.Message);
+                      }
+                      else {
+                          $('#AddorUpdateWindow').dialog('close');
+                          flush($('#FlushID').val());
+                          $('#tree').treegrid('select', $('#AddID').val());
+                      }
+                  }, "json");
+            }
+        }
+    }
+    function flush(id) {
+        $.ajaxSetup({
+            async: false
+        });
+        $.post("@Url.Action("GetNextLevelRegionList", "AreaRegion")", {
+            RegionID: id
+        }, function (json) {
+            var ss = $('#tree').treegrid('getChildren', id);
+            for (var i = 0; i < ss.length; i++) {
+                if (ss[i].RegionPID == id) {
+                    $('#tree').treegrid('remove', ss[i].RegionID);
+                }
+            }
+            if (json.length > 0) {
+                $('#tree').treegrid('append', {
+                    parent: id,
+                    data: json
+                });
+            }
+
+
+        }, "json");
+        $.ajaxSetup({
+            async: true
+        });
+    }
+</script>
+<div class="easyui-layout" style="height:100%;">
+    <div region="north" style="height:94px">
+        @Html.Partial("_Partialtool")
+    </div>
+    <div region="center">
+        <table id="tree" style="width:100%;height:100%;"></table>
+    </div>
+    <input id="FlushID" hidden="hidden" />
+</div>
+    @*新增/修改*@
+    <div id="AddorUpdateWindow">
+        <div class="AddContent">
+            <form id="AddorUpdate">
+                <input id="AddID" hidden="hidden" />
+                <input id="AddPID" hidden="hidden" />
+                <input id="AddLevel" hidden="hidden" />
+                <input id="AddUp" hidden="hidden" />
+                <p>
+                    <span class="cl100">编号：</span>
+                    <input class="easyui-textbox " style="width:200px;" id="Number" />
+
+                </p>
+                <p>
+                    <span class="cl100">名称：</span>
+                    <input class="easyui-textbox " style="width:200px;" id="Name" required missingmessage="名称必须填写！" />
+
+                </p>
+            </form>
+        </div>
+    </div>

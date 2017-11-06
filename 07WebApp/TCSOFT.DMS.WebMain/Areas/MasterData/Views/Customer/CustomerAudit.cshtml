@@ -1,0 +1,186 @@
+﻿@{
+    Layout = null;
+    ViewBag.SearchOption = "prompt:'支持客户名、申请经销商模糊查询',searcher:doSearch";
+
+}
+
+<script type="text/javascript">
+    $(function () {
+        $('#grid').datagrid({
+            url: '@Url.Action("GetCustomerAuditList", "Customer")',
+            width: function () { return document.body.clientWidth * 0.9 },
+            nowrap: true,
+            autoRowHeight: true,
+            striped: true,
+            collapsible: false,
+            pagination: true,
+            pageSize: 10,
+            pageList: [10, 20, 30],
+            rownumbers: true,
+            sortOrder: 'desc',
+            remoteSort: false,
+            singleSelect: true,
+            idField: 'CustomerApplyID',
+            queryParams: {},
+            animate: true,
+            columns: [[
+                 { title: 'ID', field: 'CustomerApplyID', hidden: true, width: 1, halign: 'center', align: 'center' },
+                 { title: '审核状态', field: 'StatusStr', width: 80, halign: 'center', align: 'center' },
+                 { title: '省份', field: 'Province', width: 100, halign: 'center', align: 'center' },
+                 { title: '城市', field: 'City', width: 100, halign: 'center', align: 'center' },
+                 { title: '县区', field: 'Country', width: 180, halign: 'center', align: 'center' },
+                 { title: '经销商提交客户名', field: 'CustomerName', width: 380, halign: 'center', align: 'left' },
+                 { title: '申请经销商', field: 'DistributorName', width: 200, halign: 'center', align: 'left' }
+            ]]
+        });
+        $('#Similartable').datagrid({
+            url: '',
+            width: function () { return document.body.clientWidth * 0.9 },
+            nowrap: true,
+            autoRowHeight: true,
+            height: 300,
+            width: 770,
+            striped: true,
+            collapsible: false,
+            pagination: true,
+            pageSize: 10,
+            pageList: [10, 20, 30],
+            rownumbers: true,
+            sortOrder: 'desc',
+            remoteSort: false,
+            singleSelect: true,
+            idField: 'ID',
+            queryParams: {},
+            animate: true,
+            columns: [[
+                 { title: 'ID', field: 'CustomerID', hidden: true, width: 1, halign: 'center', align: 'center' },
+                 { title: '省份', field: 'Province', width: 100, halign: 'center', align: 'center' },
+                 { title: '城市', field: 'City', width: 100, halign: 'center', align: 'center' },
+                 { title: '县区', field: 'Country', width: 100, halign: 'center', align: 'center' },
+                 { title: '客户名', field: 'CustomerName', width: 200, halign: 'center', align: 'center' },
+                 { title: 'Oracle号', field: 'OracleNO', width: 120, halign: 'center', align: 'center' },
+                 { title: 'OracleName', field: 'OracleName', width: 120, halign: 'center', align: 'center' }
+            ]]
+        });
+        //审核
+        $('#AuditWindow').dialog({
+            width: 'auto',
+            height: 'auto',
+            top: 1,
+            modal: true,
+            closed: true,
+            inline: true,
+            buttons: [{
+                text: '通过',
+                handler: function () {
+                    Pass();
+                }
+            }, {
+                text: '拒绝',
+                handler: function () {
+                    Refuse();
+                }
+            }],
+            title: "审核客户"
+        });
+    })
+    function doSearch(value) {
+        $('#grid').datagrid('reload', { SearchText: value });
+    }
+    function ClickAudit() {
+        var row = $("#grid").datagrid("getSelected");
+        if (row == null) {
+            alert("您还没有选择客户信息，请选择！");
+            return;
+        }
+        $('#Similartable').datagrid('loadData', { total: 0, rows: [] });
+        $('#Similartable').datagrid({ url: '@Url.Action("GetSimilarCustomerList", "Customer")', queryParams: { SearchText: row.CustomerName } });
+        $("#CustomerApplyID").val(row.CustomerApplyID);
+        $("#Province").textbox('setValue', row.Province);
+        $("#City").textbox('setValue', row.City);
+        $("#Country").textbox('setValue', row.Country);
+        $("#CustomerName").textbox('setValue', row.CustomerName);
+        $("#DistributorName").textbox('setValue', row.DistributorName);
+
+        $('#AuditWindow').dialog('open');
+    }
+    function Pass() {
+        $.post(
+                  '@Url.Action("CustomerAuditSuccess", "Customer")',
+                  {
+                      CustomerApplyID: $("#CustomerApplyID").val()
+                  },
+                  function success(data, textStatus, jqXHR) {
+                      if (!data.SubmitResult) {
+                          alert(data.Message);
+                      }
+                      else {
+                          $('#AuditWindow').dialog('close');
+                          $('#grid').datagrid('reload');
+                      }
+                  }, "json");
+    }
+    function Refuse() {
+        if ($("#AuditReason").textbox('getValue') == '') {
+            alert("拒绝原因必须填写");
+            return;
+        }
+        $.post(
+                  '@Url.Action("CustomerAuditFail", "Customer")',
+                  {
+                      CustomerApplyID: $("#CustomerApplyID").val(),
+                      AuditReason: $("#AuditReason").textbox('getValue')
+                  },
+                  function success(data, textStatus, jqXHR) {
+                      if (!data.SubmitResult) {
+                          alert(data.Message);
+                      }
+                      else {
+                          $('#AuditWindow').dialog('close');
+                          $('#grid').datagrid('reload');
+                      }
+                  }, "json");
+    }
+</script>
+<div class="easyui-layout" style="height:100%;">
+    <div region="north" style="height:94px">
+        @Html.Partial("_Partialtool")
+    </div>
+    <div region="center">
+        <div id="BodyContentDiv">
+            <table id="grid" fit="true"></table>
+        </div>
+    </div>
+</div>
+
+
+@*客户审核*@
+<div id="AuditWindow">
+    <div class="AddContent">
+        <input id="CustomerApplyID" hidden="hidden">
+        <form id="Audit">
+            <p>
+                <span class="cl100">省份：</span>
+                <input class="easyui-textbox txt150" style="width:150px;" id="Province" readonly="readonly" />
+                <span class="cl80">城市：</span>
+                <input class="easyui-textbox txt150" style="width:150px;" id="City" readonly="readonly" />
+                <span class="cl80">县区：</span>
+                <input class="easyui-textbox txt150" style="width:150px;" id="Country" readonly="readonly" />
+            </p>
+            <p>
+                <span class="cl100">经销商提交客户：</span>
+                <input class="easyui-textbox txt150" style="width:150px;" id="CustomerName" readonly="readonly" />
+                <span class="cl80">经销商：</span>
+                <input class="easyui-textbox txt150" style="width:150px;" id="DistributorName" readonly="readonly" />
+            </p>
+            <p>
+                <span class="cl100">拒绝原因：</span>
+                <input class="easyui-textbox" style="width:630px;height:50px" data-options="multiline:true" id="AuditReason" />
+            </p>
+        </form>
+    </div>
+    <div id="SimilartableDiv" class="easyui-panel" title="相似医院"
+         style="width:780px;height:250px;overflow:hidden;">
+        <table id="Similartable" fit="true"></table>
+    </div>
+</div>

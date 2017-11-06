@@ -1,0 +1,171 @@
+﻿@model List<TCSOFT.DMS.MasterData.DTO.StructureDTO>
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link href="~/Content/EasyUI/themes/lanssion/easyui.css" rel="stylesheet" />
+    <link href="~/Content/EasyUI/themes/icon.css" rel="stylesheet" />
+    <link href="~/Content/CSS/CommonS.css" rel="stylesheet" />
+    <link href="~/Content/MasterData/CSS/Main.css" rel="stylesheet" />
+    <link href="~/Content/MasterData/CSS/_LayoutDetails.css" rel="stylesheet" />
+    <script src="~/Content/EasyUI/jquery.min.js"></script>
+    <script src="~/Content/JS/jquery.form.min.js"></script>
+    <script src="~/Content/EasyUI/jquery.easyui.min.js"></script>
+    <script src="~/Content/JS/EasyUIExtentions.js"></script>
+    <script src="~/Content/EasyUI/locale/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            //手风琴
+            var Accordion = function (el, multiple) {
+                this.el = el || {};
+                this.multiple = multiple || false;
+                // Variables privadas
+                var links = this.el.find('.link');
+                // Evento
+                links.on('click', { el: this.el, multiple: this.multiple }, this.dropdown)
+            }
+
+            Accordion.prototype.dropdown = function (e) {
+                var $el = e.data.el;
+                $this = $(this),
+                $next = $this.next();
+
+                $(".link").next().slideUp();
+                if ($next.is(":hidden")) {
+                    $next.slideDown();
+                } else {
+                    $next.slideUp();
+                }
+
+                if (!e.data.multiple) {
+                    $el.find('.submenu').not($next).slideUp().parent().removeClass('open');
+                };
+            }
+
+            var accordion = new Accordion($('.accordion'), true);
+
+            // 初始化默认首页
+            var $ss = $("#uloneli li div").next()
+            $ss.slideDown();
+            $(".submenu li").css("color", "#0033CC");
+            $(".submenu li").css("background-color", "#0033CC");
+            var $ww = $ss.find("li").first().find("a").first();
+            $ww.parent().css("background-color", "#a7a8aa");
+            $(".imgcd").hide();
+            $ww.prev().show();
+            $ww.removeClass("hover");
+            var url = $ww.attr("value");
+            $("#ContentArea").panel({ href: url });
+        });
+
+        //选中变色
+        function SelectedL(seleid) {
+            $(".submenu li").css("color", "#0033CC");
+            $(".submenu li").css("background-color", "#0033CC");
+            $(".imgcd").hide();
+            $("#" + seleid).prev().show();
+            $("#" + seleid).parent().css("background-color", "#a7a8aa");
+            $("#" + seleid).removeClass("hover");
+        }
+        //退出
+        function Exit() {
+            window.opener = null;
+            window.open('', '_self');
+            window.close();
+        }
+
+        function ShowContent(contenturl, seleid) {
+            SelectedL(seleid);
+            $("#ContentArea").panel({ href: contenturl });
+        }
+    </script>
+    <title>基础数据管理</title>
+</head>
+<body class="easyui-layout">
+    <div data-options="region:'west'" id="Header">
+        <div class="easyui-layout" data-options="fit:true">
+            <div data-options="region:'north'" id="HeaderImg" style="height: 150px;width:250px;">
+                <a href="#">
+                    <img src="~/Content/MasterData/Image/logo-BCI.png" /></a>
+            </div>
+            <div data-options="region:'center'" style="height:100%;overflow:hidden;">
+                <div id="lstSty" style="height:100%;overflow:hidden;">
+                    <div class="easyui-accordion" style="overflow:hidden;">
+                        <div data-options="iconCls:'icon-ok'" id="ListMenuOne" style="overflow: -Scroll; overflow-x: hidden;">
+                            <ul id="uloneli" class="accordion" style="overflow:hidden; margin: 0cm 0cm 3cm 0cm">
+                                <li style="border-top: 1px solid #0241a9;">
+                                    @if (this.Model != null)
+                                    {
+                                        foreach (var p in this.Model)
+                                        {
+                                            if (p.ParentStructureID == "095")
+                                            {
+                                                if (p.StructureID != this.Model[0].StructureID)
+                                                {
+                                    @Html.Raw("</ul></li>")
+                                                }
+                                    <div class="link" id="a1" target="ifContent" onclick="SelectedL('@p.StructureID')">
+                                        <i class="fa fa-code"></i>
+                                        @p.StructureName
+                                        <i class="fa "></i>
+                                    </div>
+                                    @Html.Raw("<ul class='submenu'>")
+                                            }
+                                            else
+                                            {
+                                <li>
+                                    <img class="imgcd" src="~/Content/MasterData/Image/Menu.png" style="float:left;width:32px;height:40px;display:none" />
+                                    <a href="#" id="@p.StructureID" value="@p.URL" onclick="ShowContent('@p.URL','@p.StructureID')">@p.StructureName</a>
+                                </li>
+                                            }
+                                        }
+                                    }
+                                    @Html.Raw("</ul></li>")
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div data-options="region:'center'" style="overflow: hidden;">
+            <div class="easyui-layout" data-options="fit:true">
+                <div data-options="region:'north'" id="TitleTop">
+                    <div id="TitleContent" class="easyui-layout" fit="true">
+                        <div region="west" border="false" style="width:400px;font-size:26px;color:#0241a9;font-weight:700;padding:0 0 0 45px;line-height:56px;overflow:hidden;">
+                            Master Data
+                        </div>
+                        <div region="center">
+                            @{
+                                var user = (TCSOFT.DMS.MasterData.DTO.UserLoginDTO)Session["UserLoginInfo"];
+                                <div id="tipname">
+                                    <p id="spanA">@user.PhoneNumber</p>
+                                    <p style="border-bottom:1px solid #0096D6;width:204px;" ></p>
+                                    <p id="spanB">@user.FullName</p>
+                                </div>
+                            }
+                        </div>
+                        <div region="east" style="width:144px;overflow: hidden;padding-left:4px;" border="false">
+                            <a href="#" class="areaUser"></a>
+                            <a href="#" id="spanOut" onclick="Exit();" class="areaLogout"></a>
+                        </div>
+                    </div>
+                </div>
+                <div region="center">
+                    <div id="ContentArea" style="height:100%;width:100%;"></div>
+                </div>
+            </div>
+        </div>
+        <div data-options="region:'south'" style=" height:40px;line-height:40px;background-color:#666;font-size:12pt;overflow: hidden;">
+            <span style="color:#ffffff;margin-left:20px;">技术支持：TCSOFT 13661487706  021-51580506  QQ： 800189020 工作时间：9：00-12：00 13：00~18：00 邮箱：tcsoftsupport@tcsoft.net.cn</span>
+            <img style="height: 26px;width: 116px;float: right;margin:7px 20px 7px 0;" src="~/Content/MasterData/Image/logo-TC-W.png" />
+        </div>
+    </body>
+</html>
+
+

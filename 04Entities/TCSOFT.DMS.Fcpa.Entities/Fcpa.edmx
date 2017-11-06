@@ -1,0 +1,351 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="TCDMS_PCPAModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="fcpa_AlarmInfo">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="UserID" Type="int" />
+          <Property Name="AlarmTime" Type="datetime" />
+        </EntityType>
+        <EntityType Name="fcpa_CredentialInfo">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="DistributorID" Type="nvarchar" MaxLength="255" />
+          <Property Name="Certificate" Type="nvarchar" MaxLength="255" />
+          <Property Name="Status" Type="int" />
+          <Property Name="Name" Type="nvarchar" MaxLength="255" />
+          <Property Name="Department" Type="nvarchar" MaxLength="255" />
+          <Property Name="Title" Type="nvarchar" MaxLength="255" />
+          <Property Name="CompletedDate" Type="datetime" />
+          <Property Name="OffWork" Type="bit" />
+          <Property Name="OffWorkDate" Type="datetime" />
+          <Property Name="Domain1" Type="bit" />
+          <Property Name="Domain2" Type="bit" />
+          <Property Name="UpdateDate" Type="datetime" />
+          <Property Name="ExpireDate" Type="datetime" />
+          <Property Name="Remark" Type="nvarchar" MaxLength="512" />
+        </EntityType>
+        <EntityType Name="fcpa_DistributorInfo">
+          <Key>
+            <PropertyRef Name="DistributorID" />
+          </Key>
+          <Property Name="DistributorID" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="DistributorName" Type="nvarchar" MaxLength="255" />
+          <Property Name="AreaName" Type="nvarchar" MaxLength="255" />
+          <Property Name="RegionName" Type="nvarchar" MaxLength="255" />
+          <Property Name="OrgMap" Type="nvarchar" MaxLength="512" />
+          <Property Name="OrgMapFile" Type="nvarchar" MaxLength="512" />
+          <Property Name="Trains" Type="nvarchar" MaxLength="512" />
+          <Property Name="Status" Type="int" />
+          <Property Name="OrgMapUpdateTime" Type="datetime" />
+          <Property Name="TrainsUpdateTime" Type="datetime" />
+          <Property Name="ValidNum" Type="int" />
+          <Property Name="ShouldNum" Type="int" />
+          <Property Name="Rate" Type="float" />
+          <Property Name="Domain1" Type="bit" />
+          <Property Name="Domain2" Type="bit" />
+        </EntityType>
+        <EntityType Name="fcpa_UserInfo">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="UserID" Type="int" Nullable="false" />
+          <Property Name="DepartID" Type="int" />
+          <Property Name="UserCode" Type="varchar" MaxLength="50" />
+          <Property Name="FullName" Type="nvarchar" MaxLength="100" />
+          <Property Name="PhoneNumber" Type="varchar" MaxLength="15" />
+          <Property Name="DynamicPassword" Type="varchar" MaxLength="10" />
+          <Property Name="EffectiveTtime" Type="datetime" />
+          <Property Name="StopTime" Type="datetime" />
+          <Property Name="Email" Type="varchar" MaxLength="50" />
+          <Property Name="UserType" Type="smallint" />
+          <Property Name="AuditName" Type="nvarchar" MaxLength="100" />
+          <Property Name="IsActive" Type="bit" />
+          <Property Name="NoActiveTime" Type="datetime" />
+          <Property Name="CreateUser" Type="nvarchar" MaxLength="50" />
+          <Property Name="CreateTime" Type="datetime" />
+          <Property Name="ModifyUser" Type="nvarchar" MaxLength="50" />
+          <Property Name="ModifyTime" Type="datetime" />
+          <Property Name="RelEmail" Type="nvarchar" MaxLength="255" />
+          <Property Name="Domain1" Type="bit" />
+          <Property Name="Domain2" Type="bit" />
+          <Property Name="Role" Type="int" />
+          <Property Name="RelDistributor" Type="varchar" MaxLength="1024" />
+        </EntityType>
+        <Association Name="FK_FCPA_ALA_REFERENCE_FCPA_USE">
+          <End Role="fcpa_UserInfo" Type="Self.fcpa_UserInfo" Multiplicity="0..1" />
+          <End Role="fcpa_AlarmInfo" Type="Self.fcpa_AlarmInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="fcpa_UserInfo">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="fcpa_AlarmInfo">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FCPA_CRE_REFERENCE_FCPA_DIS">
+          <End Role="fcpa_DistributorInfo" Type="Self.fcpa_DistributorInfo" Multiplicity="0..1" />
+          <End Role="fcpa_CredentialInfo" Type="Self.fcpa_CredentialInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="fcpa_DistributorInfo">
+              <PropertyRef Name="DistributorID" />
+            </Principal>
+            <Dependent Role="fcpa_CredentialInfo">
+              <PropertyRef Name="DistributorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="TCDMS_PCPAModelStoreContainer">
+          <EntitySet Name="fcpa_AlarmInfo" EntityType="Self.fcpa_AlarmInfo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="fcpa_CredentialInfo" EntityType="Self.fcpa_CredentialInfo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="fcpa_DistributorInfo" EntityType="Self.fcpa_DistributorInfo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="fcpa_UserInfo" EntityType="Self.fcpa_UserInfo" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_FCPA_ALA_REFERENCE_FCPA_USE" Association="Self.FK_FCPA_ALA_REFERENCE_FCPA_USE">
+            <End Role="fcpa_UserInfo" EntitySet="fcpa_UserInfo" />
+            <End Role="fcpa_AlarmInfo" EntitySet="fcpa_AlarmInfo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FCPA_CRE_REFERENCE_FCPA_DIS" Association="Self.FK_FCPA_CRE_REFERENCE_FCPA_DIS">
+            <End Role="fcpa_DistributorInfo" EntitySet="fcpa_DistributorInfo" />
+            <End Role="fcpa_CredentialInfo" EntitySet="fcpa_CredentialInfo" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="TCDMS_PCPAModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="fcpa_AlarmInfo">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Guid" Nullable="false" />
+          <Property Name="UserID" Type="Int32" />
+          <Property Name="AlarmTime" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="fcpa_UserInfo" Relationship="Self.FK_FCPA_ALA_REFERENCE_FCPA_USE" FromRole="fcpa_AlarmInfo" ToRole="fcpa_UserInfo" />
+        </EntityType>
+        <EntityType Name="fcpa_CredentialInfo">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Guid" Nullable="false" />
+          <Property Name="DistributorID" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Certificate" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="Int32" />
+          <Property Name="Name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Department" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Title" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="CompletedDate" Type="DateTime" Precision="3" />
+          <Property Name="OffWork" Type="Boolean" />
+          <Property Name="OffWorkDate" Type="DateTime" Precision="3" />
+          <Property Name="Domain1" Type="Boolean" />
+          <Property Name="Domain2" Type="Boolean" />
+          <Property Name="UpdateDate" Type="DateTime" Precision="3" />
+          <Property Name="ExpireDate" Type="DateTime" Precision="3" />
+          <Property Name="Remark" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="fcpa_DistributorInfo" Relationship="Self.FK_FCPA_CRE_REFERENCE_FCPA_DIS" FromRole="fcpa_CredentialInfo" ToRole="fcpa_DistributorInfo" />
+        </EntityType>
+        <EntityType Name="fcpa_DistributorInfo">
+          <Key>
+            <PropertyRef Name="DistributorID" />
+          </Key>
+          <Property Name="DistributorID" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="DistributorName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="AreaName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="RegionName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="OrgMap" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
+          <Property Name="OrgMapFile" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
+          <Property Name="Trains" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="Int32" />
+          <Property Name="OrgMapUpdateTime" Type="DateTime" Precision="3" />
+          <Property Name="TrainsUpdateTime" Type="DateTime" Precision="3" />
+          <Property Name="ValidNum" Type="Int32" />
+          <Property Name="ShouldNum" Type="Int32" />
+          <Property Name="Rate" Type="Double" />
+          <Property Name="Domain1" Type="Boolean" />
+          <Property Name="Domain2" Type="Boolean" />
+          <NavigationProperty Name="fcpa_CredentialInfo" Relationship="Self.FK_FCPA_CRE_REFERENCE_FCPA_DIS" FromRole="fcpa_DistributorInfo" ToRole="fcpa_CredentialInfo" />
+        </EntityType>
+        <EntityType Name="fcpa_UserInfo">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="UserID" Type="Int32" Nullable="false" />
+          <Property Name="DepartID" Type="Int32" />
+          <Property Name="UserCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="FullName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="DynamicPassword" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="EffectiveTtime" Type="DateTime" Precision="3" />
+          <Property Name="StopTime" Type="DateTime" Precision="3" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="UserType" Type="Int16" />
+          <Property Name="AuditName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="IsActive" Type="Boolean" />
+          <Property Name="NoActiveTime" Type="DateTime" Precision="3" />
+          <Property Name="CreateUser" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CreateTime" Type="DateTime" Precision="3" />
+          <Property Name="ModifyUser" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ModifyTime" Type="DateTime" Precision="3" />
+          <Property Name="RelEmail" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Domain1" Type="Boolean" />
+          <Property Name="Domain2" Type="Boolean" />
+          <Property Name="Role" Type="Int32" />
+          <Property Name="RelDistributor" Type="String" MaxLength="1024" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="fcpa_AlarmInfo" Relationship="Self.FK_FCPA_ALA_REFERENCE_FCPA_USE" FromRole="fcpa_UserInfo" ToRole="fcpa_AlarmInfo" />
+        </EntityType>
+        <Association Name="FK_FCPA_ALA_REFERENCE_FCPA_USE">
+          <End Role="fcpa_UserInfo" Type="Self.fcpa_UserInfo" Multiplicity="0..1" />
+          <End Role="fcpa_AlarmInfo" Type="Self.fcpa_AlarmInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="fcpa_UserInfo">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="fcpa_AlarmInfo">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FCPA_CRE_REFERENCE_FCPA_DIS">
+          <End Role="fcpa_DistributorInfo" Type="Self.fcpa_DistributorInfo" Multiplicity="0..1" />
+          <End Role="fcpa_CredentialInfo" Type="Self.fcpa_CredentialInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="fcpa_DistributorInfo">
+              <PropertyRef Name="DistributorID" />
+            </Principal>
+            <Dependent Role="fcpa_CredentialInfo">
+              <PropertyRef Name="DistributorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="TCDMS_FCPAEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="fcpa_AlarmInfo" EntityType="Self.fcpa_AlarmInfo" />
+          <EntitySet Name="fcpa_CredentialInfo" EntityType="Self.fcpa_CredentialInfo" />
+          <EntitySet Name="fcpa_DistributorInfo" EntityType="Self.fcpa_DistributorInfo" />
+          <EntitySet Name="fcpa_UserInfo" EntityType="Self.fcpa_UserInfo" />
+          <AssociationSet Name="FK_FCPA_ALA_REFERENCE_FCPA_USE" Association="Self.FK_FCPA_ALA_REFERENCE_FCPA_USE">
+            <End Role="fcpa_UserInfo" EntitySet="fcpa_UserInfo" />
+            <End Role="fcpa_AlarmInfo" EntitySet="fcpa_AlarmInfo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FCPA_CRE_REFERENCE_FCPA_DIS" Association="Self.FK_FCPA_CRE_REFERENCE_FCPA_DIS">
+            <End Role="fcpa_DistributorInfo" EntitySet="fcpa_DistributorInfo" />
+            <End Role="fcpa_CredentialInfo" EntitySet="fcpa_CredentialInfo" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="TCDMS_PCPAModelStoreContainer" CdmEntityContainer="TCDMS_FCPAEntities">
+          <EntitySetMapping Name="fcpa_AlarmInfo">
+            <EntityTypeMapping TypeName="TCDMS_PCPAModel.fcpa_AlarmInfo">
+              <MappingFragment StoreEntitySet="fcpa_AlarmInfo">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="AlarmTime" ColumnName="AlarmTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="fcpa_CredentialInfo">
+            <EntityTypeMapping TypeName="TCDMS_PCPAModel.fcpa_CredentialInfo">
+              <MappingFragment StoreEntitySet="fcpa_CredentialInfo">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="DistributorID" ColumnName="DistributorID" />
+                <ScalarProperty Name="Certificate" ColumnName="Certificate" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Department" ColumnName="Department" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="CompletedDate" ColumnName="CompletedDate" />
+                <ScalarProperty Name="OffWork" ColumnName="OffWork" />
+                <ScalarProperty Name="OffWorkDate" ColumnName="OffWorkDate" />
+                <ScalarProperty Name="Domain1" ColumnName="Domain1" />
+                <ScalarProperty Name="Domain2" ColumnName="Domain2" />
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+                <ScalarProperty Name="ExpireDate" ColumnName="ExpireDate" />
+                <ScalarProperty Name="Remark" ColumnName="Remark" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="fcpa_DistributorInfo">
+            <EntityTypeMapping TypeName="TCDMS_PCPAModel.fcpa_DistributorInfo">
+              <MappingFragment StoreEntitySet="fcpa_DistributorInfo">
+                <ScalarProperty Name="DistributorID" ColumnName="DistributorID" />
+                <ScalarProperty Name="DistributorName" ColumnName="DistributorName" />
+                <ScalarProperty Name="AreaName" ColumnName="AreaName" />
+                <ScalarProperty Name="RegionName" ColumnName="RegionName" />
+                <ScalarProperty Name="OrgMap" ColumnName="OrgMap" />
+                <ScalarProperty Name="OrgMapFile" ColumnName="OrgMapFile" />
+                <ScalarProperty Name="Trains" ColumnName="Trains" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="OrgMapUpdateTime" ColumnName="OrgMapUpdateTime" />
+                <ScalarProperty Name="TrainsUpdateTime" ColumnName="TrainsUpdateTime" />
+                <ScalarProperty Name="ValidNum" ColumnName="ValidNum" />
+                <ScalarProperty Name="ShouldNum" ColumnName="ShouldNum" />
+                <ScalarProperty Name="Rate" ColumnName="Rate" />
+                <ScalarProperty Name="Domain1" ColumnName="Domain1" />
+                <ScalarProperty Name="Domain2" ColumnName="Domain2" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="fcpa_UserInfo">
+            <EntityTypeMapping TypeName="TCDMS_PCPAModel.fcpa_UserInfo">
+              <MappingFragment StoreEntitySet="fcpa_UserInfo">
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="DepartID" ColumnName="DepartID" />
+                <ScalarProperty Name="UserCode" ColumnName="UserCode" />
+                <ScalarProperty Name="FullName" ColumnName="FullName" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="DynamicPassword" ColumnName="DynamicPassword" />
+                <ScalarProperty Name="EffectiveTtime" ColumnName="EffectiveTtime" />
+                <ScalarProperty Name="StopTime" ColumnName="StopTime" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="UserType" ColumnName="UserType" />
+                <ScalarProperty Name="AuditName" ColumnName="AuditName" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="NoActiveTime" ColumnName="NoActiveTime" />
+                <ScalarProperty Name="CreateUser" ColumnName="CreateUser" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="ModifyUser" ColumnName="ModifyUser" />
+                <ScalarProperty Name="ModifyTime" ColumnName="ModifyTime" />
+                <ScalarProperty Name="RelEmail" ColumnName="RelEmail" />
+                <ScalarProperty Name="Domain1" ColumnName="Domain1" />
+                <ScalarProperty Name="Domain2" ColumnName="Domain2" />
+                <ScalarProperty Name="Role" ColumnName="Role" />
+                <ScalarProperty Name="RelDistributor" ColumnName="RelDistributor" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="无" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

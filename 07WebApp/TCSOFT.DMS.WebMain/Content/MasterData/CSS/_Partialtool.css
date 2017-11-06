@@ -1,0 +1,82 @@
+﻿#BodyContentTool {
+    background-color: #FFF;
+    height: 94px;
+    padding: 10px 20px 10px 45px;
+    display: table-cell;
+    vertical-align: middle;
+   
+}
+
+    #BodyContentTool .textbox-focused {
+        border: 2px solid #3771d4 !important;
+    }
+
+#btnButton {
+    width: 100%;
+    height: auto;
+    z-index: 100;
+    background-color: #FFF;
+}
+
+    #btnButton ul li {
+        list-style: none;
+        float: left;
+    }
+
+.comboelse .combo {
+    border-radius: 16px !important;
+    border: 1px solid #ccc !important;
+    margin-right: 10px !important;
+    padding: 2px 8px;
+}
+
+.comboelse .textbox-button {
+    background: #fff;
+    color: #333;
+    position: absolute;
+    top: 6px;
+    border-left: 1px solid #CCC;
+    height: 20px !important;
+    line-height: 20px !important;
+}
+
+.comboelse .textbox-addon {
+    right: 25% !important;
+    top: 42% !important;
+}
+
+.searchbox {
+    border-radius: 16px !important;
+    border: 1px solid #ccc !important;
+    margin-right: 10px !important;
+}
+
+    .searchbox .textbox-text {
+        padding-left: 8px !important;
+    }
+
+    .searchbox .textbox-addon {
+        position: absolute;
+        right: 0 !important;
+        top: 0 !important;
+    }
+
+.searchbox-button {
+    background: url('../Image/search.png') center center no-repeat;
+    width: 40px !important;
+    height: 26px !important;
+    border-left: 1px solid #CCC;
+    padding: 0 8px;
+    border-left: 1px solid #CCC;
+    margin: 2px 0;
+}
+
+.datebox .combo-arrow {
+    position: absolute;
+    top: -9px;
+    right: -4px;
+}
+
+#btnButton .datebox .combo-arrow {
+    right: 19px;
+}

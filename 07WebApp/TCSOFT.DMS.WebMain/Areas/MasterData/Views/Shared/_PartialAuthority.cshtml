@@ -1,0 +1,45 @@
+﻿<style type="text/css">
+   #AuthorityDIV .pagination {
+        height:30px;
+    }
+   #AuthorityDIV .pagination table {
+        display: none;
+    }
+   #AuthorityDIV .pagination-info {
+       display:none;
+    }
+</style>
+<script type="text/javascript">
+    $(function () {
+        $('#Authoritygrid').treegrid({
+            url: '',
+            width: function () { return document.body.clientWidth * 0.9 },
+            rownumbers: true,
+            idField: 'StructureID',
+            treeField: 'StructureName',
+            pagination:false,
+            animate: false,
+            columns: [[
+                { title: 'StructureID', field: 'StructureID', hidden: true, width: 1 },
+                { title: '模块名称', field: 'StructureName', width: 200, halign: 'center', align: 'left' },
+                {
+                    title: '权限', field: 'ButtonAuthorityList',width: 600, halign: 'center', align: 'left', formatter: function (cellvalue, options, rowObject) {
+                        var str = '';
+                        for (var i = 0; i < cellvalue.length; i++) {
+                            str += "  <input type='checkbox' name='" + cellvalue[i].ButtonName + "' value='" + cellvalue[i].ButtonID + "'";
+                            if (cellvalue[i].IsChecked) {
+                                str += "checked='checked'"
+                            }
+                            str += "/><span>" + cellvalue[i].ButtonValue + "</span>";
+                        }
+                        return str;
+                    }
+                }
+            ]]
+        });
+    })
+</script>
+<div id="AuthorityDIV" style="height:100%;display:block;">
+    <table id="Authoritygrid" style="height:100%;"></table>
+</div>
+

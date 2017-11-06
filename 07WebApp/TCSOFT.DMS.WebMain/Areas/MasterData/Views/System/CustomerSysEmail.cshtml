@@ -1,0 +1,252 @@
+﻿@{
+    Layout = null;
+}
+
+<script type="text/javascript">
+    $(function () {
+        $('#DepartmentName').combotree({
+            lines: true,
+            multiple: false,
+            onSelect: function (row) { //选中一个选项时调用
+                $('#DepartArea').combobox({
+                    url: '@Url.Action("GetDepAreaByDepartID", "AreaRegion")',
+                    valueField: 'AreaID',
+                    textField: 'AreaName',
+                    queryParams: { DepartID: row.id },
+                    editable: false,
+
+                });
+            },
+        });
+        $('#grid').datagrid({
+            width: function () { return document.body.clientWidth * 0.9 },
+            nowrap: true,
+            autoRowHeight: true,
+            striped: true,
+            collapsible: false,
+            pagination: true,
+            pageSize: 1000,
+            pageList: [1000],
+            rownumbers: true,
+            sortOrder: 'desc',
+            remoteSort: false,
+            singleSelect: true,
+            idField: 'UserID',
+            queryParams: {},
+            animate: true,
+            columns: [[
+                 { title: 'ID', field: 'UserID', hidden: true, width: 1, halign: 'center', align: 'center' },
+                 { title: '', field: 'AreaID', hidden: true, width: 280, halign: 'center', align: 'center' },
+                 { title: '区域', field: 'CusAdminAreaNames', width: 280, halign: 'center', align: 'center' },
+                 { title: '邮箱', field: 'Email', width: 280, halign: 'center', align: 'center' },
+            ]]
+        });
+        $('#treejg').treegrid({
+            url: '@Url.Action("GetDepartmentList", "UserAuthority")',
+            width: function () { return document.body.clientWidth * 0.9 },
+            idField: 'FictitiousID',
+            treeField: 'DepartName',
+            animate: true,
+            columns: [[
+                { title: 'DepartID', field: 'DepartID', hidden: true, width: 1 },
+                { title: 'FictitiousID', field: 'FictitiousID', hidden: true, width: 1 },
+                { title: 'DepartParentID', field: 'DepartParentID', hidden: true, width: 1 },
+                { title: '部门名称', field: 'DepartName', halign: 'center', align: 'left' },
+            ]],
+            onLoadSuccess: function () {
+                $('#treejg').treegrid('selectRow', 1);
+            },
+            onSelect: function (rowIndex, rowData) {
+                var rid = JSON.stringify([98]);
+                $('#grid').datagrid({
+                    url: '@Url.Action("GetUser", "UserAuthority")',
+                    queryParams: { DepartID: rowIndex.DepartID, RoleIDlist: ['98'], QueryType: 1 }
+                });
+            }
+        });
+        //新增
+        $('#gridInfo').datagrid({
+            url: '@Url.Action("GetCustomerAdminList", "System")',
+            nowrap: true,
+            autoRowHeight: true,
+            striped: true,
+            collapsible: false,
+            pagination: false,
+            pageSize: 10,
+            pageList: [10, 20, 30],
+            rownumbers: true,
+            sortOrder: 'desc',
+            remoteSort: false,
+            singleSelect: true,
+            idField: 'ID',
+            queryParams: {},
+            animate: true,
+            columns: [[
+                 { title: 'ID', field: 'UserID', hidden: true, width: 1, halign: 'center', align: 'center' },
+                 { title: '姓名', field: 'FullName', width: 150, halign: 'center', align: 'center' },
+                 { title: '手机号', field: 'PhoneNumber', width: 150, halign: 'center', align: 'center' },
+                 { title: '邮箱', field: 'Email', width: 150, halign: 'center', align: 'center' }
+            ]]
+        });
+        //新增/修改
+        $('#AddorUpdateWindow').dialog({
+            width: 'auto',
+            height: 'auto',
+            top: 20,
+            modal: true,
+            closed: true,
+            inline: true,
+            buttons: [{
+                text: '确定',
+                handler: function () {
+
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    $('#AddorUpdateWindow').dialog('close');
+                }
+            }],
+            onOpen: function () {
+                
+            },
+            onClose: function () {
+                
+            }
+        });
+        //新增
+        $('#AddWindow').dialog({
+            width: 'auto',
+            height: 'auto',
+            top: 20,
+            modal: true,
+            closed: true,
+            inline: true,
+            buttons: [{
+                text: '确定',
+                handler: function () {
+                    SaveAdd();
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    $('#AddWindow').dialog('close');
+                }
+            }],
+            onOpen: function () {
+                
+            },
+            onClose: function () {
+                
+            }
+        });
+    })
+    function Depart() {
+        $.post("@Url.Action("GetDepartmentTree", "UserAuthority")", {}, function (data) {
+            $('#DepartmentName').combotree('loadData', data);
+        })
+    }
+    function ClickAdd() {
+        Depart();
+        $("#DepartmentName").combotree("setValue", null);
+        $("#DepartArea").combobox('setValue', null)
+        $('#AddWindow').dialog({ title: "新增客户管理员" });
+        $('#AddWindow').dialog('open');
+    }
+    function ClickModify() {
+
+    }
+    function ClickDel() {
+        var row = $("#grid").datagrid("getSelected");
+        if (!row) {
+            alert("您还没有选择信息，请选择！");
+            return;
+        }
+        $.messager.confirm('提示', '是否删除选中数据?', function (data) {
+            if (!data) {
+                return;
+            }
+            $.post("@Url.Action("DeleteCustomerAdmin", "System")", {
+                UserID: row.UserID,
+                AreaID: row.AreaID,
+            }, function (data) {
+                if (data.SubmitResult) {
+                    $('#grid').datagrid('reload');
+                    $('#grid').datagrid('clearSelections');
+                } else {
+                    alert(data.Message);
+                }
+            })
+        })
+    }
+    //保存新增的数据
+    function SaveAdd() {
+        if ($("#Addform").form('validate')) {
+            var row = $("#gridInfo").datagrid("getSelected");
+            if (row == null) {
+                alert("您还没有选择人员，请选择！");
+                return;
+            }
+            $.post(
+                      '@Url.Action("AddCustomerAdmin", "System")',
+                      {
+                          UserID: row.UserID,
+                          AreaID: $('#DepartArea').combobox('getValue'),
+
+                      },
+                      function success(data, textStatus, jqXHR) {
+                          if (!data.SubmitResult) {
+                              alert(data.Message);
+                          }
+                          else {
+                              $('#AddWindow').dialog('close');
+                              $('#gridInfo').datagrid('clearSelections');
+                              $('#grid').datagrid('reload');
+                              $('#grid').datagrid('clearSelections');
+                          }
+                      }, "json");
+        }
+    }
+</script>
+<div class="easyui-layout" style="height:100%;">
+    <div region="north" style="height:94px">
+        @Html.Partial("_Partialtool")
+    </div>
+    <div region="west" style="width:200px;border-right:1px solid #CCC;">
+        <table id="treejg" fit="true"></table>
+    </div>
+    <div region="center" class="DivPage">
+        <table id="grid" fit="true"></table>
+    </div>
+</div>
+
+<div id="AddorUpdateWindow">
+    <div class="AddContent">
+        <form id="AddorUpProductType">
+            <p>
+                <span class="cl100">区域名称：</span>
+                <input class="easyui-combobox txt150" style="width:150px;" id="RegionName" editable="false" required missingmessage="Oracle名称必须填写！" />
+            </p>
+            <p>
+                <span class="cl100">邮箱：</span>
+                <input class="easyui-textbox txt150" style="width:150px;" id="RegionName" editable="false" required missingmessage="邮箱必须填写！" />
+            </p>
+        </form>
+    </div>
+</div>
+
+@*新增功能*@
+<div id="AddWindow">
+    <div class="AddContent">
+        <form id="Addform">
+            <p>
+                <span class="cl100">选择部门：</span>
+                <select id="DepartmentName" class="easyui-tree txt150" style="width:150px;"  editable="false" required missingmessage="部门必须选择！"></select>
+
+                <span class="cl100">选择大区：</span>
+                <select id="DepartArea" class="easyui-combobox txt150" style="width:150px;" editable="false" required missingmessage="大区必须选择！"></select>
+            </p>
+        </form>
+    </div>
+    <table id="gridInfo" style="width:600px;height:300px;"></table>
+</div>
