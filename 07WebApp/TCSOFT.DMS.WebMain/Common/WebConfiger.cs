@@ -35,15 +35,7 @@ namespace TCSOFT.DMS.WebMain.Common
             {
                 return ConfigurationManager.AppSettings["FcpaFile"];
             }
-        }
-
-        public static string DocumentServicesUrl
-        {
-            get
-            {
-                return ConfigurationManager.AppSettings["DocumentServices"];
-            }
-        }
+        }       
         public static string DocumentFile
         {
             get

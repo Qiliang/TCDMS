@@ -49,6 +49,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <HintPath>..\..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
       <Private>True</Private>
@@ -141,12 +149,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="AboutWebsite.xml" />
-    <Content Include="Areas\Document\Views\Admin\LSSyylb_data.json" />
-    <Content Include="Areas\Document\Views\Admin\LSSyylb_download_data.json" />
-    <Content Include="Areas\Document\Views\Admin\LSSyylb_tree_data.json" />
     <Content Include="Areas\Document\Views\Admin\smkxyqbjlb_data.json" />
-    <Content Include="Areas\Document\Views\Admin\zczlb_data.json" />
-    <Content Include="Areas\Document\Views\Admin\zczlb_tree_data.json" />
     <None Include="Areas\Document\Views\Customer\BCCEzzlb.cshtml" />
     <None Include="Areas\Document\Views\Customer\CTSyylb.cshtml" />
     <None Include="Areas\Document\Views\Customer\kltxyqbjlb.cshtml" />
@@ -168,6 +171,7 @@
     <Content Include="Content\Document\CSS\icon.css" />
     <Content Include="Content\Document\CSS\main.css" />
     <Content Include="Content\Document\CSS\normalize.css" />
+    <Content Include="Content\Document\CSS\uploadify.css" />
     <Content Include="Content\Document\CSS\_layoutDetails.css" />
     <Content Include="Content\Document\CSS\_Partialtool.css" />
     <Content Include="Content\Document\Image\.gitignore" />
@@ -201,13 +205,22 @@
     <Content Include="Content\Document\Image\tabs_icons.png" />
     <Content Include="Content\Document\Image\tagbox_icons.png" />
     <Content Include="Content\Document\Image\tree_icons.png" />
+    <Content Include="Content\Document\Image\uploadify.swf" />
     <Content Include="Content\Document\Image\User.png" />
     <Content Include="Content\Document\Image\validatebox_warning.png" />
+    <Content Include="Content\Document\JS\uploadify\Change Log.txt" />
+    <Content Include="Content\Document\JS\uploadify\jquery.uploadify.js" />
+    <Content Include="Content\Document\JS\uploadify\jquery.uploadify.min.js" />
+    <Content Include="Content\Document\JS\uploadify\license.txt" />
+    <Content Include="Content\Document\JS\uploadify\uploadify-cancel.png" />
+    <Content Include="Content\Document\JS\uploadify\uploadify.css" />
+    <Content Include="Content\Document\JS\uploadify\uploadify.swf" />
     <Content Include="Content\Document\JS\vendor\EasyUIExtentions.js" />
     <Content Include="Content\Document\JS\vendor\jquery-3.2.1.min.js" />
     <Content Include="Content\Document\JS\vendor\jquery.easyui.min.js" />
     <Content Include="Content\Document\JS\vendor\jquery.form.min.js" />
     <Content Include="Content\Document\JS\vendor\jquery.min.js" />
+    <Content Include="Content\Document\JS\vendor\jquery.uploadify.min.js" />
     <Content Include="Content\Document\JS\vendor\locale\easyui-lang-zh_CN.js" />
     <Content Include="Content\Document\JS\vendor\modernizr-3.5.0.min.js" />
     <Content Include="Content\EasyUI\easyloader.js" />
@@ -889,10 +902,6 @@
     <Compile Include="Areas\Document\Controllers\MainController.cs" />
     <Compile Include="Areas\Document\DocumentAreaRegistration.cs" />
     <Compile Include="Areas\Document\Models\Model\ExcelHeaderModel.cs" />
-    <Compile Include="Areas\Document\Models\Provider\BcceProvider.cs" />
-    <Compile Include="Areas\Document\Models\Provider\CtsProvider.cs" />
-    <Compile Include="Areas\Document\Models\Provider\LssProvider.cs" />
-    <Compile Include="Areas\Document\Models\Provider\RegisterProvider.cs" />
     <Compile Include="Areas\Fcpa\Const.cs" />
     <Compile Include="Areas\Fcpa\Controllers\AlermController.cs" />
     <Compile Include="Areas\Fcpa\Controllers\CredentialsController.cs" />
@@ -1085,9 +1094,13 @@
     <Content Include="Areas\Document\Views\Customer\LSSyylb_data.json" />
     <Content Include="Areas\Document\Views\Customer\LSSyylb_tree_data.json" />
     <Content Include="Areas\Document\Views\Customer\smkxyqbjlb_data.json" />
-    <Content Include="Areas\Document\Views\Customer\zczlb_data.json" />
-    <Content Include="Areas\Document\Views\Customer\zczlb_tree_data.json" />
     <Content Include="Areas\Document\Views\Dialog\AddRegister.cshtml" />
+    <Content Include="Areas\Document\Views\Dialog\AddBcce.cshtml" />
+    <Content Include="Areas\Document\Views\Dialog\AddLss.cshtml" />
+    <Content Include="Areas\Document\Views\Dialog\AddCts.cshtml" />
+    <Content Include="Content\Document\JS\uploadify\check-exists.php" />
+    <Content Include="Content\Document\JS\uploadify\index.php" />
+    <Content Include="Content\Document\JS\uploadify\uploadify.php" />
     <None Include="Properties\PublishProfiles\LocalPublish.pubxml" />
     <None Include="Properties\PublishProfiles\TestPublish.pubxml" />
     <Content Include="Views\Shared\_Partialtool.cshtml" />
@@ -1173,6 +1186,14 @@
     <ProjectReference Include="..\..\03DTO\TCSOFT.DMS.User.DTO\TCSOFT.DMS.UserApply.DTO.csproj">
       <Project>{512de9db-d8ea-4b5b-9c4d-8620f39384a4}</Project>
       <Name>TCSOFT.DMS.UserApply.DTO</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\05Services\TCSOFT.DMS.Document.IServices\TCSOFT.DMS.Document.IServices.csproj">
+      <Project>{334fbdba-05c8-4fab-b2df-b45e82b468e9}</Project>
+      <Name>TCSOFT.DMS.Document.IServices</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\05Services\TCSOFT.DMS.Document.Services\TCSOFT.DMS.Document.Services.csproj">
+      <Project>{2a7d735f-693a-4022-9fe7-a726569d5470}</Project>
+      <Name>TCSOFT.DMS.Document.Services</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

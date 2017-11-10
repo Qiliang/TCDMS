@@ -1,0 +1,53 @@
+﻿
+@{
+    Layout = null;
+}
+
+    <div class="AddContent">
+        <form id="ac-form" method="post">
+            <input  name="BcceID"  type="hidden" />
+            <p>
+                <span class="cl100">标题：</span>
+                <input class="easyui-textbox txt200" style="width:300px;" name="Title" data-options="required:true" />
+            </p>
+            <p>
+                <span class="cl100">货号：</span>
+                <input class="easyui-textbox txt200" style="width:300px;" name="ProductNo"  data-options="required:true" />
+            </p>          
+            <p>
+                <span class="cl100">有效期：</span>
+                <input class="easyui-datebox txt200" style="width:300px;" name="ValidDate" data-options="required:true" />
+            </p>
+
+            <p>
+                <span class="cl100">附件：</span>
+                <span>(最多5个附件)</span>
+            </p>
+            <div id="attPanel">
+                <p>
+                    <span class="cl100">附件：</span>
+                    <input class="easyui-filebox" name="file1" data-options="prompt:'Choose a file...'" style="width:300px">
+                </p>
+                <p>
+                    <span class="cl100">附件：</span>
+                    <input class="easyui-filebox" name="file2" data-options="prompt:'Choose a file...'" style="width:300px">
+                </p>
+                <p>
+                    <span class="cl100">附件：</span>
+                    <input class="easyui-filebox" name="file3" data-options="prompt:'Choose a file...'" style="width:300px">
+                </p>
+                <p>
+                    <span class="cl100">附件：</span>
+                    <input class="easyui-filebox" name="file4" data-options="prompt:'Choose a file...'" style="width:300px">
+                </p>
+                <p>
+                    <span class="cl100">附件：</span>
+                    <input class="easyui-filebox" name="file5" data-options="prompt:'Choose a file...'" style="width:300px">
+                </p>
+            </div>
+           
+           
+          
+        </form>
+    </div>
+

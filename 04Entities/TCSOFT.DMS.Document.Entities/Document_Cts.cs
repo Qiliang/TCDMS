@@ -17,13 +17,12 @@ namespace TCSOFT.DMS.Document.Entities
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Document_Cts()
         {
-            this.Document_CtsAttachmentDownload = new HashSet<Document_CtsAttachmentDownload>();
             this.Document_CtsFavorite = new HashSet<Document_CtsFavorite>();
+            this.Document_CtsAttachment = new HashSet<Document_CtsAttachment>();
         }
     
         public System.Guid CtsID { get; set; }
-        public Nullable<System.Guid> TagID { get; set; }
-        public string ProductNo { get; set; }
+        public Nullable<int> TagID { get; set; }
         public string Title { get; set; }
         public Nullable<System.DateTime> EffectDate { get; set; }
         public Nullable<System.DateTime> ValidDate { get; set; }
@@ -31,13 +30,11 @@ namespace TCSOFT.DMS.Document.Entities
         public Nullable<System.DateTime> PublishDate { get; set; }
         public Nullable<System.DateTime> UpdateDate { get; set; }
         public Nullable<int> PublisherID { get; set; }
-        public string AttachmentName { get; set; }
-        public Nullable<int> AttachmentSize { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Document_CtsAttachmentDownload> Document_CtsAttachmentDownload { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Document_CtsFavorite> Document_CtsFavorite { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Document_CtsAttachment> Document_CtsAttachment { get; set; }
         public virtual Document_CtsTag Document_CtsTag { get; set; }
     }
 }

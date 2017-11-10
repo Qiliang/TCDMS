@@ -15,9 +15,9 @@ namespace TCSOFT.DMS.Document.Entities
     public partial class Document_LssAttachmentDownload
     {
         public int UserID { get; set; }
-        public Nullable<System.Guid> LssID { get; set; }
+        public Nullable<System.Guid> AttachmentID { get; set; }
         public Nullable<bool> IsDownload { get; set; }
     
-        public virtual Document_Lss Document_Lss { get; set; }
+        public virtual Document_LssAttachment Document_LssAttachment { get; set; }
     }
 }

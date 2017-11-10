@@ -5,6 +5,7 @@
 
     <div class="AddContent">
         <form id="ac-form" method="post">
+            <input  name="RegisterID"  type="hidden" />
             <p>
                 <span class="cl100">标题：</span>
                 <input class="easyui-textbox txt200" style="width:300px;" name="Title" data-options="required:true" />
@@ -31,27 +32,30 @@
                 <span class="cl100">附件：</span>
                 <span>(最多5个附件)</span>
             </p>
-
-            <p>
-                <span class="cl100">附件1：</span>
-                <input class="easyui-filebox" name="file1" data-options="prompt:'Choose a file...'" style="width:300px">               
-            </p>
-            <p>
-                <span class="cl100">附件2：</span>
-                <input class="easyui-filebox" name="file2" data-options="prompt:'Choose a file...'" style="width:300px">
-            </p>
-            <p>
-                <span class="cl100">附件3：</span>
-                <input class="easyui-filebox" name="file3" data-options="prompt:'Choose a file...'" style="width:300px">
-            </p>
-            <p>
-                <span class="cl100">附件4：</span>
-                <input class="easyui-filebox" name="file4" data-options="prompt:'Choose a file...'" style="width:300px">
-            </p>
-            <p>
-                <span class="cl100">附件5：</span>
-                <input class="easyui-filebox" name="file5" data-options="prompt:'Choose a file...'" style="width:300px">
-            </p>
+            <div id="attPanel">
+                <p>
+                    <span class="cl100">附件：</span>
+                    <input class="easyui-filebox" name="file1" data-options="prompt:'Choose a file...'" style="width:300px">
+                </p>
+                <p>
+                    <span class="cl100">附件：</span>
+                    <input class="easyui-filebox" name="file2" data-options="prompt:'Choose a file...'" style="width:300px">
+                </p>
+                <p>
+                    <span class="cl100">附件：</span>
+                    <input class="easyui-filebox" name="file3" data-options="prompt:'Choose a file...'" style="width:300px">
+                </p>
+                <p>
+                    <span class="cl100">附件：</span>
+                    <input class="easyui-filebox" name="file4" data-options="prompt:'Choose a file...'" style="width:300px">
+                </p>
+                <p>
+                    <span class="cl100">附件：</span>
+                    <input class="easyui-filebox" name="file5" data-options="prompt:'Choose a file...'" style="width:300px">
+                </p>
+            </div>
+           
+           
           
         </form>
     </div>

@@ -2,7 +2,7 @@
     Layout = null;
 }
 
-<div class="easyui-layout" style="height:100%;">
+@*<div class="easyui-layout" style="height:100%;">
     <div region="north" style="height:94px">
         <link href="~/Content/Document/CSS/_Partialtool.css" rel="stylesheet" />
         <div id="BodyContentTool">
@@ -252,5 +252,24 @@
     function showDoloadDialog() {
         $("#showDoloadDialog").dialog('open');
     }
+
+</script>*@
+
+
+<form>
+    <div id="queue"></div>
+    <input id="file_upload" name="file_upload" type="file" multiple="true">
+</form>
+<script>
+    $(function () {
+        $('#file_upload').uploadify({
+            buttonText:'选择附件',
+            'swf': '/Content/Document/JS/uploadify/uploadify.swf',
+            removeCompleted: false,
+            fileSizeLimit:'50MB',
+            uploadLimit:5,
+            'uploader': '@Url.Action("Upload", "Lss")'
+        });
+    });
 
 </script>

@@ -97,6 +97,9 @@
     <Compile Include="Document_Cts.cs">
       <DependentUpon>Document.tt</DependentUpon>
     </Compile>
+    <Compile Include="Document_CtsAttachment.cs">
+      <DependentUpon>Document.tt</DependentUpon>
+    </Compile>
     <Compile Include="Document_CtsAttachmentDownload.cs">
       <DependentUpon>Document.tt</DependentUpon>
     </Compile>
@@ -107,6 +110,9 @@
       <DependentUpon>Document.tt</DependentUpon>
     </Compile>
     <Compile Include="Document_Lss.cs">
+      <DependentUpon>Document.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Document_LssAttachment.cs">
       <DependentUpon>Document.tt</DependentUpon>
     </Compile>
     <Compile Include="Document_LssAttachmentDownload.cs">

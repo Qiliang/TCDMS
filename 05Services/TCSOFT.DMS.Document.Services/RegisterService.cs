@@ -17,18 +17,24 @@ namespace TCSOFT.DMS.Document.Services
         /// </summary>          
         public PageableDTO<RegisterResultDTO> Query(RegisterSearchDTO q)
         {
+            if (q.PublishDateTo.HasValue)
+            {
+                q.PublishDateTo = new DateTime(q.PublishDateTo.Value.Year, q.PublishDateTo.Value.Month, q.PublishDateTo.Value.Day, 23, 59, 59);
+            }
             var token = q.UserInfo as UserInfoDTO;
             q.InitQuery("PublishDate", false);
             return document.Document_Register
                 .Where(p => string.IsNullOrEmpty(q.Search) ? true : (p.ProductNo.Contains(q.Search) || p.Title.Contains(q.Search) || p.Publisher.Contains(q.Search)))//货号、标题、发布人
                 .Where(p => q.PublishDateFrom.HasValue ? p.PublishDate >= q.PublishDateFrom : true)
                 .Where(p => q.PublishDateTo.HasValue ? p.PublishDate <= q.PublishDateTo : true)
-                .Where(p => q.ProductTypeID>0 ? p.ProductTypeID == q.ProductTypeID : true)
-                .Where(p => q.ProductLineID>0 ? p.ProductLineID == q.ProductLineID : true)
-                .Where(p => token.UserType != 2 ? true : token.ProductLineIDs.Contains(p.ProductLineID))
+                .Where(p => q.ProductTypeID > 0 ? p.ProductTypeID == q.ProductTypeID : true)
+                .Where(p => q.ProductLineID > 0 ? p.ProductLineID == q.ProductLineID : true)
+                .Where(p => token.UserType != 2 ? true : token.ProductLineIDs.Contains(p.ProductLineID.Value))
                 .Select(p => new RegisterResultDTO
                 {
                     RegisterID = p.RegisterID,
+                    ProductLineID = p.ProductLineID,
+                    ProductTypeID = p.ProductTypeID,
                     ProductTypeName = p.ProductTypeName,
                     ProductLineName = p.ProductLineName,
                     ProductNo = p.ProductNo,
@@ -37,7 +43,7 @@ namespace TCSOFT.DMS.Document.Services
                     Publisher = p.Publisher,
                     PublishDate = p.PublishDate,
                     UpdateDate = p.UpdateDate,
-                    IsDownload = p.Document_RegisterAttachment.All(att => att.Document_RegisterAttachmentDownload.All(down => down.IsDownload == true)),
+                    IsDownload = p.Document_RegisterAttachment.All(att => att.Document_RegisterAttachmentDownload.Count > 0 && att.Document_RegisterAttachmentDownload.All(down => down.IsDownload == true && down.UserID==token.UserID)),
                     Attachments = p.Document_RegisterAttachment.Select(att => new RegisterAttachmentDTO
                     {
                         AttachmentID = att.AttachmentID,
@@ -48,12 +54,14 @@ namespace TCSOFT.DMS.Document.Services
                 }).ToPageable(q);
         }
 
-        public RegisterResultDTO Get(string id)
+        public RegisterResultDTO Get(Guid id)
         {
-            var p = document.Document_Register.Find(new Guid(id));
+            var p = document.Document_Register.Find(id);
             return new RegisterResultDTO
             {
                 RegisterID = p.RegisterID,
+                ProductLineID = p.ProductLineID,
+                ProductTypeID = p.ProductTypeID,
                 ProductTypeName = p.ProductTypeName,
                 ProductLineName = p.ProductLineName,
                 ProductNo = p.ProductNo,
@@ -62,7 +70,7 @@ namespace TCSOFT.DMS.Document.Services
                 Publisher = p.Publisher,
                 PublishDate = p.PublishDate,
                 UpdateDate = p.UpdateDate,
-                IsDownload = p.Document_RegisterAttachment.All(att => att.Document_RegisterAttachmentDownload.All(down => down.IsDownload == true)),
+               // IsDownload = p.Document_RegisterAttachment.All(att => att.Document_RegisterAttachmentDownload.All(down => down.IsDownload == true)),
                 Attachments = p.Document_RegisterAttachment.Select(att => new RegisterAttachmentDTO
                 {
                     AttachmentID = att.AttachmentID,
@@ -71,69 +79,6 @@ namespace TCSOFT.DMS.Document.Services
                 })
             };
         }
-
-        ///// <summary>
-        ///// 上传
-        ///// </summary>       
-        //public IHttpActionResult Upload(RegisterAttachmentDTO dto)
-        //{
-        //    HttpFileCollection files = HttpContext.Current.Request.Files;
-        //    Guid id = Guid.NewGuid();
-        //    foreach (string key in files.AllKeys)
-        //    {
-        //        HttpPostedFile file = files[key];
-        //        if (string.IsNullOrEmpty(file.FileName)) continue;
-        //        file.SaveAs(Const.RealRegisterPath(id.ToString()));
-        //        document.Document_RegisterAttachment.Add(new Document_RegisterAttachment
-        //        {
-        //            AttachmentID = id,
-        //            AttachmentName = file.FileName,
-        //            AttachmentSize = file.ContentLength
-        //        });
-        //        document.SaveChanges();
-        //        return Ok(id);
-        //    }
-        //    return BadRequest();
-        //}
-
-        /// <summary>
-        /// 下载
-        /// </summary>  
-        //[Route("Download"), HttpGet]
-        //public HttpResponseMessage Download([FromUri]Guid RegisterID, [FromUri]Guid[] AttIDs)
-        //{
-        //    var token = User as UserToken;
-        //    var register = document.Document_Register.Find(RegisterID);
-        //    if (register == null) return new HttpResponseMessage(HttpStatusCode.NoContent);
-        //    if (AttIDs == null || AttIDs.Length == 0) return new HttpResponseMessage(HttpStatusCode.NoContent);
-        //    var temp = Path.GetTempFileName();
-        //    ZipFile zipFile = ZipFile.Create(temp);
-        //    zipFile.BeginUpdate();
-        //    foreach (var att in document.Document_RegisterAttachment.Where(p => AttIDs.Contains(p.AttachmentID)).ToList())
-        //    {
-        //        if (!File.Exists(Const.RealRegisterPath(att.AttachmentID.ToString()))) return new HttpResponseMessage(HttpStatusCode.NotFound);
-        //        zipFile.Add(Const.RealRegisterPath(att.AttachmentID.ToString()), att.AttachmentName);
-        //        att.Document_RegisterAttachmentDownload.Add(new Document_RegisterAttachmentDownload
-        //        {
-        //            AttachmentID = att.AttachmentID,
-        //            IsDownload = true,
-        //            UserID = token.UserID
-        //        });
-        //    }
-        //    zipFile.CommitUpdate();
-        //    zipFile.Close();
-
-        //    HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
-        //    response.Content = new ByteArrayContent(File.ReadAllBytes(temp));
-        //    response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
-        //    response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
-        //    {
-        //        FileName = string.Format("{0}).zip", register.Title)
-        //    };
-        //    document.SaveChanges();
-        //    return response;
-        //}
-
 
 
         /// <summary>
@@ -162,10 +107,14 @@ namespace TCSOFT.DMS.Document.Services
                 };
                 if (model.AttachmentIDs != null)
                 {
-                    model.AttachmentIDs.Select(att => document.Document_RegisterAttachment.Find(att)).ToList().ForEach(att =>
+                    document.Document_RegisterAttachment.AddRange(model.AttachmentIDs.Select(p => new Document_RegisterAttachment
                     {
-                        entity.Document_RegisterAttachment.Add(att);
-                    });
+                        AttachmentID = p.AttachmentID,
+                        AttachmentName = p.AttachmentName,
+                        AttachmentSize = p.AttachmentSize,
+                        RegisterID = entity.RegisterID
+                    }));
+                    document.SaveChanges();
                 }
 
                 document.Document_Register.Add(entity);
@@ -207,17 +156,36 @@ namespace TCSOFT.DMS.Document.Services
                 entity.Publisher = token.FullName;
                 entity.UpdateDate = DateTime.Now;
 
-                entity.Document_RegisterAttachment.ToList().ForEach(att =>
+                if (model.DeleteAttachmentIDs != null)
                 {
-                    document.Document_RegisterAttachment.Remove(att);
-                });
-                if (model.AttachmentIDs != null)
-                {
-                    model.AttachmentIDs.Select(att => document.Document_RegisterAttachment.Find(att)).ToList().ForEach(att =>
+                    model.DeleteAttachmentIDs.ForEach(p =>
                     {
-                        entity.Document_RegisterAttachment.Add(att);
+                        var att = document.Document_RegisterAttachment.Find(p);
+                        if (att == null) return;
+                        document.Document_RegisterAttachmentDownload.RemoveRange(att.Document_RegisterAttachmentDownload);
+                        document.Document_RegisterAttachment.Remove(att);
                     });
                 }
+
+                document.Document_RegisterAttachment.AddRange(model.AttachmentIDs.Select(p => new Document_RegisterAttachment
+                {
+                    AttachmentID = p.AttachmentID,
+                    AttachmentName = p.AttachmentName,
+                    AttachmentSize = p.AttachmentSize,
+                    RegisterID = model.RegisterID
+                }));
+                document.SaveChanges();
+                //entity.Document_RegisterAttachment.ToList().ForEach(att =>
+                //{
+                //    document.Document_RegisterAttachment.Remove(att);
+                //});
+                //if (model.AttachmentIDs != null)
+                //{
+                //    model.AttachmentIDs.Select(att => document.Document_RegisterAttachment.Find(att.AttachmentID)).ToList().ForEach(att =>
+                //    {
+                //        entity.Document_RegisterAttachment.Add(att);
+                //    });
+                //}
                 document.SaveChanges();
                 return new DocumentResultDTO { success = true };
             }
@@ -235,18 +203,19 @@ namespace TCSOFT.DMS.Document.Services
         /// </summary> 
         public DocumentResultDTO Delete(Guid id)
         {
-            try { 
-            var entity = document.Document_Register.FirstOrDefault(p => p.RegisterID == id);
-            if (entity != null)
+            try
             {
-                entity.Document_RegisterAttachment.ToList().ForEach(att =>
+                var entity = document.Document_Register.FirstOrDefault(p => p.RegisterID == id);
+                if (entity != null)
                 {
-                    document.Document_RegisterAttachmentDownload.RemoveRange(att.Document_RegisterAttachmentDownload);
-                });
-                document.Document_RegisterAttachment.RemoveRange(entity.Document_RegisterAttachment);
-                document.Document_Register.Remove(entity);
-                document.SaveChanges();
-            }
+                    entity.Document_RegisterAttachment.ToList().ForEach(att =>
+                    {
+                        document.Document_RegisterAttachmentDownload.RemoveRange(att.Document_RegisterAttachmentDownload);
+                    });
+                    document.Document_RegisterAttachment.RemoveRange(entity.Document_RegisterAttachment);
+                    document.Document_Register.Remove(entity);
+                    document.SaveChanges();
+                }
                 return new DocumentResultDTO { success = true };
             }
             catch (Exception ex)
@@ -255,38 +224,6 @@ namespace TCSOFT.DMS.Document.Services
             }
 
         }
-
-        ///// <summary>
-        ///// 导出
-        ///// </summary>  
-        //[Route("Export"), HttpGet, HttpPost]
-        //public HttpResponseMessage Export(RegisterQueryModel q)
-        //{
-        //    if (q == null) q = new RegisterQueryModel();
-        //    var result = Query(q).List;
-        //    try
-        //    {
-        //        var views = new List<ExcelView>()
-        //        {
-        //            new ExcelView { Header="产品类型", PropertyName="ProductTypeName", Width=15 },
-        //            new ExcelView { Header="产品线", PropertyName="ProductLineName", Width=15 },
-        //            new ExcelView { Header="货号", PropertyName="ProductNo", Width=15 },
-        //            new ExcelView { Header="标题", PropertyName="Title", Width=15 },
-        //            new ExcelView { Header="有效期", PropertyName="ValidDate" , Width=22},
-        //            new ExcelView { Header="发布人", PropertyName="Publisher", Width=15 },
-        //            new ExcelView { Header="发布日期", PropertyName="PublishDate" , Width=22 },
-        //            new ExcelView { Header="更新日期", PropertyName="UpdateDate", Width=22  }
-        //        };
-
-
-        //        return result.ToExcel(views, "注册证({0}).xlsx");
-
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return new HttpResponseMessage(HttpStatusCode.NoContent);
-        //    }
-        //}
 
 
         /// <summary>
@@ -308,7 +245,7 @@ namespace TCSOFT.DMS.Document.Services
             if (token.UserType == 2)
             {
                 sql = "SELECT master_ProductLine.ProductLineID, master_ProductLine.DepartID, master_ProductLine.ProductLineName, master_DepartmentInfo.DepartName FROM master_ProductLine INNER JOIN master_DepartmentInfo ON master_ProductLine.DepartID = master_DepartmentInfo.DepartID where master_ProductLine.IsActive=1 "
-                    + string.Format("  and master_ProductLine.ProductLineID in ({0})", string.Join(",", token.ProductLineIDs.Where(p => p.HasValue)));
+                    + string.Format("  and master_ProductLine.ProductLineID in ({0})", string.Join(",", token.ProductLineIDs));
             }
             else
             {
@@ -327,6 +264,20 @@ namespace TCSOFT.DMS.Document.Services
                 root.children.Add(departNode);
             });
             return root;
+        }
+
+        public DocumentResultDTO Download(UserInfoDTO userInfo, Guid[] ids)
+        {
+            document.Document_RegisterAttachmentDownload.AddRange(ids.Select(id =>
+            new Document_RegisterAttachmentDownload
+            {
+                AttachmentID = id,
+                IsDownload = true,
+                UserID = userInfo.UserID
+            }));
+
+            document.SaveChanges();
+            return new DocumentResultDTO { success = true };
         }
     }
 }

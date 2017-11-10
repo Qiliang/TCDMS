@@ -9,6 +9,8 @@ namespace TCSOFT.DMS.Document.DTO.Register
     public class RegisterResultDTO
     {
         public Guid RegisterID { get; set; }
+        public int? ProductTypeID { get; set; }
+        public int? ProductLineID { get; set; }
         public string ProductTypeName { get; set; }
         public string ProductLineName { get; set; }
         public string ProductNo { get; set; }

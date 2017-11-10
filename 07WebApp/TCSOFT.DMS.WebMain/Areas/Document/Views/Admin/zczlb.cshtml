@@ -4,18 +4,20 @@
 
 <div class="easyui-layout" style="height:100%;">
     <div region="north" style="height:94px">
-        <link href="~/Content/Document/CSS/_Partialtool.css" rel="stylesheet" />    
+        <link href="~/Content/Document/CSS/_Partialtool.css" rel="stylesheet" />
         <div id="BodyContentTool">
             <div id="btnButton">
                 <div class="comboelse" style="padding:5px 5px 5px 0;">
                     <input id="searchproductline" class="easyui-combobox txt250" name="productType" buttonText="类型" panelHeight="auto" editable="false"
-                           data-options="valueField:'ProductTypeID',textField:'ProductTypeName',url:'@Url.Action("ProductType", "Register")'">                  
-                    <input class='easyui-datebox txt350' id='ValidDate1' editable='false' buttonText='发布日期起'/>
-                    <input class='easyui-datebox txt350' id='ValidDate2' editable='false' buttonText='发布日期止'/>
+                           data-options="valueField:'ProductTypeID',textField:'ProductTypeName',url:'@Url.Action("ProductType", "Register")'">
+                    <input class='easyui-datebox txt350' id='ValidDate1' editable='false' buttonText='发布日期起' />
+                    <input class='easyui-datebox txt350' id='ValidDate2' editable='false' buttonText='发布日期止' />
                 </div>
                 <ul>
-                    <li><input id="serchText" class="easyui-searchbox search" style="height:32px;width:500px;"
-                               data-options="prompt:'支持标题、货号、发布人模糊查询',searcher:function(){}"/></li>
+                    <li>
+                        <input id="serchText" class="easyui-searchbox search" style="height:32px;width:500px;"
+                               data-options="prompt:'支持标题、货号、发布人模糊查询',searcher:function(){}" />
+                    </li>
                     <li><a href="#" class="easyui-linkbutton" id="btnAdd" onclick="addDialog();">添加</a></li>
                     <li><a href="#" class="easyui-linkbutton" id="btnModify" onclick="updateDialog();">修改</a></li>
                     <li><a href="#" class="easyui-linkbutton" id="btnDel" onclick="del();">删除</a></li>
@@ -33,37 +35,37 @@
         <div id="BodyContentDiv">
             <table id="grid" class="easyui-datagrid"
                    data-options="
-                    iconCls: 'icon-view',
-                    width: function () { return document.body.clientWidth * 0.9 },
-                    nowrap: true,
-                    autoRowHeight: true,
-                    striped: true,
-                    collapsible: false,
-                    pagination: true,
-                    pageSize: 10,
-                    pageList: [10, 20, 30],
-                    rownumbers: true,
-                    sortOrder: 'desc',
-                    remoteSort: false,
-                    singleSelect: false,
-                    queryParams: {},
-                    animate: true,                    
-                    idField:'id',
-                    fit:true">
+                   iconCls: 'icon-view' ,
+                   width:function () { return document.body.clientWidth * 0.9 },
+                   nowrap: true,
+                   autoRowHeight: true,
+                   striped :true,
+                   collapsible: false,
+                   pagination: true,
+                   pageSize: 10,
+                   pageList: [10, 20, 30],
+                   rownumbers :true,
+                   sortOrder: 'desc' ,
+                   remoteSort: false,
+                   singleSelect: true,
+                   queryParams: {},
+                   animate: true,
+                   idField:'id',
+                   fit:true">
                 <thead>
-                <tr>
-             
-                    <th data-options="field:'RegisterID',checkbox:true"></th>
-                    <th data-options="field:'Attachments',width:80,align:'center',formatter:formatterAttachment">附件</th>
-                    <th data-options="field:'ProductTypeName',width:100,sortable:true,align:'center'">产品类型</th>
-                    <th data-options="field:'ProductLineName',width:120,align:'center',sortable:true">产品线</th>
-                    <th data-options="field:'ProductNo',width:120,align:'center',sortable:true">货号</th>
-                    <th data-options="field:'Title',width:250,align:'center'">标题</th>
-                    <th data-options="field:'ValidDate',width:100,align:'center'">有效期</th>
-                    <th data-options="field:'Publisher',width:100,align:'center'">发布人</th>
-                    <th data-options="field:'PublishDate',width:160,align:'center'">发布日期</th>
-                    <th data-options="field:'UpdateDate',width:160,align:'center'">更新日期</th>
-                </tr>
+                    <tr>
+
+                        <th data-options="field:'RegisterID',checkbox:true"></th>
+                        <th data-options="field:'Attachments',width:80,align:'center',formatter:formatterAttachment">附件</th>
+                        <th data-options="field:'ProductTypeName',width:100,sortable:true,align:'center'">产品类型</th>
+                        <th data-options="field:'ProductLineName',width:120,align:'center',sortable:true">产品线</th>
+                        <th data-options="field:'ProductNo',width:120,align:'center',sortable:true">货号</th>
+                        <th data-options="field:'Title',width:250,align:'center'">标题</th>
+                        <th data-options="field:'ValidDate',width:100,align:'center',formatter:function(v){return v ? v.substr(0,10): ''}">有效期</th>
+                        <th data-options="field:'Publisher',width:100,align:'center'">发布人</th>
+                        <th data-options="field:'PublishDate',width:160,align:'center',formatter:function(v){return v ? v.substr(0,10): ''}">发布日期</th>
+                        <th data-options="field:'UpdateDate',width:160,align:'center',formatter:function(v){return v ? v.substr(0,10): ''}">更新日期</th>
+                    </tr>
                 </thead>
             </table>
         </div>
@@ -82,10 +84,10 @@
             }">
     <div class="easyui-panel" style="width:400px;padding:20px 60px">
         <div style="margin-bottom:10px">
-            <input type="checkbox" name="downloadUrl"/>&nbsp;&nbsp;附件1
+            <input type="checkbox" name="downloadUrl" />&nbsp;&nbsp;附件1
         </div>
         <div style="margin-bottom:10px">
-            <input type="checkbox" name="downloadUrl"/>&nbsp;&nbsp;附件2
+            <input type="checkbox" name="downloadUrl" />&nbsp;&nbsp;附件2
         </div>
     </div>
 </div>
@@ -94,12 +96,23 @@
     var searchOps = {}
 
     $(function () {
+
+        $('#serchText').searchbox({
+            searcher: function (value) {
+                searchOps.Search = value;
+                searchOps.PublishDateFrom = $('#ValidDate1').val();
+                searchOps.PublishDateTo = $('#ValidDate2').val();
+                $('#grid').datagrid('load', searchOps);
+            },
+            prompt: '支持标题、货号、发布人模糊查询'
+        });
+
         $('#grid').datagrid({
             url: '@Url.Action("Query", "Register")',
         });
 
         $('#product_tree').tree({
-            onSelect: function (node) {               
+            onSelect: function (node) {
                 searchOps.ProductLineID = node.ProductLineID;
                 $('#grid').datagrid('load', searchOps);
             }
@@ -124,60 +137,12 @@
 
 
     //添加
-    function addDialog() {      
+    function addDialog() {
         $('<div/>').dialog({
             title: '注册证 添加新项',
             width: 500,
             height: 600,
             id: 'addDialog',
-            top: 20,
-            modal: true,
-            closed: false,
-            href: '@Url.Action("AddRegister", "Dialog")',
-            buttons: [{
-                text: '确定',
-                handler: function () {
-                    addSubmit();
-                }
-            }, {
-                text: '取消',
-                handler: function () {                   
-                    $('#addDialog').dialog('close');
-                }
-            }],
-            onLoad: function () {                
-               
-                $('#add_productLine').combotree({
-                    url: '@Url.Action("ProductLine", "Register")',                   
-                    required: true,
-                    onBeforeSelect: function (node) {                      
-                        if (node.children) return false;
-                        return true;
-                    }
-                });
-                $('#add_productType').combobox({
-                    url: '@Url.Action("ProductType", "Register")',
-                    valueField: 'ProductTypeID',
-                    textField: 'ProductTypeName'
-                });
-            }
-        });
-    }
-
-
-    //修改
-    function updateDialog() {
-        var record = $('#grid').datagrid('getSelected');
-        if (record == null) {
-            alert('请选择一行再操作');
-            return;
-        }
-        $('<div/>').dialog({
-            title: '注册证 更新信息',
-            width: 500,
-            height: 600,
-            id: 'addDialog',
-            top: 20,
             modal: true,
             closed: false,
             href: '@Url.Action("AddRegister", "Dialog")',
@@ -189,7 +154,7 @@
             }, {
                 text: '取消',
                 handler: function () {
-                    $('#addDialog').dialog('close');
+                    $('#addDialog').dialog('destroy');
                 }
             }],
             onLoad: function () {
@@ -207,8 +172,83 @@
                     valueField: 'ProductTypeID',
                     textField: 'ProductTypeName'
                 });
-                
-                record
+            }
+        });
+    }
+
+    //修改
+    function updateDialog() {
+
+        var record = $('#grid').datagrid('getSelected');
+
+        if (record == null) {
+            alert('请选择一行再操作');
+            return;
+        }
+        $('<div/>').dialog({
+            title: '注册证 更新信息',
+            width: 500,
+            height: 600,
+            id: 'updateDialog',
+            modal: true,
+            closed: false,
+            href: '@Url.Action("AddRegister", "Dialog")',
+            buttons: [{
+                text: '确定',
+                handler: function () {
+                    updateSubmit();
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    $('#updateDialog').dialog('destroy');
+                }
+            }],
+            onLoad: function () {
+
+                $('#add_productLine').combotree({
+                    url: '@Url.Action("ProductLine", "Register")',
+                    required: true,
+                    onBeforeSelect: function (node) {
+                        if (node.children) return false;
+                        return true;
+                    }
+                });
+
+                $('#add_productType').combobox({
+                    url: '@Url.Action("ProductType", "Register")',
+                    valueField: 'ProductTypeID',
+                    textField: 'ProductTypeName'
+                });
+
+                //$('#add_productLine').combotree('setValue', record.ProductLineID);
+                //$('#add_productType').combobox('setValue', record.ProductLineID);
+                $('#ac-form').form('reset');
+                $('#ac-form').form('load', record);
+                $('#attPanel').empty();
+                $.each(record.Attachments, function (index, att) {
+                    $('#attPanel').append('<p><span class="cl100">附件：</span><a id="att' + index + '" href="#" name="' + att.AttachmentID + '"></a><span>' + att.AttachmentName + '</span></p>')
+                    $('#att' + index).linkbutton({
+                        plain: true,
+                        iconCls: 'icon-cancel'
+                    });
+                    $('#att' + index).bind('click', function () {
+                        var $this = $(this);
+                        var $parent = $(this).parents("p");
+                        $.messager.confirm('删除', '是否确认删除?', function (r) {
+                            if (!r) return;
+                            $parent.empty();
+                            $parent.append(' <p><span class="cl100">附件：</span> <input id="att' + index + '" class="easyui-filebox" name="file' + index + '"  style="width:300px">  </p>');
+                            $('#att' + index).filebox({});
+                        });
+                    });
+                });
+                for (var index = $('#attPanel>p').length; index < 5; index++) {
+                    $('#attPanel').append(' <p><span class="cl100">附件：</span> <input id="att' + index + '" class="easyui-filebox" name="file' + index + '"  style="width:300px">  </p>');
+                    $('#att' + index).filebox({});
+
+                }
+
 
             }
         });
@@ -244,7 +284,7 @@
 
         var form = new FormData($('#ac-form')[0]);
         var settings = {
-            "async": true,           
+            "async": true,
             "url": '@Url.Action("Add", "Register")',
             "method": "POST",
             "processData": false,
@@ -252,7 +292,7 @@
             "mimeType": "multipart/form-data",
             "data": form
         }
-     
+
         $.ajax(settings).done(function (response) {
             var obj = JSON.parse(response);
             if (!obj.success) {
@@ -264,6 +304,83 @@
         }).fail(function (response) {
             var obj = JSON.parse(response.responseText);
             alert(obj.Message);
+        });
+    }
+
+
+    function updateSubmit() {
+        var record = $('#grid').datagrid('getSelected');
+        var data = $('#ac-form').toJSON();
+        if (!data.ProductLineID) {
+            alert('产品线不能为空');
+            return;
+        }
+        if (!data.ProductTypeID) {
+            alert('产品类型不能为空');
+            return;
+        }
+        //var v = $('#ac-form input[name=Certificate]').val();
+        //if (v == null || v == '') {
+        //    alert('证书不能为空');
+        //    return;
+        //}
+        if (data.Title == null || data.Name == '') {
+            alert('标题不能为空');
+            return;
+        }
+        if (!data.ProductNo) {
+            alert('部门不能为空');
+            return;
+        }
+        if (!data.ValidDate) {
+            alert('有效期不能为空');
+            return;
+        }
+
+        var form = new FormData($('#ac-form')[0]);
+        var settings = {
+            "async": true,
+            "url": '@Url.Action("Update", "Register")',
+            "method": "POST",
+            "processData": false,
+            "contentType": false,
+            "mimeType": "multipart/form-data",
+            "data": form
+        }
+        $.each(record.Attachments, function (index, att) {
+            if ($('a[name=' + att.AttachmentID + ']').length == 0) {
+                form.append("DeleteAttachmentIDs", att.AttachmentID);
+            }
+        })
+
+        $.ajax(settings).done(function (response) {
+            var obj = JSON.parse(response);
+            if (!obj.success) {
+                alert(obj.message);
+                return;
+            }
+           
+            $('#grid').datagrid('reload');
+            $('#updateDialog').dialog('destroy');
+        }).fail(function (response) {
+            var obj = JSON.parse(response.responseText);
+            alert(obj.Message);
+        });
+    }
+
+
+    function del() {
+        var record = $('#grid').datagrid('getSelected');
+        if (record == null) {
+            $.messager.alert('提示', '请选择一行再操作!');
+            return;
+        }
+        $.messager.confirm('删除', '是否确认删除?', function (r) {
+            if (r) {
+                $.post('@Url.Action("Delete", "Register")?id=' + record.RegisterID, {}, function () {
+                    $('#grid').datagrid('reload');
+                });
+            }
         });
     }
 
@@ -281,20 +398,58 @@
     }
 
     function formatterAttachment(value, row, index) {
-        return "<a href='javascript:void(0);' onclick='downloadAttachment();'>下载</a>"
+        $('body').undelegate('#download' + index,'click');
+        $('body').delegate('#download' + index, 'click', function (e) {
+            downloadAttachment(row);
+            return false;
+        });
+        return '<a href="#" id="download'+index+'">下载</a>';
     }
-    function downloadAttachment() {
-        $("#downloadDialog").dialog('open');
+    function downloadAttachment(item) {
+        debugger
+        $('<div><div class="easyui-panel" style="width:290px;padding:20px 60px"></div></div>').dialog({
+            title: '下载附件',
+            width: 300,
+            height: 250,
+            id: 'downloadDialog',            
+            modal: true,
+            closed: false,
+            buttons: [{
+                text: '确定',
+                handler: function () {
+                    if ($('#downloadDialog :checked').length == 0) {
+                        $.messager.alert('提示', '请选择至少一个附件!');
+                        return;
+                    }
+                    var params="registerID="+item.RegisterID;
+                    $('#downloadDialog :checked').each(function () {
+                        params+="&attIDs="+$(this).val();
+                    })
+                    window.location.href = '@Url.Action("Download", "Register")?' + params;
+                    $('#downloadDialog').dialog('destroy');
+                }
+            }, {
+                text: '取消',
+                handler: function () {
+                    $('#downloadDialog').dialog('destroy');
+                }
+            }],
+            onOpen: function () {
+
+
+                for (var i = 0; i < item.Attachments.length; i++) {
+                    var att = item.Attachments[i];
+                    $('#downloadDialog>div').append('<div style="margin-bottom:10px"><input type="checkbox" name="downloadUrl" value="' + att.AttachmentID+ '" />&nbsp;&nbsp;' + att.AttachmentName + '</div>')
+                }
+
+            }
+        });
+
+
     }
 
     function gotoDownload() {
 
     }
-    function del() {
-        $.messager.confirm('删除', '是否确认删除?', function (r) {
-            if (r) {
-                alert('删除成功！');
-            }
-        });
-    }
+
 </script>

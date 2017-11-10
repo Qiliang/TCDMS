@@ -29,10 +29,12 @@ namespace TCSOFT.DMS.Document.Entities
         public virtual DbSet<Document_BcceAttachment> Document_BcceAttachment { get; set; }
         public virtual DbSet<Document_BcceAttachmentDownload> Document_BcceAttachmentDownload { get; set; }
         public virtual DbSet<Document_Cts> Document_Cts { get; set; }
+        public virtual DbSet<Document_CtsAttachment> Document_CtsAttachment { get; set; }
         public virtual DbSet<Document_CtsAttachmentDownload> Document_CtsAttachmentDownload { get; set; }
         public virtual DbSet<Document_CtsFavorite> Document_CtsFavorite { get; set; }
         public virtual DbSet<Document_CtsTag> Document_CtsTag { get; set; }
         public virtual DbSet<Document_Lss> Document_Lss { get; set; }
+        public virtual DbSet<Document_LssAttachment> Document_LssAttachment { get; set; }
         public virtual DbSet<Document_LssAttachmentDownload> Document_LssAttachmentDownload { get; set; }
         public virtual DbSet<Document_LssFavorite> Document_LssFavorite { get; set; }
         public virtual DbSet<Document_LssTag> Document_LssTag { get; set; }

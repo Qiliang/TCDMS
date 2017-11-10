@@ -8,8 +8,23 @@ namespace TCSOFT.DMS.WebMain.Areas.Document.Controllers
 {
     public class DialogController : Controller
     {
-        // GET: Document/Dialog
+       
         public ActionResult AddRegister()
+        {
+            return View();
+        }
+
+        public ActionResult AddBcce()
+        {
+            return View();
+        }
+
+        public ActionResult AddLss()
+        {
+            return View();
+        }
+
+        public ActionResult AddCts()
         {
             return View();
         }

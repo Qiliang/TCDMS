@@ -15,6 +15,6 @@ namespace TCSOFT.DMS.Document.DTO.Register
         public string ProductTypeName { get; set; }
         public string ProductNo { get; set; }
         public DateTime? ValidDate { get; set; }
-        public List<Guid> AttachmentIDs { get; set; }
+        public List<RegisterAttachmentDTO> AttachmentIDs { get; set; }
     }
 }

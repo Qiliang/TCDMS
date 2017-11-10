@@ -22,7 +22,8 @@ namespace TCSOFT.DMS.WebMain.Areas.Document.Controllers
             {
                 UserID = 2,
                 UserType = 1,
-                FullName = "lfl"
+                FullName = "lfl",
+                ProductLineIDs = new int[] { }
             };
             //return new UserInfoDTO
             //{

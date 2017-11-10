@@ -9,5 +9,6 @@ namespace TCSOFT.DMS.Document.DTO.Register
     public class RegisterUpdateDTO:RegisterAddDTO
     {
         public Guid RegisterID { get; set; }
+        public List<Guid> DeleteAttachmentIDs { get; set; }
     }
 }

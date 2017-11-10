@@ -40,9 +40,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bcce\BcceAddDTO.cs" />
+    <Compile Include="Bcce\BcceAttachmentDTO.cs" />
+    <Compile Include="Bcce\BcceResultDTO.cs" />
+    <Compile Include="Bcce\BcceSearchDTO.cs" />
+    <Compile Include="Bcce\BcceUpdateDTO.cs" />
     <Compile Include="Class1.cs" />
     <Compile Include="DocumentDTO.cs" />
     <Compile Include="DocumentResultDTO.cs" />
+    <Compile Include="Lss\DepartNode.cs" />
+    <Compile Include="Lss\ProductLineNode.cs" />
+    <Compile Include="Lss\ProductLineResultDTO.cs" />
+    <Compile Include="Lss\LssAddDTO.cs" />
+    <Compile Include="Lss\LssAttachmentDTO.cs" />
+    <Compile Include="Lss\LssResultDTO.cs" />
+    <Compile Include="Lss\LssSearchDTO.cs" />
+    <Compile Include="Lss\LssUpdateDTO.cs" />
+    <Compile Include="Lss\RootNode.cs" />
+    <Compile Include="Lss\TagDTO.cs" />
     <Compile Include="PageableDTO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueryDTO.cs" />
@@ -58,6 +73,9 @@
     <Compile Include="Register\RegisterUpdateDTO.cs" />
     <Compile Include="UserInfoDTO.cs" />
     <Compile Include="UserQueryDTO.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Cts\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

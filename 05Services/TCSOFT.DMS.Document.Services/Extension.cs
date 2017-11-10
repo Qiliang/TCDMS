@@ -52,7 +52,7 @@ namespace TCSOFT.DMS.Document.Services
 
         public static PageableDTO<T> ToPageable<T>(this IQueryable<T> source, QueryDTO q) where T : class
         {
-            var total = source.Count();
+            var total = source.Count();            
             var queryable = source.OrderBy(q.OrderBy, q.Ascending.Value);
             if (!string.IsNullOrEmpty(q.ThenBy))
             {

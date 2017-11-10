@@ -20,10 +20,10 @@ namespace TCSOFT.DMS.Document.Entities
             this.Document_Lss = new HashSet<Document_Lss>();
         }
     
-        public int ProductLineID { get; set; }
+        public Nullable<int> ProductLineID { get; set; }
         public string TagName { get; set; }
-        public System.Guid TagID { get; set; }
-        public Nullable<System.Guid> ParentID { get; set; }
+        public int TagID { get; set; }
+        public Nullable<int> ParentID { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Document_Lss> Document_Lss { get; set; }

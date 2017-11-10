@@ -11,11 +11,12 @@ namespace TCSOFT.DMS.Document.IServices
     public interface IRegisterService
     {
         PageableDTO<RegisterResultDTO> Query(RegisterSearchDTO q);
-        RegisterResultDTO Get(string id);
+        RegisterResultDTO Get(Guid id);
         DocumentResultDTO Add(RegisterAddDTO model);
         DocumentResultDTO Update(RegisterUpdateDTO model);
         DocumentResultDTO Delete(Guid id);
         List<ProductTypeResultDTO> ProductType();
         RootNode ProductLine(DocumentDTO dto);
+        DocumentResultDTO Download(UserInfoDTO userInfo, Guid[] ids);
     }
 }
